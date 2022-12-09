@@ -1,0 +1,2 @@
+raylib==4.2.1.2
+PyOpenGL==3.1.6
