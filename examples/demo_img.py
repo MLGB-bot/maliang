@@ -18,10 +18,14 @@ with open('./resources/img.png', 'rb') as f:
     img_data = f.read()
 
 app.stroke(pr.PINK)
-img2 = app.load_data(data=img_data, filetype='.png')
-img2 = app.from_text("Hello World", fontsize=12)
+img2 = app.load_image_data(data=img_data, filetype='.png')
+# img2 = app.from_text("Hello World", fontsize=12)
 
-img2.load_colors()
+colors = img2.load_colors()
+print(11111, colors, tuple(colors))
+
+colors2 = img2.load_palette(128, 32)
+print(222, colors2, tuple(colors2))
 
 # exit(0)
 # img2.export_to_file("../learn/test0.png", mode=0)

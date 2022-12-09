@@ -7,9 +7,6 @@ class MImage:
         self.pr_image = None
         self.pr_texture = None
 
-    def load(self, image_path):
-        return pr.load_image(image_path)
-
     def unload(self):
         self.unload_pr_image()
         self.unload_pr_texture()
@@ -142,17 +139,21 @@ class MImage:
 
     def load_colors(self):  # 将图像中的颜色数据加载为颜色阵列(RGBA-32位)
         pr_color = pr.load_image_colors(self.pr_image)
-        return mod_color.MColor(pr_color.r, pr_color.g, pr_color.b, pr_color.a)
+        color = mod_color.MColor(pr_color.r, pr_color.g, pr_color.b, pr_color.a)
+        pr.unload_image_colors(pr_color)
+        return color
 
-    def unload_colors(self, colors: [mod_color.MColor]):  # 卸载用加载图像Colors()加载的颜色数据
-        pr.unload_image_colors([c.to_pyray() for c in colors])
+    # def unload_colors(self, colors: [mod_color.MColor]):  # 卸载加载的颜色数据
+    #     pr.unload_image_colors([c.to_pyray() for c in colors])
 
     def load_palette(self, max_palette_size, color_count):  # 从图像 Load调色板作为颜色阵列(RGBA-32位)
         pr_color = pr.load_image_palette(self.pr_image, max_palette_size, color_count)
-        return mod_color.MColor(pr_color.r, pr_color.g, pr_color.b, pr_color.a)
+        color = mod_color.MColor(pr_color.r, pr_color.g, pr_color.b, pr_color.a)
+        pr.unload_image_palette(pr_color)
+        return color
 
-    def unload_image_palette(self, colors: [mod_color.MColor]):  # 卸载用加载图像Palette()加载的调色板
-        pr.unload_image_palette([c.to_pyray() for c in colors])
+    # def unload_image_palette(self, colors: [mod_color.MColor]):  # 卸载用加载图像Palette()加载的调色板
+    #     pr.unload_image_palette([c.to_pyray() for c in colors])
 
     def get_alpha_border(self, threshold):  # 获取图像 alpha边框Rectangle
         rect = pr.get_image_alpha_border(self.pr_image, threshold)

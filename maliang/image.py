@@ -62,6 +62,12 @@ class Image():
             assert mode in ImageMode.__values__
             self._image_mode = mode
 
+    def unload_image(self, img: MImage):
+        img.unload_pr_image()
+
+    def unload_image_all(self, img: MImage):
+        img.unload()
+
     def load_image(self, filename):
         image_path = os.path.join(ResourceLoader.static_dir, filename)
         img = MImage()
@@ -95,7 +101,7 @@ class Image():
         img.pr_image = pr.load_image_anim(image_path, frames)
         return img
 
-    def load_data(self, data, filetype='.png'):
+    def load_image_data(self, data, filetype='.png'):
         img = MImage()
         img.pr_image = pr.load_image_from_memory(filetype, data, len(data))
         return img
