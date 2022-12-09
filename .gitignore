@@ -1,0 +1,11 @@
+# Ignore dynaconf secret files
+.secrets.*
+/.idea
+*.pyc
+*.log
+*qiniu*.json
+**/__pycache__
+/.vscode
+/.logs
+
+venv
