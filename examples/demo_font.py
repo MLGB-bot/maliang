@@ -50,22 +50,26 @@ def on_setup():
     # app.textColor(200, 200, 255)
     # app.text("WORD", 40, 180)
     # #
-    app.text("FONT, 你好", 40, 250, font=font1, text_color=(255, 200, 200), text_size=30)
-    app.text("FONT, 你好", 40, 300, font=font2, text_color=(255, 200, 200), text_size=80, space=5)
+    # app.text("FONT, 你好", 40, 250, font=font1, text_color=(255, 200, 200), text_size=30)
+    # app.text("FONT, 你好", 40, 300, font=font2, text_color=(255, 200, 200), text_size=80, space=5)
 
 
 def on_draw():
     # app.background(200, 200, 255, 50)
-    app.background(200, 200, 255, 255)
+    # app.background(200, 200, 255, 255)
+    app.background(255)
     # print("ondraw")
 
     # app.image(img2, 100, 50, )
     # app.image(img2, 100, 80, )
+    app.textSize(random.randint(12, 100))
+    app.textColor(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+    app.text("FONT, 你好", random.randint(0, app.width/2), random.randint(0, app.height/2), font=font2, space=0)
 
 
 
 app.regist_event('on_setup', on_setup)
-# app.regist_event('on_draw', on_draw)
+app.regist_event('on_draw', on_draw)
 
 def on_mouse_moved(*args):
     print("on_mouse_moved", args)

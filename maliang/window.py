@@ -9,7 +9,7 @@ from maliang.events import Events
 from maliang.image import Image
 from maliang.font import Font
 from maliang.text import Text
-
+from maliang.units import ResourceLoader
 
 class Window(Environment, Shapes2d, Transform, Events, Mouse, Keyboard, Image, Font, Text):
     def __init__(self, width=100, height=100, title='', fps=60,
@@ -101,7 +101,6 @@ class Window(Environment, Shapes2d, Transform, Events, Mouse, Keyboard, Image, F
                 self.keyboard_watcher()
             if hasattr(self, 'catpure_events'):
                 self.catpure_events()
-
         self.frame_count += 1
 
     def on_exit(self):
@@ -113,4 +112,6 @@ class Window(Environment, Shapes2d, Transform, Events, Mouse, Keyboard, Image, F
         while not pr.window_should_close():
             self._on_draw()
             self.release_matrix()
+            # done: auto clean fonts created in runtime
+            ResourceLoader.task_unload_fonts_runtime()
         self.on_exit()
