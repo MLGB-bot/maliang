@@ -30,7 +30,7 @@ class Keyboard:
         # 1 移除已经松开的key
         released_keys = []
         for _key in self._pressed_keys:
-            if not self.key_is_pressed(_key):
+            if not self.is_key_pressed(_key):
                 released_keys.append(_key)
         for _key in released_keys:
             self._delete_key(_key)
@@ -47,13 +47,13 @@ class Keyboard:
         self.released_keys = released_keys
         self.clicked_keys = clicked_keys
 
-    def key_is_clicked(self, key:int):
+    def is_key_clicked(self, key:int):
         return pr.is_key_pressed(key)
 
-    def key_is_pressed(self, key:int):
+    def is_key_pressed(self, key:int):
         return pr.is_key_down(key)
 
-    def key_is_released(self, key:int):
+    def is_key_released(self, key:int):
         return pr.is_key_up(key)
 
     def event_trigger_on_key_clicked(self):

@@ -64,10 +64,10 @@ class Mouse:
     def mouse_offset(self, offsetx:int, offsety:int):
         pr.set_mouse_offset(offsetx, offsety)
 
-    def mouse_is_pressed(self, button: int):
+    def is_mouse_pressed(self, button: int):
         return pr.is_mouse_button_down(button)
 
-    def mouse_is_released(self, button: int):
+    def is_mouse_released(self, button: int):
         return pr.is_mouse_button_up(button)
 
     def event_trigger_on_mouse_moved(self):
