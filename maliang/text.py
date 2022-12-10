@@ -26,6 +26,7 @@ class Text:
             codepoints_count = 0
             # codepointsCount = ffi.new("int *")
             codepoints = pr.load_codepoints(text, codepoints_count)
+            # print(codepoints)
             fontx = pr.load_font_from_memory(font._type, font._bin, font._len, text_size, codepoints, len(text) )
             pr.unload_codepoints(codepoints)
             pr.draw_text_ex(fontx, text, pr.Vector2(x, y), text_size, space, MColor(*text_color).to_pyray() )

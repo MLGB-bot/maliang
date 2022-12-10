@@ -51,7 +51,7 @@ def on_setup():
     # app.text("WORD", 40, 180)
     # #
     app.text("FONT, 你好", 40, 250, font=font1, text_color=(255, 200, 200), text_size=30)
-    app.text("FONT, 你好", 40, 300, font=font2, text_color=(255, 200, 200), text_size=30)
+    app.text("FONT, 你好", 40, 300, font=font2, text_color=(255, 200, 200), text_size=80, space=5)
 
 
 def on_draw():
