@@ -23,6 +23,8 @@ s3 = a.load_music_stream('country.mp3')
 # s3 = a.load_music_stream('weird.wav')
 # time.sleep(10)
 
+s4 = a.init_audio_stream(44100, 16, 1)
+
 def on_setup():
     # s1.play()
     s2.play()
