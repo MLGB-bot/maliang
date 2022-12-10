@@ -30,5 +30,6 @@ class Text:
             pr.unload_codepoints(codepoints)
             pr.draw_text_ex(fontx, text, pr.Vector2(x, y), text_size, space, MColor(*text_color).to_pyray() )
             # pr.unload_font(fontx)
+            # todo unload font after end_draw()
         else:
             pr.draw_text(text, x, y, text_size, MColor(*text_color).to_pyray())
