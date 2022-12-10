@@ -42,3 +42,97 @@ class MSound:
     def set_pan(self, pan: float):
         pr.set_sound_pan(self.pr_sound, pan)
 
+
+class MusicStream():
+    def __init__(self):
+        self.pr_stream = None
+
+    def unload(self):
+        pr.unload_music_stream(self.pr_stream)
+
+    def play(self):
+        pr.play_music_stream(self.pr_stream)
+
+    def playing(self):
+        return pr.is_music_stream_playing(self.pr_stream)
+
+    def stop(self):
+        pr.stop_music_stream(self.pr_stream)
+
+    def pause(self):
+        pr.pause_music_stream(self.pr_stream)
+
+    def resume(self):
+        pr.resume_music_stream(self.pr_stream)
+
+    def seek(self, second:float):
+        pr.seek_music_stream(self.pr_stream, second)
+
+    def set_volumn(self, volumn: float):
+        pr.set_music_volume(self.pr_stream, volumn)
+
+    def set_pitch(self, pitch: float):
+        pr.set_music_pitch(self.pr_stream, pitch)
+
+    def set_pan(self, pan: float):
+        pr.set_music_pan(self.pr_stream, pan)
+
+    def update(self):
+        pr.update_music_stream(self.pr_stream)
+
+    def get_time_length(self) -> float:
+        return pr.get_music_time_length(self.pr_stream)
+
+    def get_time_played(self) -> float:
+        return pr.get_music_time_played(self.pr_stream)
+
+
+
+
+class AudioStream():
+    def __init__(self):
+        self.pr_stream = None
+
+    def unload(self):
+        pr.unload_audio_stream(self.pr_stream)
+
+    def play(self):
+        pr.play_audio_stream(self.pr_stream)
+
+    def playing(self):
+        return pr.is_audio_stream_playing(self.pr_stream)
+
+    def stop(self):
+        pr.stop_audio_stream(self.pr_stream)
+
+    def pause(self):
+        pr.pause_audio_stream(self.pr_stream)
+
+    def resume(self):
+        pr.resume_audio_stream(self.pr_stream)
+
+    def set_volumn(self, volumn: float):
+        pr.set_audio_stream_volume(self.pr_stream, volumn)
+
+    def set_pitch(self, pitch: float):
+        pr.set_audio_stream_pitch(self.pr_stream, pitch)
+
+    def set_pan(self, pan: float):
+        pr.set_audio_stream_pan(self.pr_stream, pan)
+
+    # def set_default_buffer_size(self, size: int):
+    #     pr.set_audio_stream_buffer_size_default(size)
+
+    def set_callback(self, callback):
+        pr.set_audio_stream_callback(self.pr_stream, callback)
+
+    def attach_processor(self, processor):
+        pr.attach_audio_stream_processor(self.pr_stream, processor)
+
+    def detach_processor(self, processor):
+        pr.detach_audio_stream_processor(self.pr_stream, processor)
+
+    def update(self, data, frame_count):
+        pr.update_audio_stream(self.pr_stream, data, frame_count)
+
+

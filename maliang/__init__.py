@@ -1,5 +1,3 @@
-import pyray as pr
-
 from maliang.window import Window
 from maliang.units import ResourceLoader
 

@@ -1,7 +1,7 @@
 import os
 import pyray as pr
 from maliang.units import ResourceLoader
-from maliang.structs import MSound
+from maliang.structs import MSound, MusicStream, AudioStream
 
 
 class Audio:
@@ -26,3 +26,8 @@ class Audio:
         sound.pr_sound = pr.load_sound(_path)
         return sound
 
+    def load_music_stream(self, filename):
+        _path = os.path.join(ResourceLoader.static_dir, filename)
+        stream = MusicStream()
+        stream.pr_stream = pr.load_music_stream(_path)
+        return stream
