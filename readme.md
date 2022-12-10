@@ -2,3 +2,6 @@
 
 background(Image)
 
+image -> unload()
+
+audio -> unload()
