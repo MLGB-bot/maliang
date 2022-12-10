@@ -3,7 +3,7 @@ import random
 import pyray as pr
 from maliang import Maliang
 
-app = Maliang(width=300, height=200, double_buffer=True, fps=10)
+app = Maliang(width=500, height=400, double_buffer=True, fps=10)
 app.set_trace_log_level(4)
 app.set_static_relative_dir('./resources/')
 
@@ -19,6 +19,33 @@ with open('./resources/img.png', 'rb') as f:
 
 app.stroke(pr.PINK)
 img2 = app.load_image_data(data=img_data, filetype='.png')
+"""
+if ((false)
+#if defined(SUPPORT_FILEFORMAT_PNG)
+        || (strcmp(fileType, ".png") == 0)
+#endif
+#if defined(SUPPORT_FILEFORMAT_BMP)
+        || (strcmp(fileType, ".bmp") == 0)
+#endif
+#if defined(SUPPORT_FILEFORMAT_TGA)
+        || (strcmp(fileType, ".tga") == 0)
+#endif
+#if defined(SUPPORT_FILEFORMAT_JPG)
+        || ((strcmp(fileType, ".jpg") == 0) || (strcmp(fileType, ".jpeg") == 0))
+#endif
+#if defined(SUPPORT_FILEFORMAT_GIF)
+        || (strcmp(fileType, ".gif") == 0)
+#endif
+#if defined(SUPPORT_FILEFORMAT_PIC)
+        || (strcmp(fileType, ".pic") == 0)
+#endif
+#if defined(SUPPORT_FILEFORMAT_PNM)
+        || ((strcmp(fileType, ".ppm") == 0) || (strcmp(fileType, ".pgm") == 0))
+#endif
+#if defined(SUPPORT_FILEFORMAT_PSD)
+        || (strcmp(fileType, ".psd") == 0)
+#endif
+"""
 # img2 = app.from_text("Hello World", fontsize=12)
 
 colors = img2.load_colors()

@@ -7,9 +7,11 @@ from maliang.mouse import Mouse
 from maliang.keyboard import Keyboard
 from maliang.events import Events
 from maliang.image import Image
+from maliang.font import Font
+from maliang.text import Text
 
 
-class Window(Environment, Shapes2d, Transform, Events, Mouse, Keyboard, Image):
+class Window(Environment, Shapes2d, Transform, Events, Mouse, Keyboard, Image, Font, Text):
     def __init__(self, width=100, height=100, title='', fps=60,
                  background_color=(235, 235, 235, 255), double_buffer=True):
         Environment.__init__(self, width, height)
@@ -19,6 +21,8 @@ class Window(Environment, Shapes2d, Transform, Events, Mouse, Keyboard, Image):
         Mouse.__init__(self)
         Keyboard.__init__(self)
         Image.__init__(self)
+        Font.__init__(self)
+        Text.__init__(self)
 
         self.frame_count = 0
         self.double_buffer = double_buffer
