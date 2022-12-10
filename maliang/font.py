@@ -21,5 +21,3 @@ class Font():
     #     font.pr_font = pr.load_font_from_image(img.pr_image, color.to_pyray(), firstchar)
     #     return font
 
-    # def unload_font(self, font: MFont):
-    #     font.unload()
