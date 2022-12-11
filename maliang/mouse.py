@@ -70,6 +70,9 @@ class Mouse:
     def is_mouse_released(self, button: int):
         return pr.is_mouse_button_up(button)
 
+    def is_mouse_clicked(self, button: int):
+        return pr.is_mouse_button_pressed(button)
+
     def event_trigger_on_mouse_moved(self):
         delta = self.delta
         if sum(delta) != 0:
