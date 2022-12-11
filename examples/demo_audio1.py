@@ -57,7 +57,7 @@ def audio_callback(buffer, frames):
     buf[:] = data
 
 
-s.set_callback(audio_callback)
+pr.set_audio_stream_callback(s.pr_stream, audio_callback)
 
 # // Frame buffer, describing the waveform when repeated over the course of a frame
 waveLength = 1
