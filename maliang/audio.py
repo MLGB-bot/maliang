@@ -35,3 +35,4 @@ class Audio:
     def init_audio_stream(self, sample_rate: int=44100, sample_size: int=16, channels: int=1):
         stream = AudioStream()
         stream.pr_stream = pr.load_audio_stream(sample_rate, sample_size, channels)
+        return stream
