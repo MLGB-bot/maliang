@@ -88,7 +88,7 @@ class MusicStream():
         return pr.get_music_time_played(self.pr_stream)
 
 
-AUDIO_STREAM_CALLBACK_WRAPPER = None
+AUDIO_STREAM_CALLBACK_WRAPPERS = []
 
 class AudioStream():
     def __init__(self):
@@ -138,10 +138,9 @@ class AudioStream():
             buf = ffi.buffer(buffer, frames*sample_count) # create write buffer.
             buf[:] = audio_bytes_data   # enrich audio data. can play sound in window
 
-        global AUDIO_STREAM_CALLBACK_WRAPPER
-        if not AUDIO_STREAM_CALLBACK_WRAPPER:
-            AUDIO_STREAM_CALLBACK_WRAPPER = wrap_callback
-        pr.set_audio_stream_callback(self.pr_stream, AUDIO_STREAM_CALLBACK_WRAPPER)
+        global AUDIO_STREAM_CALLBACK_WRAPPERS
+        AUDIO_STREAM_CALLBACK_WRAPPERS.append(wrap_callback)
+        pr.set_audio_stream_callback(self.pr_stream, wrap_callback)
         return
 
     def attach_processor(self, processor):
