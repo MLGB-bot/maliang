@@ -43,10 +43,14 @@ class Audio:
         :param channels:
             音频通道数: 同时有多少通道/设备采集声音. 通道数越多,音质越真实,占的资源越多. 通常为1[单声道]/2[双声道]/n[多声道]
 
-        :extent bit_rate(bps):
+        :extent
+        1 bit_rate(bps):
             比特率/码率: 即每秒采集的声音信号的计算机大小. 计算公式位:
             bit_rate = sample_rate * sample_size * channels
             bit_rate = 44100 * 16 * 1 (bit/second)
+        2 frame_size:
+            frame_size = channels * sample_size / 8  (bytes)
+
         :return:
         """
         stream = AudioStream()

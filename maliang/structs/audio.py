@@ -1,5 +1,5 @@
 import pyray as pr
-from raylib._raylib_cffi import ffi # ,lib
+from raylib._raylib_cffi import ffi  # ,lib
 
 
 class MSound:
@@ -66,7 +66,7 @@ class MusicStream():
     def resume(self):
         pr.resume_music_stream(self.pr_stream)
 
-    def seek(self, second:float):
+    def seek(self, second: float):
         pr.seek_music_stream(self.pr_stream, second)
 
     def set_volumn(self, volumn: float):
@@ -89,6 +89,7 @@ class MusicStream():
 
 
 AUDIO_STREAM_CALLBACK_WRAPPERS = []
+
 
 class AudioStream():
     def __init__(self):
@@ -124,8 +125,13 @@ class AudioStream():
     # def set_default_buffer_size(self, size: int):
     #     pr.set_audio_stream_buffer_size_default(size)
 
-    def set_callback(self, callback, sample_count=1):
-        # todo remove sample_count
+    def set_callback(self, callback, frame_size=2):
+        """
+
+        :param callback:
+        :param frame_size: channels * sample_size / 8  (bytes)
+        :return:
+        """
         @ffi.callback("void(*)(void *, unsigned int)")
         def wrap_callback(buffer, frames):
             """
@@ -134,9 +140,9 @@ class AudioStream():
             :param frames: buffer size.
             :return:
             """
-            audio_bytes_data = callback(frames)   # generate audio binary data
-            buf = ffi.buffer(buffer, frames*sample_count) # create write buffer.
-            buf[:] = audio_bytes_data   # enrich audio data. can play sound in window
+            audio_bytes_data = callback(frames)  # generate audio binary data
+            buf = ffi.buffer(buffer, frames * frame_size)  # create write buffer. (‘cdata’, 'bytes')
+            buf[:] = audio_bytes_data  # enrich audio data. can play sound in window
 
         global AUDIO_STREAM_CALLBACK_WRAPPERS
         AUDIO_STREAM_CALLBACK_WRAPPERS.append(wrap_callback)
@@ -151,5 +157,3 @@ class AudioStream():
 
     def update(self, data, frame_count):
         pr.update_audio_stream(self.pr_stream, data, frame_count)
-
-
