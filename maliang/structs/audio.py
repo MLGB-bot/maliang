@@ -1,4 +1,5 @@
 import pyray as pr
+from raylib._raylib_cffi import ffi # ,lib
 
 
 class MSound:
@@ -87,7 +88,7 @@ class MusicStream():
         return pr.get_music_time_played(self.pr_stream)
 
 
-
+AUDIO_STREAM_CALLBACK_WRAPPER = None
 
 class AudioStream():
     def __init__(self):
@@ -123,8 +124,25 @@ class AudioStream():
     # def set_default_buffer_size(self, size: int):
     #     pr.set_audio_stream_buffer_size_default(size)
 
-    def set_callback(self, callback):
-        pr.set_audio_stream_callback(self.pr_stream, callback)
+    def set_callback(self, callback, sample_count=1):
+        # todo remove sample_count
+        @ffi.callback("void(*)(void *, unsigned int)")
+        def wrap_callback(buffer, frames):
+            """
+
+            :param buffer: cData void point to buffer
+            :param frames: buffer size.
+            :return:
+            """
+            audio_bytes_data = callback(frames)   # generate audio binary data
+            buf = ffi.buffer(buffer, frames*sample_count) # create write buffer.
+            buf[:] = audio_bytes_data   # enrich audio data. can play sound in window
+
+        global AUDIO_STREAM_CALLBACK_WRAPPER
+        if not AUDIO_STREAM_CALLBACK_WRAPPER:
+            AUDIO_STREAM_CALLBACK_WRAPPER = wrap_callback
+        pr.set_audio_stream_callback(self.pr_stream, AUDIO_STREAM_CALLBACK_WRAPPER)
+        return
 
     def attach_processor(self, processor):
         pr.attach_audio_stream_processor(self.pr_stream, processor)
