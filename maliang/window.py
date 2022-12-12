@@ -9,9 +9,10 @@ from maliang.events import Events
 from maliang.image import Image
 from maliang.font import Font
 from maliang.text import Text
+from maliang.texture import Texture
 from maliang.units import ResourceLoader
 
-class Window(Environment, Shapes2d, Transform, Events, Mouse, Keyboard, Image, Font, Text):
+class Window(Environment, Shapes2d, Transform, Events, Mouse, Keyboard, Image, Font, Text, Texture):
     def __init__(self, width=100, height=100, title='', fps=60,
                  background_color=(235, 235, 235, 255), double_buffer=True):
         Environment.__init__(self, width, height)
@@ -23,6 +24,7 @@ class Window(Environment, Shapes2d, Transform, Events, Mouse, Keyboard, Image, F
         Image.__init__(self)
         Font.__init__(self)
         Text.__init__(self)
+        Texture.__init__(self)
 
         self.frame_count = 0
         self.double_buffer = double_buffer

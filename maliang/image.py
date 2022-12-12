@@ -158,11 +158,4 @@ class Image():
 
             _x, _y, _w, _h = init_mode(mode)
             texture = img.gen_texture()
-            pr.draw_texture_pro(
-                texture.pr_texture,
-                pr.Rectangle(0, 0, img.pr_image.width, img.pr_image.height),
-                pr.Rectangle(_x, _y, _w, _h),
-                pr.Vector2(0, 0),
-                0,
-                MColor(*tint_color).to_pyray()
-            )
+            texture.draw_pro(_x, _y, _w, _h, tint=MColor(*tint_color).to_pyray())
