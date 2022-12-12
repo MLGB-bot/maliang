@@ -62,12 +62,6 @@ class Image():
             assert mode in ImageMode.__values__
             self._image_mode = mode
 
-    def unload_image(self, img: MImage):
-        img.unload_pr_image()
-
-    def unload_image_all(self, img: MImage):
-        img.unload()
-
     def load_image(self, filename):
         image_path = os.path.join(ResourceLoader.static_dir, filename)
         img = MImage()
@@ -165,7 +159,7 @@ class Image():
             _x, _y, _w, _h = init_mode(mode)
             texture = img.gen_texture()
             pr.draw_texture_pro(
-                texture,
+                texture.pr_texture,
                 pr.Rectangle(0, 0, img.pr_image.width, img.pr_image.height),
                 pr.Rectangle(_x, _y, _w, _h),
                 pr.Vector2(0, 0),

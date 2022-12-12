@@ -1,36 +1,26 @@
 import pyray as pr
 import maliang.structs.color as mod_color
-
+import maliang.structs.texture as mod_texture
 
 class MImage:
     def __init__(self):
         self.pr_image = None
-        self.pr_texture = None
+        self.texture = None
 
     def unload(self):
-        self.unload_pr_image()
-        self.unload_pr_texture()
-
-    def unload_pr_image(self):
         if self.pr_image:
             pr.unload_image(self.pr_image)
             self.pr_image = None
 
-    def unload_pr_texture(self):
-        if self.pr_texture:
-            pr.unload_texture(self.pr_texture)
-            self.pr_texture = None
-
     def load_raw(self, image_path, w, h, format, header_size):
         return pr.load_image_raw(image_path, w, h, format, header_size)
 
-    def release(self):
-        self.unload()
-
     def gen_texture(self):
-        if self.pr_texture:
-            return self.pr_texture
-        return pr.load_texture_from_image(self.pr_image)
+        if self.texture:
+            return self.texture
+        self.texture = texture = mod_texture.MTexture()
+        texture.pr_texture = pr.load_texture_from_image(self.pr_image)
+        return texture
 
     def export_to_file(self, filename, mode=0) -> bool:
         if mode == 0:
@@ -41,7 +31,9 @@ class MImage:
     @staticmethod
     def decorate_on_image_change(func):
         def inner(self, *args, **kwargs):
-            self.unload_pr_texture()
+            if self.texture:
+                self.texture.unload()
+                self.texture = None
             return func(self, *args, **kwargs)
 
         return inner
@@ -143,17 +135,11 @@ class MImage:
         pr.unload_image_colors(pr_color)
         return color
 
-    # def unload_colors(self, colors: [mod_color.MColor]):  # 卸载加载的颜色数据
-    #     pr.unload_image_colors([c.to_pyray() for c in colors])
-
     def load_palette(self, max_palette_size, color_count):  # 从图像 Load调色板作为颜色阵列(RGBA-32位)
         pr_color = pr.load_image_palette(self.pr_image, max_palette_size, color_count)
         color = mod_color.MColor(pr_color.r, pr_color.g, pr_color.b, pr_color.a)
         pr.unload_image_palette(pr_color)
         return color
-
-    # def unload_image_palette(self, colors: [mod_color.MColor]):  # 卸载用加载图像Palette()加载的调色板
-    #     pr.unload_image_palette([c.to_pyray() for c in colors])
 
     def get_alpha_border(self, threshold):  # 获取图像 alpha边框Rectangle
         rect = pr.get_image_alpha_border(self.pr_image, threshold)
