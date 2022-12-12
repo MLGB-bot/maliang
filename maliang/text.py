@@ -20,7 +20,7 @@ class Text:
     def textFont(self, font: MFont):
         self.text_font = font
 
-    def text(self, text, x, y, font: MFont=None, text_size=None, text_color=None, space=0):
+    def text(self, text, x, y, text_size=None, text_color=None, space=0, font: MFont=None):
         # void DrawTextPro(Font font, const char *text, Vector2 position, Vector2 origin, float rotation, float fontSize, float spacing, Color tint); // Draw text using Font and pro parameters (rotation)
         font = font or self.text_font
         text_size = text_size or self.text_size
