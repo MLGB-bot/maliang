@@ -16,6 +16,13 @@ class ImageMode:
     RADIUS = 3  # 中心点 半径
     CORNERS = 4  # 两个对角
 
+class TextureMode:
+    __keys__ = ['CORNER', 'CENTER', 'RADIUS', 'CORNERS']
+    __values__ = [1, 2, 3, 4]
+    CORNER = 1  # 左上角
+    CENTER = 2  # 中心点
+    RADIUS = 3  # 中心点 半径
+    CORNERS = 4  # 两个对角
 
 class RectMode:
     __keys__ = ['CORNER', 'CENTER', 'RADIUS', 'CORNERS']
