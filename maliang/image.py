@@ -101,7 +101,7 @@ class Image():
         return img
 
     def from_texture(self, texture: MTexture):
-        img = Image()
+        img = MImage()
         img.pr_image = pr.load_image_from_texture(texture.pr_texture)
         return img
 
