@@ -1,9 +1,9 @@
 import os
 import pyray as pr
 from maliang.units import ResourceLoader, ImageMode
-from maliang.structs import MColor, MImage
+from maliang.structs import MColor, MImage, MTexture
 
-# todo: texture -> MTexture, font -> MFont
+# todo: font -> MFont
 
 class Image():
     def __init__(self):
@@ -100,9 +100,9 @@ class Image():
         img.pr_image = pr.load_image_from_memory(filetype, data, len(data))
         return img
 
-    def load_texture(self, texture):
+    def from_texture(self, texture: MTexture):
         img = Image()
-        img.pr_image = pr.load_image_from_texture(texture)
+        img.pr_image = pr.load_image_from_texture(texture.pr_texture)
         return img
 
     def from_image(self, image: MImage, x, y, w, h):
