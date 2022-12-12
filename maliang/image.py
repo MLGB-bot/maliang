@@ -3,7 +3,6 @@ import pyray as pr
 from maliang.units import ResourceLoader, ImageMode
 from maliang.structs import MColor, MImage, MTexture
 
-# todo: font -> MFont
 
 class Image():
     def __init__(self):
@@ -112,17 +111,6 @@ class Image():
 
     def copy_image(self, image: MImage):
         return image.copy()
-
-    def from_text(self, text, fontsize=12, font=None, color=None, space=0):
-        if hasattr(self, 'stroke_color'):
-            color = self.stroke_color if not color else MColor(*color).to_pyray()
-        # print(color)
-        img = MImage()
-        if font:
-            img.pr_image = pr.image_text_ex(font, text, fontsize, space, color)
-        else:
-            img.pr_image = pr.image_text(text, fontsize, color)
-        return img
 
     def tint(self, *color):
         color = MColor(*color)
