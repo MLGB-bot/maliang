@@ -7,6 +7,22 @@ class MImage:
         self.pr_image = None
         self.texture = None
 
+    @property
+    def width(self):
+        return self.pr_image.width
+
+    @property
+    def height(self):
+        return self.pr_image.height
+
+    @property
+    def format(self):
+        return self.pr_image.format
+
+    @property
+    def mipmaps(self):
+        return self.pr_image.mipmaps
+
     def unload(self):
         if self.pr_image:
             pr.unload_image(self.pr_image)
