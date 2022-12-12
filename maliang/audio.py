@@ -53,6 +53,6 @@ class Audio:
 
         :return:
         """
-        stream = AudioStream()
+        stream = AudioStream(sample_rate, sample_size, channels)
         stream.pr_stream = pr.load_audio_stream(sample_rate, sample_size, channels)
         return stream

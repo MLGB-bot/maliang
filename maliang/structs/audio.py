@@ -92,8 +92,11 @@ AUDIO_STREAM_CALLBACK_WRAPPERS = []
 
 
 class AudioStream():
-    def __init__(self):
+    def __init__(self, sample_rate: int=44100, sample_size: int=16, channels: int=1):
         self.pr_stream = None
+        self.sample_rate = sample_rate
+        self.sample_size = sample_size
+        self.channels = channels
 
     def unload(self):
         pr.unload_audio_stream(self.pr_stream)
@@ -125,13 +128,17 @@ class AudioStream():
     # def set_default_buffer_size(self, size: int):
     #     pr.set_audio_stream_buffer_size_default(size)
 
-    def set_callback(self, callback, frame_size=2):
+    def set_callback(self, callback, frame_size=0):
         """
 
         :param callback:
-        :param frame_size: channels * sample_size / 8  (bytes)
+        :param frame_size: byte size every frame.
+                    frame_size= channels * sample_size / 8  (bytes)
         :return:
         """
+        if not frame_size:
+            frame_size = self.channels * self.sample_size / 8
+
         @ffi.callback("void(*)(void *, unsigned int)")
         def wrap_callback(buffer, frames):
             """
