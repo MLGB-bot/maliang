@@ -141,8 +141,10 @@ def demo():
     def on_mouse_clicked(*args):
         print("on_mouse_clicked", args)
         nonlocal img1
-        img1 = app.load_screen()
+        # img1 = app.load_screen()
         # print(img1.pr_img)
+        app.no_fill()
+        app.circle(app.mouse_x, app.mouse_y, 20, stroke_color=pr.RED)
 
     def on_mouse_wheel(*args):
         print("on_mouse_wheel", args)
@@ -156,7 +158,7 @@ def demo():
     # app.regist_event('on_mouse_moved', on_mouse_moved)
     # app.regist_event('on_mouse_pressed', on_mouse_pressed)
     # app.regist_event('on_mouse_released', on_mouse_released)
-    # app.regist_event('on_mouse_clicked', on_mouse_clicked)
+    app.regist_event('on_mouse_clicked', on_mouse_clicked)
     # app.regist_event('on_mouse_wheel', on_mouse_wheel)
     # app.regist_event('on_mouse_dragged', on_mouse_dragged)
     app.regist_event('on_mouse_double_clicked', on_mouse_double_clicked)

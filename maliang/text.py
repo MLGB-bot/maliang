@@ -22,11 +22,10 @@ class Text:
         self.text_font = font
 
     def _generate_temp_font_(self, font: MFont, text='', text_size=12):
-        # codepoints_count = 0
         codepoints_count = ffi.new("int *")
         codepoints = pr.load_codepoints(text, codepoints_count)
-        # print(codepoints_count)
-        font_runtime = pr.load_font_from_memory(font._type, font._bin, font._len, text_size, codepoints, len(text))
+        # print(text, "codepoints_count[0]: ", codepoints_count[0])
+        font_runtime = pr.load_font_from_memory(font._type, font._bin, font._len, text_size, codepoints, codepoints_count[0])
         pr.unload_codepoints(codepoints)
         # add to resource
         ResourceLoader.loaded_fonts_runtime.append(font_runtime)

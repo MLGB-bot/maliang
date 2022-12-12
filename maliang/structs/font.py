@@ -3,7 +3,7 @@ import pyray as pr
 
 class MFont:
     def __init__(self):
-        self._bin = b''
+        self._bin = None
         self._len = 0
         self._type = '.ttf'
 
