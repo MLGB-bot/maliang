@@ -1,14 +1,10 @@
-try:
-    from PIL import ImageDraw, Image
-except:
-    pass
-import math
 import maliang.structs.image as mod_image
 import maliang.structs.color as mod_color
 import pyray as pr
 from io import BytesIO
 import maliang.units.resource_loader as mod_resource
 from raylib._raylib_cffi import ffi
+from maliang.libs import FontEnginePillow
 
 
 class FontEngines:
@@ -49,7 +45,7 @@ class MFont:
         self._eng = 0
         self._pil = None  # Pillow engine
 
-    def generate_pillow_temp_font(self, text='', text_size=12):
+    def generate_raylib_temp_font(self, text='', text_size=12):
         codepoints_count = ffi.new("int *")
         codepoints = pr.load_codepoints(text, codepoints_count)
         # print(text, "codepoints_count[0]: ", codepoints_count[0])
@@ -64,69 +60,20 @@ class MFont:
     @engine(FontEngines.FONT_RAYLIB)
     def text_image(self, text, text_size=12, text_color=(0, 0, 0, 255), space=0) -> mod_image.MImage:
         img = mod_image.MImage()
-        font_runtime = self.generate_pillow_temp_font(text, text_size)
+        font_runtime = self.generate_raylib_temp_font(text, text_size)
         img.pr_image = pr.image_text_ex(font_runtime, text, text_size, space, mod_color.MColor(*text_color).to_pyray())
         return img
 
     @engine(FontEngines.FONT_RAYLIB)
     def text(self, text, x, y, text_size=None, text_color=None, space=0):
-        font_runtime = self.generate_pillow_temp_font(text, text_size)
+        font_runtime = self.generate_raylib_temp_font(text, text_size)
         pr.draw_text_ex(font_runtime, text, pr.Vector2(x, y), text_size, space,
                         mod_color.MColor(*text_color).to_pyray())
 
-    def generate_pillow_text_image(self, text, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0):
-        left, top, right, bottom = self._pil.getbbox(text)
-        width, height = right - left, bottom - top
-        # print(left, top, right, bottom, '=', width, height)
-        im = Image.new("RGBA", (max(width, height), max(width, height) + space_y * (1 + text.count("\n"))))
-        draw = ImageDraw.Draw(im)
-        # 裁剪字体
-        if "\n" in text:
-            draw.multiline_text(
-                xy=(0, 0),
-                text=text,
-                fill=text_color,
-                font=self._pil,
-                spacing=space_y,
-            )
-            text_box = draw.multiline_textbbox(
-                xy=(0, 0),
-                text=text,
-                font=self._pil,
-                spacing=space_y,
-            )
-            # print(text_box)
-            # im.show()
-            im2 = im.crop(text_box)
-        else:
-            draw.text(
-                xy=(0, 0),
-                text=text,
-                fill=text_color,
-                font=self._pil,
-                spacing=space_y,
-                align="left",
-            )
-            # textlength = draw.textlength(
-            #     text=text,
-            #     font=self._pil,
-            #     direction=None,
-            #     features=None,
-            #     language=None,
-            #     embedded_color=False,
-            # )
-            # print(textlength)
-            im2 = im.crop((left, top, right, bottom))
-        raw_text_size = self._pil.size
-        scale_rate = text_size / raw_text_size
-        im3 = im2.resize((math.floor(im2.width * scale_rate), math.floor(im2.height * scale_rate)), )
-        del im2
-        # im3.show()
-        return im3
 
     @engine(FontEngines.FONT_PILLOW)
     def text_image(self, text, text_size=12, text_color=(0, 0, 0, 255), space=0) -> mod_image.MImage:
-        pillow_image = self.generate_pillow_text_image(text, text_size=text_size, text_color=text_color, space_y=space)
+        pillow_image = FontEnginePillow.generate_pillow_text_image(self._pil, text, text_size=text_size, text_color=text_color, space_y=space)
         m_image = mod_image.MImage()
         # raw  = pillow_image.tobytes()
         output = BytesIO()
@@ -139,7 +86,7 @@ class MFont:
     @engine(FontEngines.FONT_PILLOW)
     def text(self, text, x, y, text_size=None, text_color=None, space=0):
         img = self.text_image(text, text_size=text_size, text_color=text_color, space=space)
-        # todo unload texture
+        # done unload texture
         texture = img.gen_texture()
         texture.draw(x, y, tint=pr.WHITE)
         img.unload()

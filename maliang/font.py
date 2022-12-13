@@ -4,10 +4,8 @@ from raylib._raylib_cffi import ffi
 from maliang.units import ResourceLoader
 from maliang.structs.font import FontEngines
 from maliang.structs import MFont
-try:
-    from PIL import ImageFont
-except:
-    pass
+from maliang.libs import FontEnginePillow
+
 
 class Font(FontEngines):
     def __init__(self):
@@ -30,27 +28,15 @@ class Font(FontEngines):
         elif font_engine == self.FONT_PILLOW:
             font = MFont()
             font._eng = self.FONT_PILLOW
+            font.font_size = font_engine_pillow_font_size
             if _path:
-                if os.path.exists(_path):
+                if os.path.exists(_path) and os.path.isfile(_path):
                     pass
                 else:
                     # try to search font in system font dictionary
                     _path = filename
-                if filetype in ('.ttf', '.ttc', 'opentype', 'truetype'):
-                    pil_obj = ImageFont.truetype(_path, size=font_engine_pillow_font_size)
-                    font.font_size = font_engine_pillow_font_size
-                else:
-                    pil_obj = ImageFont.load(_path)
-            else:
-                pil_obj = ImageFont.load_default()
-
+            pil_obj = FontEnginePillow.auto_load(_path, filetype, font_engine_pillow_font_size)
             font._type = filetype
             font._pil = pil_obj
             return font
-
-
-    # def load_font_from_image(self, img: MImage, color: MColor, firstchar=0):
-    #     font = MFont()
-    #     font.pr_font = pr.load_font_from_image(img.pr_image, color.to_pyray(), firstchar)
-    #     return font
 
