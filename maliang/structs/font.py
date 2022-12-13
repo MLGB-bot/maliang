@@ -101,10 +101,5 @@ class MFont:
         return m_image
 
     @engine(0)
-    def text(self, text, x, y, text_size=None, text_color=None, space=0):
-        img = self.text_image(text, text_size=text_size, text_color=text_color, space=space)
-        # done unload texture
-        texture = img.gen_texture()
-        texture.draw(x, y, tint=pr.WHITE)
-        img.unload()
-        mod_resource.ResourceLoader.loaded_texture_runtime.append(texture.pr_texture)
+    def text(self, text, x, y, text_size=None, text_color=None, space_x=0, space_y=0):
+        self.engine.api_text(self.engine_font, text, x, y, text_size, text_color, space_x, space_y)

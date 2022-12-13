@@ -31,6 +31,7 @@ app.set_static_relative_dir('./resources/')
 from maliang.libs import FontEnginePillow
 
 # font2 = app.load_font("yezigongchangweifengshouji.ttf", font_engine=2, )
+# font2 = app.load_font("yezigongchangweifengshouji.ttf", font_engine=10, engine=FontEnginePillow)
 font2 = app.load_font("yezigongchangweifengshouji.ttf", font_engine=10, engine=FontEnginePillow)
 
 #
@@ -78,7 +79,7 @@ def on_draw():
 
 
 app.regist_event('on_setup', on_setup)
-app.regist_event('on_draw', on_draw)
+# app.regist_event('on_draw', on_draw)
 
 def on_mouse_moved(*args):
     print("on_mouse_moved", args)

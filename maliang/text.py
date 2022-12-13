@@ -25,7 +25,7 @@ class Text:
         text_size = text_size or self.text_size
         text_color = text_color or self.text_color
         if font:
-            font.text(text, x, y, text_size=text_size, text_color=text_color, space=space)
+            font.text(text, x, y, text_size=text_size, text_color=text_color)
         else:
             pr.draw_text_ex(pr.get_font_default(), text, pr.Vector2(x, y), text_size, space, MColor(*text_color).to_pyray())
 
@@ -35,7 +35,7 @@ class Text:
         text_size = text_size or self.text_size
         text_color = text_color or self.text_color
         if font:
-            img = font.text_image(text, text_size=text_size, text_color=text_color, space=space)
+            img = font.text_image(text, text_size=text_size, text_color=text_color)
         else:
             img = MImage()
             img.pr_image = pr.image_text_ex(pr.get_font_default(), text, text_size, space, MColor(*text_color).to_pyray())
