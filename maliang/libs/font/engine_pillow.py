@@ -9,7 +9,7 @@ from io import BytesIO
 class FontEnginePillow():
 
     @classmethod
-    def api_auto_load(cls, _file, filetype, font_size):
+    def api_auto_load(cls, _file, filetype, font_size) -> ImageFont.ImageFont|ImageFont.FreeTypeFont:
         if _file:
             if filetype in ('.ttf', '.ttc', 'freetype', 'truetype') and font_size:
                 pil_obj = ImageFont.truetype(_file, font_size)
