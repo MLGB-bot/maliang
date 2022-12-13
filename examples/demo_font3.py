@@ -18,7 +18,7 @@ from maliang.structs import MImage
 from raylib._raylib_cffi import ffi
 
 
-app = Maliang(width=500, height=400, double_buffer=True, fps=10)
+app = Maliang(width=500, height=400, double_buffer=False, fps=10)
 app.set_trace_log_level(4)
 app.set_static_relative_dir('./resources/')
 
@@ -33,10 +33,11 @@ def on_setup():
 
 def on_draw():
     app.background(255, 10)
+    app.text("FONT, 你好sjf坏大hi我的\n安怀海端是阿汉地\n的赛的话uida", random.randint(0, app.width/2), random.randint(0, app.height-12), font=f1, space=0)
 
 
 app.regist_event('on_setup', on_setup)
-# app.regist_event('on_draw', on_draw)
+app.regist_event('on_draw', on_draw)
 
 app.loop()
 # pr.unload_font(font)
