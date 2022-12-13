@@ -28,7 +28,10 @@ app.set_static_relative_dir('./resources/')
 # font1 = app.load_font("SourceHanSerifSC-VF.ttf",)
 # font2 = app.load_font("yezigongchangmengmashouji.ttf", )
 # font2 = app.load_font("yezigongchangguojiangti.ttf", )
-font2 = app.load_font("yezigongchangweifengshouji.ttf", font_engine=2)
+from maliang.libs import FontEnginePillow
+
+# font2 = app.load_font("yezigongchangweifengshouji.ttf", font_engine=2, )
+font2 = app.load_font("yezigongchangweifengshouji.ttf", font_engine=10, engine=FontEnginePillow)
 
 #
 # exit(0)

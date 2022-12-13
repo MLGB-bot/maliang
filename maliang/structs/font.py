@@ -1,18 +1,15 @@
 import maliang.structs.image as mod_image
 import maliang.structs.color as mod_color
 import pyray as pr
-from io import BytesIO
 import maliang.units.resource_loader as mod_resource
 from raylib._raylib_cffi import ffi
 from maliang.libs import FontEnginePillow
 
 
 class FontEngines:
+    # Engines
     FONT_RAYLIB = 1
     FONT_PILLOW = 2
-
-    #
-    FONT_ENGINE_PILLOW_DEFAULT_TRUETYPE_SIZE = 64  # pillow truetype default size
 
 
 FontEngineFuncStore = {}
@@ -26,11 +23,12 @@ def engine(engine_id):
         FontEngineFuncStore[(engine_id, func_name)] = func
 
         def wrap(self, *args, **kwargs):
-            f = FontEngineFuncStore.get((self._eng, func_name), None)
+            f = FontEngineFuncStore.get((self.engine_id, func_name), None)
             if f:
                 return f(self, *args, **kwargs)
-            else:
-                raise RuntimeError("No valud func matched")
+            elif hasattr(self, 'engine') and self.engine:
+                f = FontEngineFuncStore[(0, func_name)]
+                return f(self, *args, **kwargs)
 
         return wrap
 
@@ -42,8 +40,17 @@ class MFont:
         self._bin = None
         self._len = 0
         self._type = '.ttf'
-        self._eng = 0
-        self._pil = None  # Pillow engine
+        self._pil = None  # Pillow engine font
+
+        # interface engine
+        self.engine_id = 0
+        self.engine_font = None
+        self.engine = None
+
+    def generate_m_image_from_data(self, filetype, filedata):
+        m_image = mod_image.MImage()
+        m_image.pr_image = pr.load_image_from_memory(filetype, filedata, len(filedata))
+        return m_image
 
     def generate_raylib_temp_font(self, text='', text_size=12):
         codepoints_count = ffi.new("int *")
@@ -73,17 +80,27 @@ class MFont:
 
     @engine(FontEngines.FONT_PILLOW)
     def text_image(self, text, text_size=12, text_color=(0, 0, 0, 255), space=0) -> mod_image.MImage:
-        pillow_image = FontEnginePillow.generate_pillow_text_image(self._pil, text, text_size=text_size, text_color=text_color, space_y=space)
-        m_image = mod_image.MImage()
-        # raw  = pillow_image.tobytes()
-        output = BytesIO()
-        pillow_image.save(output, format='PNG')
-        raw = output.getvalue()
-        m_image.pr_image = pr.load_image_from_memory('.png', raw, len(raw))
-        del pillow_image
+        img_format, img_data = FontEnginePillow.api_text_to_png(self._pil, text, text_size=text_size, text_color=text_color, space_y=space)
+        m_image = self.generate_m_image_from_data(img_format, img_data)
         return m_image
 
     @engine(FontEngines.FONT_PILLOW)
+    def text(self, text, x, y, text_size=None, text_color=None, space=0):
+        img = self.text_image(text, text_size=text_size, text_color=text_color, space=space)
+        # done unload texture
+        texture = img.gen_texture()
+        texture.draw(x, y, tint=pr.WHITE)
+        img.unload()
+        mod_resource.ResourceLoader.loaded_texture_runtime.append(texture.pr_texture)
+
+    @engine(0)
+    def text_image(self, text, text_size=12, text_color=(0, 0, 0, 255), space=0) -> mod_image.MImage:
+        img_format, img_data = self.engine.api_text_to_png(self.engine_font, text, text_size=text_size,
+                                                                text_color=text_color, space_y=space)
+        m_image = self.generate_m_image_from_data(img_format, img_data)
+        return m_image
+
+    @engine(0)
     def text(self, text, x, y, text_size=None, text_color=None, space=0):
         img = self.text_image(text, text_size=text_size, text_color=text_color, space=space)
         # done unload texture
