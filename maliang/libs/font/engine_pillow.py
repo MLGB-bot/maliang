@@ -1,3 +1,8 @@
+"""
+# pip install Pillow
+
+"""
+
 try:
     from PIL import ImageDraw, Image, ImageFont
 except:
