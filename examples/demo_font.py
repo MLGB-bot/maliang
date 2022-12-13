@@ -26,9 +26,9 @@ app.set_static_relative_dir('./resources/')
 # font = app.default_font()
 # font1 = app.load_font("Canterbury.ttf")
 # font1 = app.load_font("SourceHanSerifSC-VF.ttf",)
-font2 = app.load_font("yezigongchangmengmashouji.ttf", )
+# font2 = app.load_font("yezigongchangmengmashouji.ttf", )
 # font2 = app.load_font("yezigongchangguojiangti.ttf", )
-# font2 = app.load_font("yezigongchangweifengshouji.ttf", )
+font2 = app.load_font("yezigongchangweifengshouji.ttf", font_engine=2)
 
 #
 # exit(0)
@@ -53,13 +53,14 @@ def on_setup():
     # app.text("WORD", 40, 100)
     # app.textSize(56)
     # app.textColor(200, 200, 255)
-    app.text("WORD", 40, 180)
+    # app.text("WORD", 40, 180)
 
     # #
     # app.text("FONT, 你好", 40, 250, font=font1, text_color=(255, 200, 200), text_size=30)
     # app.text("FONT, 你好", 40, 300, font=font2, text_color=(255, 200, 200), text_size=80, space=5)
     app.image(image, 10, 10)
-    # app.text("FONT, 你好", random.randint(0, app.width / 2), random.randint(0, app.height / 2), font=font2, space=0)
+    app.text("FONT, 你好", random.randint(0, app.width / 2), random.randint(0, app.height / 2), font=font2, space=0)
+    app.text("FONT, 你好sjf坏大hi我的\n安怀海端是阿汉地\n的赛的话uida", random.randint(0, app.width/2), random.randint(0, app.height-12), font=font2, space=80)
 
 def on_draw():
     # app.background(200, 200, 255, 50)
@@ -69,12 +70,12 @@ def on_draw():
     # app.image(img2, 100, 80, )
     app.textSize(random.randint(12, 100))
     app.textColor(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-    app.text("FONT, 你好sjf坏大hi我的安怀海端是阿汉地的赛的话uida", random.randint(0, app.width/2), random.randint(0, app.height-12), font=font2, space=0)
+    app.text("FONT, 你好sjf坏大hi我的\n安怀海端是阿汉地\n的赛的话uida", random.randint(0, app.width/2), random.randint(0, app.height-12), font=font2, space=0)
     app.image(image, 20, 10)
 
 
 app.regist_event('on_setup', on_setup)
-app.regist_event('on_draw', on_draw)
+# app.regist_event('on_draw', on_draw)
 
 def on_mouse_moved(*args):
     print("on_mouse_moved", args)
