@@ -31,7 +31,12 @@ class Font(FontEngines):
             font = MFont()
             font._eng = self.FONT_PILLOW
             if _path:
-                if filetype in ('.ttf', '.ttc'):
+                if os.path.exists(_path):
+                    pass
+                else:
+                    # try to search font in system font dictionary
+                    _path = filename
+                if filetype in ('.ttf', '.ttc', 'opentype', 'truetype'):
                     pil_obj = ImageFont.truetype(_path, size=font_engine_pillow_font_size)
                     font.font_size = font_engine_pillow_font_size
                 else:
