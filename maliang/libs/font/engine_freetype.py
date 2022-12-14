@@ -53,6 +53,19 @@ class FreeTyper():
             # pen.y += slot.advance.y
         return bbox_xmin, bbox_xmax, bbox_ymin, bbox_ymax
 
+    def get_bbox_tmp(self, face, text):
+        # 1 计算 cbox 外框
+        pen = freetype.Vector()
+        pen.x = 0
+        pen.y = 0
+        max_width, max_height=0, 0
+        for cur_char in text:
+            face.load_char(cur_char)
+            slot = face.glyph
+            bitmap = slot.bitmap
+            max_width = max(bitmap.width, max_width)
+            max_height = max(bitmap.rows, max_height)
+        return 0, max_width, 0, max_height
 
 class FontEngineFreetype():
 
@@ -70,7 +83,10 @@ class FontEngineFreetype():
         # ascender = int((metrics.ascender-metrics.descender)/64)
         # print('ascender ',ascender, metrics.descender/64)
         # 1 计算 cbox 外框
-        bbox_xmin, bbox_xmax, bbox_ymin, bbox_ymax = FreeTyper().get_bbox(face, text)
+        try:
+            bbox_xmin, bbox_xmax, bbox_ymin, bbox_ymax = FreeTyper().get_bbox(face, text)
+        except:
+            bbox_xmin, bbox_xmax, bbox_ymin, bbox_ymax = FreeTyper().get_bbox_tmp(face, text)
         print("bbox: ", bbox_xmin, bbox_xmax, bbox_ymin, bbox_ymax)
         bbox_width = bbox_xmax - bbox_xmin + 1
         bbox_height = bbox_ymax - bbox_ymin + 1
@@ -91,6 +107,7 @@ class FontEngineFreetype():
                     yield x, y, color
                 else:
                     print(cur_char, x, y)
+                    # yield x, y, color
             pen.x += int(slot.advance.x / 64)
             pen.y += int(slot.advance.y / 64)
 
@@ -141,12 +158,13 @@ class FontEngineFreetype():
 
 if __name__ == '__main__':
     # text = "FonFtfont"
-    # text = "Fontfontga阿瓦达多"
+    text = "Fontfontga阿瓦达多"
     # text = "FONT"
     # text = "Fontf"
-    text = "hello Fontf你好"
+    # text = "hello Fontf你好"
     t = FontEngineFreetype()
-    face = t.api_auto_load("/Users/nana/Work/maliang/examples/./resources/yezigongchangweifengshouji.ttf", None, None)
+    # face = t.api_auto_load("/Users/nana/Work/maliang/examples/./resources/yezigongchangweifengshouji.ttf", None, None)
+    face = t.api_auto_load("../../../examples/resources/yezigongchangweifengshouji.ttf", None, None)
     img = Image.new("RGBA", (800, 300), "white")
 
     # for i in range(0, 200):
