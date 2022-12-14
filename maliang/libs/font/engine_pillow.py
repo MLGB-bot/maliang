@@ -2,7 +2,7 @@
 # pip install Pillow
 
 """
-
+import pyray as pr
 try:
     from PIL import ImageDraw, Image, ImageFont
 except:
@@ -25,11 +25,21 @@ class FontEnginePillow():
         return pil_obj
 
     @classmethod
-    def api_text_to_png(cls, font: ImageFont.ImageFont|ImageFont.FreeTypeFont, text, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0):
+    def api_text_to_image(cls, font: ImageFont.ImageFont|ImageFont.FreeTypeFont, text, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0):
         pil_img = cls._generate_text_image(font, text, text_size, text_color, space_x, space_y)
         png_data = cls._to_pic(pil_img, 'PNG')
         del pil_img
         return ".png", png_data
+
+    @classmethod
+    def api_text(cls, font: ImageFont.ImageFont|ImageFont.FreeTypeFont, text, x, y, text_size=None, text_color=None, space_x=0, space_y=0):
+        img_format, img_data = cls.api_text_to_image(font, text, text_size=text_size,
+                                                                  text_color=text_color, space_x=space_x, space_y=space_y)
+        image = pr.load_image_from_memory(img_format, img_data, len(img_data))
+        texture = pr.load_texture_from_image(image)
+        pr.draw_texture(texture, x, y, pr.WHITE)
+        pr.unload_image(image)
+        return texture
 
     @classmethod
     def _generate_text_image(cls, font: ImageFont.ImageFont|ImageFont.FreeTypeFont, text, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0):

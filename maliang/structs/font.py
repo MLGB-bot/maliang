@@ -65,28 +65,29 @@ class MFont:
         return font_runtime
 
     @engine(FontEngines.FONT_RAYLIB)
-    def text_image(self, text, text_size=12, text_color=(0, 0, 0, 255), space=0) -> mod_image.MImage:
+    def text_image(self, text, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0) -> mod_image.MImage:
         img = mod_image.MImage()
         font_runtime = self.generate_raylib_temp_font(text, text_size)
-        img.pr_image = pr.image_text_ex(font_runtime, text, text_size, space, mod_color.MColor(*text_color).to_pyray())
+        img.pr_image = pr.image_text_ex(font_runtime, text, text_size, space_x,
+                                        mod_color.MColor(*text_color).to_pyray())
         return img
 
     @engine(FontEngines.FONT_RAYLIB)
-    def text(self, text, x, y, text_size=None, text_color=None, space=0):
+    def text(self, text, x, y, text_size=None, text_color=None, space_x=0, space_y=0):
         font_runtime = self.generate_raylib_temp_font(text, text_size)
-        pr.draw_text_ex(font_runtime, text, pr.Vector2(x, y), text_size, space,
+        pr.draw_text_ex(font_runtime, text, pr.Vector2(x, y), text_size, space_x,
                         mod_color.MColor(*text_color).to_pyray())
 
-
     @engine(FontEngines.FONT_PILLOW)
-    def text_image(self, text, text_size=12, text_color=(0, 0, 0, 255), space=0) -> mod_image.MImage:
-        img_format, img_data = FontEnginePillow.api_text_to_png(self._pil, text, text_size=text_size, text_color=text_color, space_y=space)
+    def text_image(self, text, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0) -> mod_image.MImage:
+        img_format, img_data = FontEnginePillow.api_text_to_image(self._pil, text, text_size=text_size,
+                                                                  text_color=text_color, space_y=space_y)
         m_image = self.generate_m_image_from_data(img_format, img_data)
         return m_image
 
     @engine(FontEngines.FONT_PILLOW)
-    def text(self, text, x, y, text_size=None, text_color=None, space=0):
-        img = self.text_image(text, text_size=text_size, text_color=text_color, space=space)
+    def text(self, text, x, y, text_size=None, text_color=None, space_x=0, space_y=0):
+        img = self.text_image(text, text_size=text_size, text_color=text_color, space_y=space_y)
         # done unload texture
         texture = img.gen_texture()
         texture.draw(x, y, tint=pr.WHITE)
@@ -94,12 +95,14 @@ class MFont:
         mod_resource.ResourceLoader.loaded_texture_runtime.append(texture.pr_texture)
 
     @engine(0)
-    def text_image(self, text, text_size=12, text_color=(0, 0, 0, 255), space=0) -> mod_image.MImage:
-        img_format, img_data = self.engine.api_text_to_png(self.engine_font, text, text_size=text_size,
-                                                                text_color=text_color, space_y=space)
+    def text_image(self, text, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0) -> mod_image.MImage:
+        img_format, img_data = self.engine.api_text_to_image(self.engine_font, text, text_size=text_size,
+                                                             text_color=text_color, space_y=space_y)
         m_image = self.generate_m_image_from_data(img_format, img_data)
         return m_image
 
     @engine(0)
     def text(self, text, x, y, text_size=None, text_color=None, space_x=0, space_y=0):
-        self.engine.api_text(self.engine_font, text, x, y, text_size, text_color, space_x, space_y)
+        texture = self.engine.api_text(self.engine_font, text, x, y, text_size, text_color, space_x, space_y)
+        if texture:
+            mod_resource.ResourceLoader.loaded_texture_runtime.append(texture)

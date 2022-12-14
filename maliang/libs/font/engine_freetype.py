@@ -70,7 +70,7 @@ class FontEngineFreetype():
             prev_char = cur_char
 
     @classmethod
-    def api_text_to_png(cls, img, face, text, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0):
+    def api_text_to_image(cls, img, face, text, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0):
         for xy, color in cls._yield_points(face, text, text_size, text_color, space_x, space_y):
             img.putpixel(xy, color)
         img.show()
