@@ -93,7 +93,7 @@ class FontEngineFreetype():
         print("box_size: ", bbox_width, bbox_height)
         pen = freetype.Vector()
         pen.x = x
-        pen.y = y + bbox_height # [+]文字在坐标原点右下方 [-]文字在坐标原点右上方
+        pen.y = y + bbox_xmax # [+]文字在坐标原点右下方 [-]文字在坐标原点右上方
 
         for cur_char in text:
             print(cur_char)
