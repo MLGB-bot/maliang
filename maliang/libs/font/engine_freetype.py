@@ -129,7 +129,7 @@ class FontEngineFreetype():
 
         pen = freetype.Vector()
         pen.x = x
-        pen.y = y + bbox_xmax # [+]文字在坐标原点右下方 [-]文字在坐标原点右上方
+        pen.y = y + bbox_ymax # [+]文字在坐标原点右下方 [-]文字在坐标原点右上方
         alpha_cord = text_color[3] / 255
         for cur_char in text:
             char_info = extra_info.get(cur_char, {})
@@ -147,12 +147,13 @@ class FontEngineFreetype():
     @classmethod
     def _yield_points_multiline(cls, face, text, x, y, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0, need_size=True):
         max_x, max_y = x, y # 坐标
+        line_y = y
         for t in text.split('\n'):
-            line_y = max_y + space_y
             for _x, _y, color in cls._yield_points(face, t, x, line_y, text_size=text_size, text_color=text_color, space_x=space_x):
                 yield _x, _y, color
-                max_x = max(max_x, _x)
-                max_y = max(max_y, _y)
+                if _x > max_x: max_x = _x
+                if _y > max_y: max_y = _y
+            line_y = max_y + space_y
         if need_size:
             yield max_x, max_y, None
 
@@ -188,10 +189,11 @@ class FontEngineFreetype():
 
 if __name__ == '__main__':
     # text = "FonFtfont"
-    text = "Fontfontga阿瓦\n达多"
+    # text = "Fontfontga阿瓦\n达多"
     # text = "FONT"
     # text = "Fontf"
     # text = "hello Fontf你好"
+    text = "hello \n Fontf"
     t = FontEngineFreetype()
     face = t.api_auto_load("../../../examples/resources/yezigongchangweifengshouji.ttf", None, None)
     result = t.api_text_to_image(face, text, text_size=24, text_color=(0, 0, 0, 255), space_x=11, space_y=10)
