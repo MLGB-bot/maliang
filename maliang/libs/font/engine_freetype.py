@@ -7,6 +7,10 @@ try:
     import freetype
 except:
     pass
+try:
+    import numpy as np
+except:
+    pass
 import math
 from io import BytesIO
 from PIL import ImageDraw, Image, ImageFont
@@ -18,17 +22,27 @@ class FreeTyper():
     def __init__(self):
         pass
 
-    def draw_bitmap(self, bitmap, x, y, text_color):
+    def draw_bitmap(self, bitmap, x, y):
         glyph_pixels = bitmap.get("buffer", None)
         cols = bitmap.get("width", None)
         rows = bitmap.get("rows", None)
         for row in range(rows):
             for col in range(cols):
-                if glyph_pixels[row * cols + col] != 0:
+                _index = row * cols + col
+                if glyph_pixels[_index] != 0:
                     try:
-                        yield x + col, y + row, (*text_color[:3], glyph_pixels[row * cols + col])
+                        yield x + col, y + row, glyph_pixels[_index]
                     except:
                         continue
+
+    # def draw_bitmap_np(self, bitmap, x, y):
+    #     ## too slow
+    #     glyph_pixels = bitmap.get("buffer", None)
+    #     cols = bitmap.get("width", None)
+    #     rows = bitmap.get("rows", None)
+    #     np_bitmap = np.array(glyph_pixels).reshape(rows, cols)
+    #     for row, col in zip(*np.nonzero(np_bitmap)):
+    #         yield x + col, y + row, np_bitmap[row][col]
 
     def get_bbox(self, face, text, need_extra=True):
         extra_info = {}
@@ -116,14 +130,15 @@ class FontEngineFreetype():
         pen = freetype.Vector()
         pen.x = x
         pen.y = y + bbox_xmax # [+]文字在坐标原点右下方 [-]文字在坐标原点右上方
-
+        alpha_cord = text_color[3] / 255
         for cur_char in text:
             char_info = extra_info.get(cur_char, {})
-            for _x, _y, color in FreeTyper().draw_bitmap(
+            for _x, _y, alpha in FreeTyper().draw_bitmap(
                     char_info['bitmap'],
                     int(pen.x) + char_info['bitmap_left'],
-                    int(pen.y) - char_info['bitmap_top'], text_color):
-                yield _x, _y, color
+                    int(pen.y) - char_info['bitmap_top'],
+                ):
+                yield _x, _y, (*text_color[:3], int(alpha_cord*alpha))
 
             pen.x += int(char_info['advance.x'] / 64)
             pen.y += int(char_info['advance.y'] / 64)
