@@ -119,8 +119,6 @@ class FontEngineFreetype():
     @classmethod
     def _yield_points(cls, face, text, x, y, text_size=12, text_color=(0, 0, 0, 255), space_x=0):
         # done : text loaded twice by font need dec 1
-        resolution = 64
-        face.set_char_size(text_size * resolution)
         # 1 计算 cbox 外框
         try:
             bbox_xmin, bbox_xmax, bbox_ymin, bbox_ymax, extra_info = FreeTyper().get_bbox(face, text, need_extra=True)
@@ -146,14 +144,19 @@ class FontEngineFreetype():
 
     @classmethod
     def _yield_points_multiline(cls, face, text, x, y, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0, need_size=True):
+        resolution = 64
+        face.set_char_size(text_size * resolution)
+        line_height = math.floor( text_size * face.height / face.units_per_EM)
+        # print(line_height)
         max_x, max_y = x, y # 坐标
         line_y = y
-        for t in text.split('\n'):
-            for _x, _y, color in cls._yield_points(face, t, x, line_y, text_size=text_size, text_color=text_color, space_x=space_x):
-                yield _x, _y, color
-                if _x > max_x: max_x = _x
-                if _y > max_y: max_y = _y
-            line_y = max_y + space_y
+        for i, t in enumerate(text.split('\n')):
+            if t:
+                for _x, _y, color in cls._yield_points(face, t, x, line_y, text_size=text_size, text_color=text_color, space_x=space_x):
+                    yield _x, _y, color
+                    if _x > max_x: max_x = _x
+                    if _y > max_y: max_y = _y
+            line_y = line_y + line_height + space_y
         if need_size:
             yield max_x, max_y, None
 
@@ -193,8 +196,8 @@ if __name__ == '__main__':
     # text = "FONT"
     # text = "Fontf"
     # text = "hello Fontf你好"
-    text = "hello \n Fontf"
+    text = "hello \n Fontfntga阿瓦\n达多\n\nasd"
     t = FontEngineFreetype()
     face = t.api_auto_load("../../../examples/resources/yezigongchangweifengshouji.ttf", None, None)
     result = t.api_text_to_image(face, text, text_size=24, text_color=(0, 0, 0, 255), space_x=11, space_y=10)
-    print(result)
+    # print(result)
