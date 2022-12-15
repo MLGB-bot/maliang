@@ -104,7 +104,7 @@ class FontEngineFreetype():
 
     @classmethod
     def _yield_points(cls, face, text, x, y, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0):
-        # todo : text loaded twice by font need dec 1
+        # done : text loaded twice by font need dec 1
         resolution = 64
         face.set_char_size(text_size * resolution)
         # 1 计算 cbox 外框
