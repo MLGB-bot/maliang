@@ -1,6 +1,8 @@
 """
 # pip install freetype-py
 """
+import os.path
+
 try:
     import freetype
 except:
@@ -10,6 +12,7 @@ from io import BytesIO
 from PIL import ImageDraw, Image, ImageFont
 import pyray as pr
 
+from OpenGL.GL import *
 
 class FreeTyper():
     def __init__(self):
@@ -79,83 +82,110 @@ class FontEngineFreetype():
         # todo : text loaded twice by font need dec 1
         resolution = 64
         face.set_char_size(text_size * resolution)
-        # metrics = face.size
-        # ascender = int((metrics.ascender-metrics.descender)/64)
-        # print('ascender ',ascender, metrics.descender/64)
         # 1 计算 cbox 外框
         try:
             bbox_xmin, bbox_xmax, bbox_ymin, bbox_ymax = FreeTyper().get_bbox(face, text)
         except:
             bbox_xmin, bbox_xmax, bbox_ymin, bbox_ymax = FreeTyper().get_bbox_tmp(face, text)
-        print("bbox: ", bbox_xmin, bbox_xmax, bbox_ymin, bbox_ymax)
-        bbox_width = bbox_xmax - bbox_xmin + 1
-        bbox_height = bbox_ymax - bbox_ymin + 1
-        print("box_size: ", bbox_width, bbox_height)
+
         pen = freetype.Vector()
         pen.x = x
         pen.y = y + bbox_xmax # [+]文字在坐标原点右下方 [-]文字在坐标原点右上方
 
         for cur_char in text:
-            print(cur_char)
+            # print(cur_char)
             face.load_char(cur_char)
             slot = face.glyph
             bitmap = slot.bitmap
             # print(pen.x, pen.y, slot.bitmap_left, slot.bitmap_top)
-            for x, y, color in FreeTyper().draw_bitmap(bitmap, int(pen.x) + slot.bitmap_left,
+            for _x, _y, color in FreeTyper().draw_bitmap(bitmap, int(pen.x) + slot.bitmap_left,
                                                      int(pen.y)-slot.bitmap_top, text_color):
-                if (x>=0 and y>=0):
-                    yield x, y, color
-                else:
-                    print(cur_char, x, y)
-                    # yield x, y, color
+                yield _x, _y, color
+
             pen.x += int(slot.advance.x / 64)
             pen.y += int(slot.advance.y / 64)
 
+
     @classmethod
-    def api_text_to_image(cls, img, face, text, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0):
-        for _x, _y, color in cls._yield_points(face, text, x=0, y=0, text_size=text_size, text_color=text_color, space_x=space_x, space_y=space_y):
-            img.putpixel((_x, _y), color)
-        img.putpixel((0, 0), (255, 0, 0, 255))
-        img.putpixel((-1, 0), (255, 0, 0, 255))
-        img.putpixel((0, -1), (255, 0, 0, 255))
-        img.putpixel((-1, -1), (255, 0, 0, 255))
-        img.show()
-        return ".png", b""
+    def api_text_to_image(cls, face, text, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0):
+        yield_points = cls._yield_points(face, text, 0, 0, text_size, text_color, space_x, space_y)
+        min_x, min_y = 0, 0
+        max_x, max_y = 0, 0
+        points = []
+        for _x, _y, color in yield_points:
+            max_x = max(max_x, _x)
+            max_y = max(max_y, _y)
+            points.append(((_x, _y), color))
+        width = max_x - min_x + 1
+        height = max_y - min_y + 1
+
+        im = Image.new("RGBA", (width, height))
+        for xy, color in points:
+            im.putpixel(xy, color)
+        # im.show()
+        output = BytesIO()
+        im.save(output, format='PNG')
+        del im
+        return ".png", output.getvalue()
 
     @classmethod
     def api_text(cls, face, text, x, y, text_size, text_color, space_x, space_y):
-        shape_mode = 4
-        pr.rl_begin(shape_mode)
+        # way2
+        yield_points = cls._yield_points(face, text, x, y, text_size, text_color, space_x, space_y)
+        for _x, _y, color in yield_points:
+            pr.draw_pixel(_x, _y, pr.Color(*color))
+            # pass
 
-        def draw_point_quad(x, y, color):
-            pr.rl_color4ub(*color)
-            # 逆时针画
-            pr.rl_vertex2f(x, y)
-            pr.rl_vertex2f(x, y + 1)
-            pr.rl_vertex2f(x + 1, y + 1)
-            pr.rl_vertex2f(x + 1, y)
+        # cls.api_text_to_image(face, text, text_size=text_size, text_color=text_color, space_x=0, space_y=0)
 
-        def draw_point_triangle(x, y, color):
-            pr.rl_color4ub(*color)
-            # opengl一次只会画一面 所以三角形这里顺逆时针的点坐标都要画上
-            # side 2
-            pr.rl_vertex2f(x, y)
-            pr.rl_vertex2f(x, y + 1)
-            pr.rl_vertex2f(x + 1, y)
-            # side 1
-            pr.rl_vertex2f(x + 1, y)
-            pr.rl_vertex2f(x, y + 1)
-            pr.rl_vertex2f(x+1, y + 1)
+        # way 3
+        # import numpy
+        # from array import array
+        # glver = '100'
+        # _dir = os.path.abspath('./resources/shaders')
+        # print(_dir, os.path.exists(_dir))
+        # shader = pr.load_shader(pr.text_format( os.path.join(_dir, f"glsl_{glver}/point_particle.vs")),
+        #                     pr.text_format(os.path.join(_dir, f"glsl_{glver}/point_particle.fs") ))
+        # currentTimeLoc = pr.get_shader_location(shader, "currentTime")
+        # colorLoc = pr.get_shader_location(shader, "color")
+        #
+        # particles = vertices = [0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5]
+        # particles = vertices = numpy.array([0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5],
+        #                        dtype='float32')
+        # # vert = [0.0, 0.0, 0.0,
+        # #         1.0, 0.0, 0.0,
+        # #         1.0, 1.0, 0.0,
+        # #         0.0, 1.0, 0.0]
+        # vertices = numpy.array([[0, 1], [-1, -1], [1, -1]], dtype='f')
+        # vao = glGenVertexArrays(1)
+        # glBindVertexArray(vao)
+        # vbo = glGenBuffers(1)
+        # glBindBuffer(GL_ARRAY_BUFFER, vbo)
+        # glBufferData(GL_ARRAY_BUFFER, vertices,  GL_STATIC_DRAW)
+        # glVertexAttribPointer(0, 2, GL_FLOAT, False,vertices.size, None)
+        # glEnableVertexAttribArray(0)
+        # glBindBuffer(GL_ARRAY_BUFFER, 0)
+        # # glDrawArrays(GL_POINTS, 0, 10)
+        # glBindVertexArray(0)
+        # # glEnable(GL_PROGRAM_POINT_SIZE)
+        # # glBufferSubData(GL_ARRAY_BUFFER, 0, 1, vertices)
+        # # glUniform3f(polygon_color_loc, 0, 1, 0);
+        # # glUniform4fv(colorLoc, 1, pr.color_normalize(pr.Color(255, 0, 0, 128)))
+        # # glDrawArrays(GL_LINE_LOOP, 0, 4)
+        # glBindVertexArray(vao)
+        # glDrawArrays(GL_POINTS, 0, 10)
+        # glBindVertexArray(0)
 
-        for _x, _y, color in cls._yield_points(face, text, x, y, text_size, text_color, space_x, space_y):
-            # print(_x, _y, color)
-            if shape_mode == 7:
-                draw_point_quad(_x, _y, color)
-            elif shape_mode == 4:
-                draw_point_triangle(_x, _y, color)
-
-        pr.rl_end()
-        # pr.rl_set_texture(0)
+        # way4
+        # import numpy as np
+        # v = np.array([
+        #     [0, 1], [-1, -1], [1, -1]
+        # ], dtype='f')
+        # glVertexPointerd(v)
+        # glEnableClientState(GL_VERTEX_ARRAY)
+        # glDrawArrays(GL_POINTS, 0, len(v))
+        # glDisableClientState(GL_VERTEX_ARRAY)
+        # glFlush()
 
 
 if __name__ == '__main__':
@@ -165,13 +195,6 @@ if __name__ == '__main__':
     # text = "Fontf"
     # text = "hello Fontf你好"
     t = FontEngineFreetype()
-    # face = t.api_auto_load("/Users/nana/Work/maliang/examples/./resources/yezigongchangweifengshouji.ttf", None, None)
     face = t.api_auto_load("../../../examples/resources/yezigongchangweifengshouji.ttf", None, None)
-    img = Image.new("RGBA", (800, 300), "white")
-
-    # for i in range(0, 200):
-    #     img.putpixel((i, 100), (0,0,0,255))
-    # img.show()
-    # exit(0)
-    result = t.api_text_to_image(img, face, text, text_size=24, text_color=(0, 0, 0, 255))
+    result = t.api_text_to_image(face, text, text_size=24, text_color=(0, 0, 0, 255))
     print(result)
