@@ -134,58 +134,6 @@ class FontEngineFreetype():
         yield_points = cls._yield_points(face, text, x, y, text_size, text_color, space_x, space_y)
         for _x, _y, color in yield_points:
             pr.draw_pixel(_x, _y, pr.Color(*color))
-            # pass
-
-        # cls.api_text_to_image(face, text, text_size=text_size, text_color=text_color, space_x=0, space_y=0)
-
-        # way 3
-        # import numpy
-        # from array import array
-        # glver = '100'
-        # _dir = os.path.abspath('./resources/shaders')
-        # print(_dir, os.path.exists(_dir))
-        # shader = pr.load_shader(pr.text_format( os.path.join(_dir, f"glsl_{glver}/point_particle.vs")),
-        #                     pr.text_format(os.path.join(_dir, f"glsl_{glver}/point_particle.fs") ))
-        # currentTimeLoc = pr.get_shader_location(shader, "currentTime")
-        # colorLoc = pr.get_shader_location(shader, "color")
-        #
-        # particles = vertices = [0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5]
-        # particles = vertices = numpy.array([0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5],
-        #                        dtype='float32')
-        # # vert = [0.0, 0.0, 0.0,
-        # #         1.0, 0.0, 0.0,
-        # #         1.0, 1.0, 0.0,
-        # #         0.0, 1.0, 0.0]
-        # vertices = numpy.array([[0, 1], [-1, -1], [1, -1]], dtype='f')
-        # vao = glGenVertexArrays(1)
-        # glBindVertexArray(vao)
-        # vbo = glGenBuffers(1)
-        # glBindBuffer(GL_ARRAY_BUFFER, vbo)
-        # glBufferData(GL_ARRAY_BUFFER, vertices,  GL_STATIC_DRAW)
-        # glVertexAttribPointer(0, 2, GL_FLOAT, False,vertices.size, None)
-        # glEnableVertexAttribArray(0)
-        # glBindBuffer(GL_ARRAY_BUFFER, 0)
-        # # glDrawArrays(GL_POINTS, 0, 10)
-        # glBindVertexArray(0)
-        # # glEnable(GL_PROGRAM_POINT_SIZE)
-        # # glBufferSubData(GL_ARRAY_BUFFER, 0, 1, vertices)
-        # # glUniform3f(polygon_color_loc, 0, 1, 0);
-        # # glUniform4fv(colorLoc, 1, pr.color_normalize(pr.Color(255, 0, 0, 128)))
-        # # glDrawArrays(GL_LINE_LOOP, 0, 4)
-        # glBindVertexArray(vao)
-        # glDrawArrays(GL_POINTS, 0, 10)
-        # glBindVertexArray(0)
-
-        # way4
-        # import numpy as np
-        # v = np.array([
-        #     [0, 1], [-1, -1], [1, -1]
-        # ], dtype='f')
-        # glVertexPointerd(v)
-        # glEnableClientState(GL_VERTEX_ARRAY)
-        # glDrawArrays(GL_POINTS, 0, len(v))
-        # glDisableClientState(GL_VERTEX_ARRAY)
-        # glFlush()
 
 
 if __name__ == '__main__':
