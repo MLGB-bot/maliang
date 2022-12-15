@@ -117,7 +117,7 @@ class FontEngineFreetype():
         return face
 
     @classmethod
-    def _yield_points(cls, face, text, x, y, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0):
+    def _yield_points(cls, face, text, x, y, text_size=12, text_color=(0, 0, 0, 255), space_x=0):
         # done : text loaded twice by font need dec 1
         resolution = 64
         face.set_char_size(text_size * resolution)
@@ -140,23 +140,33 @@ class FontEngineFreetype():
                 ):
                 yield _x, _y, (*text_color[:3], int(alpha_cord*alpha))
 
-            pen.x += int(char_info['advance.x'] / 64)
+            pen.x += int(char_info['advance.x'] / 64) + space_x
             pen.y += int(char_info['advance.y'] / 64)
 
 
     @classmethod
-    def api_text_to_image(cls, face, text, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0):
-        yield_points = cls._yield_points(face, text, 0, 0, text_size, text_color, space_x, space_y)
-        min_x, min_y = 0, 0
-        max_x, max_y = 0, 0
-        points = []
-        for _x, _y, color in yield_points:
-            max_x = max(max_x, _x)
-            max_y = max(max_y, _y)
-            points.append(((_x, _y), color))
-        width = max_x - min_x + 1
-        height = max_y - min_y + 1
+    def _yield_points_multiline(cls, face, text, x, y, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0, need_size=True):
+        max_x, max_y = x, y # 坐标
+        for t in text.split('\n'):
+            line_y = max_y + space_y
+            for _x, _y, color in cls._yield_points(face, t, x, line_y, text_size=text_size, text_color=text_color, space_x=space_x):
+                yield _x, _y, color
+                max_x = max(max_x, _x)
+                max_y = max(max_y, _y)
+        if need_size:
+            yield max_x, max_y, None
 
+
+    @classmethod
+    def api_text_to_image(cls, face, text, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0):
+        yield_points = cls._yield_points_multiline(face, text, 0, 0, text_size, text_color, space_x, space_y)
+        points = []
+        width, height = 0, 0
+        for _x, _y, color in yield_points:
+            if color:
+                points.append(((_x, _y), color))
+            else:
+                width, height = _x+1, _y+1
         im = Image.new("RGBA", (width, height))
         for xy, color in points:
             im.putpixel(xy, color)
@@ -166,21 +176,23 @@ class FontEngineFreetype():
         del im
         return ".png", output.getvalue()
 
+
     @classmethod
     def api_text(cls, face, text, x, y, text_size, text_color, space_x, space_y):
         # way2
-        yield_points = cls._yield_points(face, text, x, y, text_size, text_color, space_x, space_y)
+        yield_points = cls._yield_points_multiline(face, text, x, y, text_size, text_color, space_x, space_y, need_size=False)
         for _x, _y, color in yield_points:
-            pr.draw_pixel(_x, _y, pr.Color(*color))
+            if color:
+                pr.draw_pixel(_x, _y, pr.Color(*color))
 
 
 if __name__ == '__main__':
     # text = "FonFtfont"
-    text = "Fontfontga阿瓦达多"
+    text = "Fontfontga阿瓦\n达多"
     # text = "FONT"
     # text = "Fontf"
     # text = "hello Fontf你好"
     t = FontEngineFreetype()
     face = t.api_auto_load("../../../examples/resources/yezigongchangweifengshouji.ttf", None, None)
-    result = t.api_text_to_image(face, text, text_size=24, text_color=(0, 0, 0, 255))
+    result = t.api_text_to_image(face, text, text_size=24, text_color=(0, 0, 0, 255), space_x=11, space_y=10)
     print(result)
