@@ -19,9 +19,9 @@ class FreeTyper():
         pass
 
     def draw_bitmap(self, bitmap, x, y, text_color):
-        glyph_pixels = bitmap.buffer
-        cols = bitmap.width
-        rows = bitmap.rows
+        glyph_pixels = bitmap.get("buffer", None)
+        cols = bitmap.get("width", None)
+        rows = bitmap.get("rows", None)
         for row in range(rows):
             for col in range(cols):
                 if glyph_pixels[row * cols + col] != 0:
@@ -30,7 +30,8 @@ class FreeTyper():
                     except:
                         continue
 
-    def get_bbox(self, face, text):
+    def get_bbox(self, face, text, need_extra=True):
+        extra_info = {}
         # 1 计算 cbox 外框
         bbox_xmin = None
         bbox_xmax = None
@@ -52,12 +53,24 @@ class FreeTyper():
             bbox_xmax = cbox.xMax if bbox_xmax is None else max(bbox_xmax, cbox.xMax)
             bbox_ymin = cbox.yMin if bbox_ymin is None else min(bbox_ymin, cbox.yMin)
             bbox_ymax = cbox.yMax if bbox_ymax is None else max(bbox_ymax, cbox.yMax)
-            # pen.x += slot.advance.x
-            # pen.y += slot.advance.y
-        return bbox_xmin, bbox_xmax, bbox_ymin, bbox_ymax
+            if need_extra:
+                extra_info[cur_char] = {
+                    'bitmap': {
+                        'buffer': slot.bitmap.buffer,
+                        'width': slot.bitmap.width,
+                        'rows': slot.bitmap.rows,
+                    },
+                    'advance.x': slot.advance.x,
+                    'advance.y': slot.advance.y,
+                    'bitmap_left': slot.bitmap_left,
+                    'bitmap_top': slot.bitmap_top,
+                }
+        return bbox_xmin, bbox_xmax, bbox_ymin, bbox_ymax, extra_info
 
-    def get_bbox_tmp(self, face, text):
+
+    def get_bbox_tmp(self, face, text, need_extra=True):
         # 1 计算 cbox 外框
+        extra_info = {}
         pen = freetype.Vector()
         pen.x = 0
         pen.y = 0
@@ -68,7 +81,19 @@ class FreeTyper():
             bitmap = slot.bitmap
             max_width = max(bitmap.width, max_width)
             max_height = max(bitmap.rows, max_height)
-        return 0, max_width, 0, max_height
+            if need_extra:
+                extra_info[cur_char] = {
+                    'bitmap': {
+                        'buffer': bitmap.buffer,
+                        'width': bitmap.width,
+                        'rows': bitmap.rows,
+                    },
+                    'advance.x': slot.advance.x,
+                    'advance.y': slot.advance.y,
+                    'bitmap_left': slot.bitmap_left,
+                    'bitmap_top': slot.bitmap_top,
+                }
+        return 0, max_width, 0, max_height, extra_info
 
 class FontEngineFreetype():
 
@@ -84,26 +109,24 @@ class FontEngineFreetype():
         face.set_char_size(text_size * resolution)
         # 1 计算 cbox 外框
         try:
-            bbox_xmin, bbox_xmax, bbox_ymin, bbox_ymax = FreeTyper().get_bbox(face, text)
+            bbox_xmin, bbox_xmax, bbox_ymin, bbox_ymax, extra_info = FreeTyper().get_bbox(face, text, need_extra=True)
         except:
-            bbox_xmin, bbox_xmax, bbox_ymin, bbox_ymax = FreeTyper().get_bbox_tmp(face, text)
+            bbox_xmin, bbox_xmax, bbox_ymin, bbox_ymax, extra_info = FreeTyper().get_bbox_tmp(face, text, need_extra=True)
 
         pen = freetype.Vector()
         pen.x = x
         pen.y = y + bbox_xmax # [+]文字在坐标原点右下方 [-]文字在坐标原点右上方
 
         for cur_char in text:
-            # print(cur_char)
-            face.load_char(cur_char)
-            slot = face.glyph
-            bitmap = slot.bitmap
-            # print(pen.x, pen.y, slot.bitmap_left, slot.bitmap_top)
-            for _x, _y, color in FreeTyper().draw_bitmap(bitmap, int(pen.x) + slot.bitmap_left,
-                                                     int(pen.y)-slot.bitmap_top, text_color):
+            char_info = extra_info.get(cur_char, {})
+            for _x, _y, color in FreeTyper().draw_bitmap(
+                    char_info['bitmap'],
+                    int(pen.x) + char_info['bitmap_left'],
+                    int(pen.y) - char_info['bitmap_top'], text_color):
                 yield _x, _y, color
 
-            pen.x += int(slot.advance.x / 64)
-            pen.y += int(slot.advance.y / 64)
+            pen.x += int(char_info['advance.x'] / 64)
+            pen.y += int(char_info['advance.y'] / 64)
 
 
     @classmethod
