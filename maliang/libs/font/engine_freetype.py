@@ -124,33 +124,35 @@ class FontEngineFreetype():
 
     @classmethod
     def api_text(cls, face, text, x, y, text_size, text_color, space_x, space_y):
-        texshapes = pr.Texture(10, 1, 1, 1, 7)
-        texshapesRec = pr.Rectangle(0, 0, 1, 1)
-        # pr.rl_set_texture(texshapes.id)
-        pr.rl_begin(7)
-        pr.rl_normal3f(0.0, 0.0, 1.0)
+        shape_mode = 4
+        pr.rl_begin(shape_mode)
 
         def draw_point_quad(x, y, color):
             pr.rl_color4ub(*color)
-
-            pr.rl_tex_coord2f(texshapesRec.x / texshapes.width, texshapesRec.y / texshapes.height)
+            # 逆时针画
             pr.rl_vertex2f(x, y)
-
-            pr.rl_tex_coord2f(texshapesRec.x / texshapes.width,
-                              (texshapesRec.y + texshapesRec.height) / texshapes.height)
             pr.rl_vertex2f(x, y + 1)
-
-            pr.rl_tex_coord2f((texshapesRec.x + texshapesRec.width) / texshapes.width,
-                              (texshapesRec.y + texshapesRec.height) / texshapes.height)
             pr.rl_vertex2f(x + 1, y + 1)
-
-            pr.rl_tex_coord2f((texshapesRec.x + texshapesRec.width) / texshapes.width,
-                              texshapesRec.y / texshapes.height)
             pr.rl_vertex2f(x + 1, y)
+
+        def draw_point_triangle(x, y, color):
+            pr.rl_color4ub(*color)
+            # opengl一次只会画一面 所以三角形这里顺逆时针的点坐标都要画上
+            # side 2
+            pr.rl_vertex2f(x, y)
+            pr.rl_vertex2f(x, y + 1)
+            pr.rl_vertex2f(x + 1, y)
+            # side 1
+            pr.rl_vertex2f(x + 1, y)
+            pr.rl_vertex2f(x, y + 1)
+            pr.rl_vertex2f(x+1, y + 1)
 
         for _x, _y, color in cls._yield_points(face, text, x, y, text_size, text_color, space_x, space_y):
             # print(_x, _y, color)
-            draw_point_quad(_x, _y, color)
+            if shape_mode == 7:
+                draw_point_quad(_x, _y, color)
+            elif shape_mode == 4:
+                draw_point_triangle(_x, _y, color)
 
         pr.rl_end()
         # pr.rl_set_texture(0)
