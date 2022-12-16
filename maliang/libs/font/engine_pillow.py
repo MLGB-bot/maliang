@@ -3,10 +3,7 @@
 
 """
 import pyray as pr
-try:
-    from PIL import ImageDraw, Image, ImageFont
-except:
-    pass
+from PIL import ImageDraw, Image, ImageFont
 import math
 from io import BytesIO
 

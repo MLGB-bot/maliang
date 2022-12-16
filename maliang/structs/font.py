@@ -3,13 +3,11 @@ import maliang.structs.color as mod_color
 import pyray as pr
 import maliang.units.resource_loader as mod_resource
 from raylib._raylib_cffi import ffi
-from maliang.libs import FontEnginePillow
 
 
 class FontEngines:
     # Engines
     FONT_RAYLIB = 1
-    FONT_PILLOW = 2
 
 
 FontEngineFuncStore = {}
@@ -78,17 +76,6 @@ class MFont:
         pr.draw_text_ex(font_runtime, text, pr.Vector2(x, y), text_size, space_x,
                         mod_color.MColor(*text_color).to_pyray())
 
-    @engine(FontEngines.FONT_PILLOW)
-    def text_image(self, text, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0) -> mod_image.MImage:
-        img_format, img_data = FontEnginePillow.api_text_to_image(self._pil, text, text_size=text_size,
-                                                                  text_color=text_color, space_y=space_y)
-        m_image = self.generate_m_image_from_data(img_format, img_data)
-        return m_image
-
-    @engine(FontEngines.FONT_PILLOW)
-    def text(self, text, x, y, text_size=None, text_color=None, space_x=0, space_y=0):
-        pr_texture = FontEnginePillow.api_text(self._pil, text, x, y, text_size, text_color, space_x, space_y)
-        mod_resource.ResourceLoader.loaded_texture_runtime.append(pr_texture)
 
     @engine(0)
     def text_image(self, text, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0) -> mod_image.MImage:

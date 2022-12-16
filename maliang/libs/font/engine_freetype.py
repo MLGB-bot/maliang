@@ -2,18 +2,9 @@
 # pip install freetype-py
 """
 
-try:
-    import freetype
-except:
-    pass
-try:
-    import numpy as np
-except:
-    pass
-try:
-    from PIL import Image
-except:
-    pass
+import freetype
+import numpy as np
+from PIL import Image
 import math
 from io import BytesIO
 import pyray as pr
@@ -211,14 +202,3 @@ class FontEngineFreetype():
         pr.unload_image(image)
         return texture
 
-if __name__ == '__main__':
-    # text = "FonFtfont"
-    # text = "Fontfontga阿瓦\n达多"
-    # text = "FONT"
-    # text = "Fontf"
-    # text = "hello Fontf你好"
-    text = "hello \n Fontfntga阿瓦\n达多\n\nasd"
-    t = FontEngineFreetype()
-    face = t.api_auto_load("../../../examples/resources/yezigongchangweifengshouji.ttf", None, None)
-    result = t.api_text_to_image(face, text, text_size=24, text_color=(0, 0, 0, 255), space_x=11, space_y=10)
-    # print(result)
