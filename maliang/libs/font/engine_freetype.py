@@ -57,40 +57,30 @@ class FreeTyper():
         pen.y = 0
         # matrix = freetype.Matrix()
         for cur_char in text:
-            char_cache = FontEngineFreetype.Cacher['chars'].get(cur_char)
-            if char_cache and char_cache.get('bbox'):
-                bbox = char_cache.get('bbox')
-                bbox_xmin = bbox[0] if bbox_xmin is None else min(bbox_xmin, bbox[0])
-                bbox_xmax = bbox[1] if bbox_xmax is None else max(bbox_xmax, bbox[1])
-                bbox_ymin = bbox[2] if bbox_ymin is None else min(bbox_ymin, bbox[2])
-                bbox_ymax = bbox[3] if bbox_ymax is None else max(bbox_ymax, bbox[3])
-                if need_extra:
-                    extra_info[cur_char] = char_cache
-            else:
-                # face.set_transform(matrix, pen)
-                face.load_char(cur_char)
-                # print("kerning: ", kerning.x, kerning.y)
-                slot = face.glyph
-                glyph = slot.get_glyph()
-                cbox = glyph.get_cbox(freetype.FT_GLYPH_BBOX_MODES['FT_GLYPH_BBOX_TRUNCATE'])
-                # print(cur_char, cbox, cbox.xMax, cbox.xMin, cbox.yMax, cbox.yMin)
-                bbox_xmin = cbox.xMin if bbox_xmin is None else min(bbox_xmin, cbox.xMin)
-                bbox_xmax = cbox.xMax if bbox_xmax is None else max(bbox_xmax, cbox.xMax)
-                bbox_ymin = cbox.yMin if bbox_ymin is None else min(bbox_ymin, cbox.yMin)
-                bbox_ymax = cbox.yMax if bbox_ymax is None else max(bbox_ymax, cbox.yMax)
-                if need_extra:
-                    extra_info[cur_char] = FontEngineFreetype.Cacher['chars'][cur_char] = {
-                        'bitmap': {
-                            'buffer': slot.bitmap.buffer,
-                            'width': slot.bitmap.width,
-                            'rows': slot.bitmap.rows,
-                        },
-                        'advance.x': slot.advance.x,
-                        'advance.y': slot.advance.y,
-                        'bitmap_left': slot.bitmap_left,
-                        'bitmap_top': slot.bitmap_top,
-                        'bbox': (cbox.xMin, cbox.xMax, cbox.yMin, cbox.yMax)
-                    }
+            # face.set_transform(matrix, pen)
+            face.load_char(cur_char)
+            # print("kerning: ", kerning.x, kerning.y)
+            slot = face.glyph
+            glyph = slot.get_glyph()
+            cbox = glyph.get_cbox(freetype.FT_GLYPH_BBOX_MODES['FT_GLYPH_BBOX_TRUNCATE'])
+            # print(cur_char, cbox, cbox.xMax, cbox.xMin, cbox.yMax, cbox.yMin)
+            bbox_xmin = cbox.xMin if bbox_xmin is None else min(bbox_xmin, cbox.xMin)
+            bbox_xmax = cbox.xMax if bbox_xmax is None else max(bbox_xmax, cbox.xMax)
+            bbox_ymin = cbox.yMin if bbox_ymin is None else min(bbox_ymin, cbox.yMin)
+            bbox_ymax = cbox.yMax if bbox_ymax is None else max(bbox_ymax, cbox.yMax)
+            if need_extra:
+                extra_info[cur_char] = {
+                    'bitmap': {
+                        'buffer': slot.bitmap.buffer,
+                        'width': slot.bitmap.width,
+                        'rows': slot.bitmap.rows,
+                    },
+                    'advance.x': slot.advance.x,
+                    'advance.y': slot.advance.y,
+                    'bitmap_left': slot.bitmap_left,
+                    'bitmap_top': slot.bitmap_top,
+                    'bbox': (cbox.xMin, cbox.xMax, cbox.yMin, cbox.yMax)
+                }
         return bbox_xmin, bbox_xmax, bbox_ymin, bbox_ymax, extra_info
 
 
@@ -102,47 +92,30 @@ class FreeTyper():
         pen.y = 0
         max_width, max_height=0, 0
         for cur_char in text:
-            char_cache = FontEngineFreetype.Cacher['chars'].get(cur_char)
-            if char_cache:
-                max_width = max(char_cache['bitmap']['width'], max_width)
-                max_height = max(char_cache['bitmap']['rows'], max_height)
-                if need_extra:
-                    extra_info[cur_char] = char_cache
-            else:
-                face.load_char(cur_char)
-                slot = face.glyph
-                bitmap = slot.bitmap
-                max_width = max(bitmap.width, max_width)
-                max_height = max(bitmap.rows, max_height)
-                if need_extra:
-                    extra_info[cur_char] = FontEngineFreetype.Cacher['chars'][cur_char] = {
-                        'bitmap': {
-                            'buffer': bitmap.buffer,
-                            'width': bitmap.width,
-                            'rows': bitmap.rows,
-                        },
-                        'advance.x': slot.advance.x,
-                        'advance.y': slot.advance.y,
-                        'bitmap_left': slot.bitmap_left,
-                        'bitmap_top': slot.bitmap_top,
-                    }
+            face.load_char(cur_char)
+            slot = face.glyph
+            bitmap = slot.bitmap
+            max_width = max(bitmap.width, max_width)
+            max_height = max(bitmap.rows, max_height)
+            if need_extra:
+                extra_info[cur_char] = {
+                    'bitmap': {
+                        'buffer': bitmap.buffer,
+                        'width': bitmap.width,
+                        'rows': bitmap.rows,
+                    },
+                    'advance.x': slot.advance.x,
+                    'advance.y': slot.advance.y,
+                    'bitmap_left': slot.bitmap_left,
+                    'bitmap_top': slot.bitmap_top,
+                }
         return 0, max_width, 0, max_height, extra_info
 
 class FontEngineFreetype():
-    Cacher = {
-        "size": None,
-        'chars': {
-        }
-    }
 
     @classmethod
     def api_auto_load(cls, _file, filetype, font_size):
         face = freetype.Face(_file)
-        cls.Cacher = {
-            "size": None,
-            'chars': {
-            }
-        }
         return face
 
     @classmethod
@@ -174,10 +147,7 @@ class FontEngineFreetype():
     @classmethod
     def _yield_points_multiline(cls, face, text, x, y, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0, need_size=True):
         resolution = 64
-        if cls.Cacher['size'] != text_size:
-            face.set_char_size(text_size * resolution)
-            cls.Cacher['size'] = text_size
-            cls.Cacher['chars'] = {}
+        face.set_char_size(text_size * resolution)
 
         line_height = math.floor( text_size * face.height / face.units_per_EM)
         # print(line_height)
