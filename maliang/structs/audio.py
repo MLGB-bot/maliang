@@ -140,15 +140,15 @@ class AudioStream():
             frame_size = self.channels * self.sample_size / 8
 
         @ffi.callback("void(*)(void *, unsigned int)")
-        def wrap_callback(buffer, frames):
+        def wrap_callback(buffer, frame_count):
             """
 
             :param buffer: cData void point to buffer
-            :param frames: buffer size.
+            :param frame_count: how many frames
             :return:
             """
-            audio_bytes_data = callback(frames)  # generate audio binary data
-            buf = ffi.buffer(buffer, frames * frame_size)  # create write buffer. (‘cdata’, 'bytes')
+            audio_bytes_data = callback(frame_count)  # generate audio binary data
+            buf = ffi.buffer(buffer, frame_count * frame_size)  # create write buffer. (‘cdata’, 'bytes')
             buf[:] = audio_bytes_data  # enrich audio data. can play sound in window
 
         global AUDIO_STREAM_CALLBACK_WRAPPERS
