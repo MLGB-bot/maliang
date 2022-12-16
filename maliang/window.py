@@ -1,5 +1,6 @@
 import pyray as pr
 from maliang.structs import MColor
+from maliang.camera import Camera
 from maliang.environment import Environment
 from maliang.shapes2d import Shapes2d
 from maliang.transform import Transform
@@ -12,7 +13,7 @@ from maliang.text import Text
 from maliang.texture import Texture
 from maliang.units import ResourceLoader
 
-class Window(Environment, Shapes2d, Transform, Events, Mouse, Keyboard, Image, Font, Text, Texture):
+class Window(Environment, Shapes2d, Transform, Events, Mouse, Keyboard, Image, Font, Text, Texture, Camera):
     def __init__(self, width=100, height=100, title='', fps=60,
                  background_color=(235, 235, 235, 255), double_buffer=True):
         Environment.__init__(self, width, height)
@@ -25,6 +26,7 @@ class Window(Environment, Shapes2d, Transform, Events, Mouse, Keyboard, Image, F
         Font.__init__(self)
         Text.__init__(self)
         Texture.__init__(self)
+        Camera.__init__(self)
 
         self.frame_count = 0
         self.double_buffer = double_buffer

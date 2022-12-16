@@ -4,8 +4,19 @@ from collections import deque
 
 
 class Camera():
+    CAMERA_PROJECTION_PERSPECTIVE = 0
+    CAMERA_PROJECTION_ORTHOGRAPHIC =1
+
     def __init__(self):
         self.camera_queue = deque()
+
+    def camera_2d(self, offset=(0, 0), target=(0, 0), rotation=0.0, zoom=1.0):
+        pr_camera = pr.Camera2D( pr.Vector2(*offset), pr.Vector2(*target), rotation, zoom)
+        return MCamera(dimension=2, pr_camera=pr_camera)
+
+    def camera_3d(self, position, target, up, fovy, projection=0):
+        pr_camera = pr.Camera3D(position, target, up, fovy, projection)
+        return MCamera(dimension=2, pr_camera=pr_camera)
 
     def begin_camera(self, camera: MCamera):
         if camera.dimension == 2:
