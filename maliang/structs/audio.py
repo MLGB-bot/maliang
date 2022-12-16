@@ -101,6 +101,10 @@ class AudioStream():
     def unload(self):
         pr.unload_audio_stream(self.pr_stream)
 
+    def is_processed(self):
+        # Check if any audio stream buffers requires refill
+        return pr.is_audio_stream_processed(self.pr_stream)
+
     def play(self):
         pr.play_audio_stream(self.pr_stream)
 
