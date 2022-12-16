@@ -8,6 +8,15 @@ class LogLevel:
     LOG_FATAL = 6   # Fatal logging, used to abort program: exit(EXIT_FAILURE)
     LOG_NONE = 7    # Disable logging
 
+
+class CameraMode:
+    CAMERA_CUSTOM = 0
+    CAMERA_FREE = 1
+    CAMERA_ORBITAL = 2
+    CAMERA_FIRST_PERSON = 3
+    CAMERA_THIRD_PERSON = 4
+
+
 class ImageMode:
     __keys__ = ['CORNER', 'CENTER', 'RADIUS', 'CORNERS']
     __values__ = [1, 2, 3, 4]
