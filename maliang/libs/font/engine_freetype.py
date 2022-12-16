@@ -1,7 +1,6 @@
 """
 # pip install freetype-py
 """
-import os.path
 
 try:
     import freetype
@@ -11,12 +10,14 @@ try:
     import numpy as np
 except:
     pass
+try:
+    from PIL import Image
+except:
+    pass
 import math
 from io import BytesIO
-from PIL import ImageDraw, Image, ImageFont
 import pyray as pr
 
-from OpenGL.GL import *
 
 class FreeTyper():
     def __init__(self):
@@ -117,7 +118,7 @@ class FontEngineFreetype():
         return face
 
     @classmethod
-    def _yield_points(cls, face, text, x, y, text_size=12, text_color=(0, 0, 0, 255), space_x=0):
+    def _yield_points(cls, face, text, x, y, text_color=(0, 0, 0, 255), space_x=0):
         # done : text loaded twice by font need dec 1
         # 1 计算 cbox 外框
         try:
@@ -152,10 +153,11 @@ class FontEngineFreetype():
         line_y = y
         for i, t in enumerate(text.split('\n')):
             if t:
-                for _x, _y, color in cls._yield_points(face, t, x, line_y, text_size=text_size, text_color=text_color, space_x=space_x):
+                for _x, _y, color in cls._yield_points(face, t, x, line_y, text_color=text_color, space_x=space_x):
                     yield _x, _y, color
-                    if _x > max_x: max_x = _x
-                    if _y > max_y: max_y = _y
+                    if need_size:
+                        if _x > max_x: max_x = _x
+                        if _y > max_y: max_y = _y
             line_y = line_y + line_height + space_y
         if need_size:
             yield max_x, max_y, None
@@ -171,24 +173,41 @@ class FontEngineFreetype():
                 points.append(((_x, _y), color))
             else:
                 width, height = _x+1, _y+1
-        im = Image.new("RGBA", (width, height))
+
+        np_array = np.zeros((height, width, 4), np.uint8)
         for xy, color in points:
-            im.putpixel(xy, color)
-        # im.show()
+            np_array[xy[1]][xy[0]] = color
+        im = Image.fromarray(np_array, "RGBA")
         output = BytesIO()
         im.save(output, format='PNG')
         del im
         return ".png", output.getvalue()
 
+        # im = Image.new("RGBA", (width, height))
+        # for xy, color in points:
+        #     im.putpixel(xy, color)
+        # # im.show()
+        # output = BytesIO()
+        # im.save(output, format='PNG')
+        # del im
+        # return ".png", output.getvalue()
+
 
     @classmethod
     def api_text(cls, face, text, x, y, text_size, text_color, space_x, space_y):
         # way2
-        yield_points = cls._yield_points_multiline(face, text, x, y, text_size, text_color, space_x, space_y, need_size=False)
-        for _x, _y, color in yield_points:
-            if color:
-                pr.draw_pixel(_x, _y, pr.Color(*color))
+        # yield_points = cls._yield_points_multiline(face, text, x, y, text_size, text_color, space_x, space_y, need_size=False)
+        # for _x, _y, color in yield_points:
+        #     if color:
+        #         pr.draw_pixel(_x, _y, pr.Color(*color))
 
+        img_format, img_data = cls.api_text_to_image(face, text, text_size=text_size,
+                                                     text_color=text_color, space_x=space_x, space_y=space_y)
+        image = pr.load_image_from_memory(img_format, img_data, len(img_data))
+        texture = pr.load_texture_from_image(image)
+        pr.draw_texture(texture, x, y, pr.WHITE)
+        pr.unload_image(image)
+        return texture
 
 if __name__ == '__main__':
     # text = "FonFtfont"
