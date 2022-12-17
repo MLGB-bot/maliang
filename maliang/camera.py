@@ -1,5 +1,5 @@
 import pyray as pr
-from maliang.structs import MCamera
+from maliang.structs import MCamera2D, MCamera3D
 from collections import deque
 
 
@@ -11,18 +11,13 @@ class Camera():
         self.camera_queue = deque()
 
     def camera_2d(self, offset=(0, 0), target=(0, 0), rotation=0.0, zoom=1.0):
-        pr_camera = pr.Camera2D( pr.Vector2(*offset), pr.Vector2(*target), rotation, zoom)
-        return MCamera(dimension=2, pr_camera=pr_camera)
+        return MCamera2D(pr.Camera2D( pr.Vector2(*offset), pr.Vector2(*target), rotation, zoom))
 
-    def camera_3d(self, position, target, up, fovy, projection=0):
-        pr_camera = pr.Camera3D(position, target, up, fovy, projection)
-        return MCamera(dimension=2, pr_camera=pr_camera)
+    def camera_3d(self, position=(0, 0, 0), target=(0, 0, 0), up=(0, 0, 0), fovy=1.0, projection=0):
+        return MCamera3D(pr.Camera3D( pr.Vector2(*position), pr.Vector2(*target), pr.Vector2(*up), fovy, projection))
 
-    def begin_camera(self, camera: MCamera):
-        if camera.dimension == 2:
-            pr.begin_mode_2d(camera.pr_camera)
-        else:
-            pr.begin_mode_3d(camera.pr_camera)
+    def begin_camera(self, camera: MCamera2D|MCamera2D):
+        camera.begin_mode()
         self.camera_queue.append(camera.dimension)
 
     def end_camera(self, ):
