@@ -65,18 +65,24 @@ class Shapes2d:
             self._circle_mode = mode
 
     def init_stroke_width(self, stroke_width):
-        if self._stroke:
-            return stroke_width or self.stroke_width
+        if stroke_width:
+            return stroke_width
+        elif self._stroke:
+            return self.stroke_width
         return 0
 
     def init_stroke_color(self, stroke_color):
-        if self._stroke:
-            return self.format_color(stroke_color) if stroke_color else self.stroke_color
+        if stroke_color:
+            return self.format_color(stroke_color)
+        elif self._stroke:
+            return self.stroke_color
         return None
 
     def init_filled_color(self, filled_color: tuple):
-        if self._fill:
-            return self.format_color(filled_color) if filled_color else self.filled_color
+        if filled_color:
+            return self.format_color(filled_color)
+        elif self._fill:
+            return self.filled_color
         return None
 
     def point(self, x, y, stroke_width=None, stroke_color: tuple = None, shape="circle"):
