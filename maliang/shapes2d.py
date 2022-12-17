@@ -104,11 +104,13 @@ class Shapes2d:
         stroke_color = self.init_stroke_color(stroke_color)
         if stroke_width and stroke_color:
             pr.draw_line_ex(
-                pr.Vector2(x1, y1),
-                pr.Vector2(x2, y2),
+                pr.Vector2(int(x1), int(y1)),
+                pr.Vector2(int(x2), int(y2)),
                 stroke_width,
                 pr.Color(*stroke_color),
             )
+        elif stroke_color:
+            pr.draw_line(int(x1), int(y1), int(x2), int(y2), pr.Color(*stroke_color), )
 
     def rect(self, x, y, w, h, stroke_width=None, stroke_color: tuple = None, filled_color: tuple = None, mode=None):
         stroke_width = self.init_stroke_width(stroke_width)
