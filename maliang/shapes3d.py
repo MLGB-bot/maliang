@@ -3,7 +3,7 @@ from maliang.structs import MTexture
 from maliang.shape_conf import ShapeConfig
 
 
-class Shape3d(ShapeConfig):
+class Shapes3d(ShapeConfig):
     def __init__(self):
         ShapeConfig().__init__()
 
