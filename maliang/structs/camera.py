@@ -1,12 +1,14 @@
 import pyray as pr
-
+import maliang.structs.ray as mod_ray
 
 class MCamera():
     def __init__(self, pr_camera):
         self.pr_camera = pr_camera
 
-    def get_coordinate_ray(self, x, y):
-        return pr.get_mouse_ray(pr.Vector2(x, y), self.pr_camera)
+    def get_ray(self, x, y) -> mod_ray.MRay:
+        ray = mod_ray.MRay()
+        ray.pr_ray = pr.get_mouse_ray(pr.Vector2(x, y), self.pr_camera)
+        return ray
 
     def set_mode(self, mode):
         # Set camera mode (multiple camera modes available)

@@ -1,78 +1,7 @@
 import pyray as pr
 from maliang.units import RectMode, EllipseMode, CircleMode
-from maliang.structs import MColor
-
-
-class ShapeConfig(object):
-    _instance = None
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-
-    # def __call__(self, *args, **kwargs):
-    #     print("call ...")
-
-    _stroke = True
-    _fill = True
-    stroke_width = 1
-    stroke_color = pr.BLACK
-    filled_color = pr.WHITE
-
-
-    def __init__(self):
-        pass
-
-    @classmethod
-    def format_color(self, color):
-        obj_color = MColor(*color)
-        return tuple(obj_color)
-
-    @classmethod
-    def no_fill(self):
-        self._fill = False
-
-    @classmethod
-    def no_stroke(self):
-        self._stroke = False
-
-    @classmethod
-    def fill(self, *color):
-        self._fill = True
-        if color:
-            self.filled_color = self.format_color(color)
-
-    @classmethod
-    def stroke(self, color: tuple = None, width: float = None):
-        self._stroke = True
-        if color is not None:
-            self.stroke_color = self.format_color(color)
-        if width is not None:
-            self.stroke_width = width
-
-    @classmethod
-    def init_stroke_width(self, stroke_width):
-        if stroke_width is not None:
-            return stroke_width
-        elif self._stroke:
-            return self.stroke_width
-        return None
-
-    @classmethod
-    def init_stroke_color(self, stroke_color):
-        if stroke_color:
-            return self.format_color(stroke_color)
-        elif self._stroke:
-            return self.stroke_color
-        return None
-
-    @classmethod
-    def init_filled_color(self, filled_color: tuple):
-        if filled_color:
-            return self.format_color(filled_color)
-        elif self._fill:
-            return self.filled_color
-        return None
+from maliang.structs import MTexture
+from maliang.shape_conf import ShapeConfig
 
 
 class Shapes2d(ShapeConfig):
@@ -123,7 +52,9 @@ class Shapes2d(ShapeConfig):
                     pr.draw_rectangle(x, y, stroke_width, stroke_width, pr.Color(*stroke_color))
             elif stroke_width == 1:
                 # 画一个像素
-                pr.draw_pixel(x, y, stroke_color)
+                pr.draw_pixel(x, y, pr.Color(*stroke_color))
+        elif stroke_color:
+            pr.draw_pixel(x, y, pr.Color(*stroke_color))
 
     def line(self, x1, y1, x2, y2, stroke_width=None, stroke_color: tuple = None):
         stroke_width = self.init_stroke_width(stroke_width)
@@ -167,7 +98,7 @@ class Shapes2d(ShapeConfig):
             else:
                 pr.draw_rectangle_lines_ex(pr.Rectangle(_x, _y, _w, _h), stroke_width, pr.Color(*stroke_color))
 
-    def circle(self, x, y, d, stroke_width=None, stroke_color: tuple = None, filled_color: tuple = None, segments=30,
+    def circle(self, x, y, diam, stroke_width=None, stroke_color: tuple = None, filled_color: tuple = None, segments=30,
                mode=None):
         stroke_width = self.init_stroke_width(stroke_width)
         stroke_color = self.init_stroke_color(stroke_color)
@@ -176,13 +107,13 @@ class Shapes2d(ShapeConfig):
         # draw
         def init_mode(rect_mode):
             if rect_mode == CircleMode.CORNER:
-                return int(x + d * 0.5), int(y + d * 0.5), d * 0.5
+                return int(x + diam * 0.5), int(y + diam * 0.5), diam * 0.5
             elif rect_mode == CircleMode.CENTER:
-                return x, y, d*0.5
+                return x, y, diam*0.5
             elif rect_mode == CircleMode.RADIUS:
-                return x, y, d
+                return x, y, diam
             else:
-                return x, y, d*0.5
+                return x, y, diam*0.5
 
         _x, _y, _r = init_mode(mode)
 
