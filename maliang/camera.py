@@ -14,7 +14,7 @@ class Camera():
         return MCamera2D(pr.Camera2D( pr.Vector2(*offset), pr.Vector2(*target), rotation, zoom))
 
     def camera_3d(self, position=(0, 0, 0), target=(0, 0, 0), up=(0, 0, 0), fovy=1.0, projection=0):
-        return MCamera3D(pr.Camera3D( pr.Vector2(*position), pr.Vector2(*target), pr.Vector2(*up), fovy, projection))
+        return MCamera3D(pr.Camera3D( pr.Vector3(*position), pr.Vector3(*target), pr.Vector3(*up), fovy, projection))
 
     def begin_camera(self, camera: MCamera2D|MCamera2D):
         camera.begin_mode()
