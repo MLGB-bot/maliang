@@ -31,7 +31,7 @@ BLACK = (0, 0 ,0)
 DARKGRAY = (80, 80, 80)
 
 def on_setup():
-    # app.no_stroke()
+    app.no_stroke()
     pass
 
 def on_draw():
@@ -41,9 +41,15 @@ def on_draw():
 
     app.background(*pr.RAYWHITE)
 
+
     app.begin_camera(camera)
-    pr.draw_cube(pr.Vector3(*cube_position), 2, 2,2, pr.RED)
-    # app.cube(*cube_position, 2, 2, 2, filled_color=RED, stroke_width=1, stroke_color=BLACK)
+    for i in range(0, 10, 2):
+        app.sphere(x=i, y=0, z=0, diam=1, stroke_color=None, filled_color=(100, 0, 0, 100))
+        app.sphere(x=0, y=i, z=0, diam=1, stroke_color=(0, 0,0) , filled_color=(0, 100, 0, 100))
+        app.sphere(x=0, y=0, z=i, diam=1, stroke_color=(0, 0,0) , filled_color=(0, 0, 0, 255))
+
+
+    app.cube(*cube_position, 2, 2, 2, filled_color=RED, stroke_color=BLACK)
     app.grid(10, 1)
     app.end_camera()
 
