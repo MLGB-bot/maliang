@@ -3,39 +3,85 @@ from maliang.units import RectMode, EllipseMode, CircleMode
 from maliang.structs import MColor
 
 
-class Shapes2d:
+class ShapeConfig(object):
+    _instance = None
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+    # def __call__(self, *args, **kwargs):
+    #     print("call ...")
+
+    _stroke = True
+    _fill = True
+    stroke_width = 1
+    stroke_color = pr.BLACK
+    filled_color = pr.WHITE
+
+
     def __init__(self):
-        self.stroke_width = 1
-        self.stroke_color = pr.BLACK
-        self.filled_color = pr.WHITE
-        self._rect_mode = RectMode.CORNER
-        self._ellipse_mode = EllipseMode.CENTER
-        self._circle_mode = CircleMode.CENTER
+        pass
 
-        self._stroke = True
-        self._fill = True
-
+    @classmethod
     def format_color(self, color):
         obj_color = MColor(*color)
         return tuple(obj_color)
 
+    @classmethod
     def no_fill(self):
         self._fill = False
 
+    @classmethod
     def no_stroke(self):
         self._stroke = False
 
+    @classmethod
     def fill(self, *color):
         self._fill = True
         if color:
             self.filled_color = self.format_color(color)
 
+    @classmethod
     def stroke(self, color: tuple = None, width: float = None):
         self._stroke = True
         if color is not None:
             self.stroke_color = self.format_color(color)
         if width is not None:
             self.stroke_width = width
+
+    @classmethod
+    def init_stroke_width(self, stroke_width):
+        if stroke_width is not None:
+            return stroke_width
+        elif self._stroke:
+            return self.stroke_width
+        return None
+
+    @classmethod
+    def init_stroke_color(self, stroke_color):
+        if stroke_color:
+            return self.format_color(stroke_color)
+        elif self._stroke:
+            return self.stroke_color
+        return None
+
+    @classmethod
+    def init_filled_color(self, filled_color: tuple):
+        if filled_color:
+            return self.format_color(filled_color)
+        elif self._fill:
+            return self.filled_color
+        return None
+
+
+class Shapes2d(ShapeConfig):
+    def __init__(self):
+        ShapeConfig().__init__()
+        self._rect_mode = RectMode.CORNER
+        self._ellipse_mode = EllipseMode.CENTER
+        self._circle_mode = CircleMode.CENTER
+
 
     def rect_mode(self, mode):
         assert isinstance(mode, (str, int))
@@ -64,26 +110,6 @@ class Shapes2d:
             assert mode in CircleMode.__values__
             self._circle_mode = mode
 
-    def init_stroke_width(self, stroke_width):
-        if stroke_width is not None:
-            return stroke_width
-        elif self._stroke:
-            return self.stroke_width
-        return None
-
-    def init_stroke_color(self, stroke_color):
-        if stroke_color:
-            return self.format_color(stroke_color)
-        elif self._stroke:
-            return self.stroke_color
-        return None
-
-    def init_filled_color(self, filled_color: tuple):
-        if filled_color:
-            return self.format_color(filled_color)
-        elif self._fill:
-            return self.filled_color
-        return None
 
     def point(self, x, y, stroke_width=None, stroke_color: tuple = None, shape="circle"):
         stroke_width = self.init_stroke_width(stroke_width)
@@ -279,30 +305,3 @@ class Shapes2d:
             elif stroke_width > 1:
                 pr.draw_poly_lines_ex(pr.Vector2(x, y), sides, r, r_angle, stroke_width, pr.Color(*stroke_color))
 
-    # def points(self):
-    #     pr.rl_begin(pr.begin_)
-    #     pr.rl_vertex2f()
-
-    # def begin_shape(self, mode):
-    #     # pr.rl_push_matrix()
-    #     # pr.rl_begin(mode)
-    #     # pr.rl_color4ub(0, 0, 255, 100)
-    #     pr.rl_color4ub(0, 0, 255, 100)
-
-    # def end_shape(self):
-    #     pr.rl_end()
-    #     # pr.rl_pop_matrix()
-
-    # def vertex(self, x, y):
-    #     # pr.rl_vertex2f(x, y,)
-
-    def shapedemo(self):
-        pr.rl_color4ub(0, 0, 255, 200)
-        pr.rl_begin(4)
-        pr.rl_vertex2f(20, 30)
-        pr.rl_vertex2f(30, 30)
-        pr.rl_vertex2f(20, 80)
-        pr.rl_vertex2f(40, 80)
-        pr.rl_vertex2f(40, 90)
-        pr.rl_vertex2f(50, 90)
-        pr.rl_end()
