@@ -61,7 +61,10 @@ class Window(Environment, Shapes2d, Shapes3d, Transform, Events, Mouse, Keyboard
 
     def background(self, *color):
         color = MColor(*color)
-        pr.draw_rectangle(0, 0, self.width, self.height, color.to_pyray())
+        if color.a == 255:
+            pr.clear_background(color.to_pyray())
+        else:
+            pr.draw_rectangle(0, 0, self.width, self.height, color.to_pyray())
 
     def on_setup(self):
         pass
