@@ -65,11 +65,11 @@ class Shapes2d:
             self._circle_mode = mode
 
     def init_stroke_width(self, stroke_width):
-        if stroke_width:
+        if stroke_width is not None:
             return stroke_width
         elif self._stroke:
             return self.stroke_width
-        return 0
+        return None
 
     def init_stroke_color(self, stroke_color):
         if stroke_color:
