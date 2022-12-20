@@ -9,6 +9,11 @@ class LogLevel:
     LOG_NONE = 7    # Disable logging
 
 
+class CameraProjection:
+    PERSPECTIVE  = 0
+    ORTHOGRAPHIC = 1
+
+
 class CameraMode:
     CAMERA_CUSTOM = 0
     CAMERA_FREE = 1

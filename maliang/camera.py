@@ -4,8 +4,6 @@ from collections import deque
 
 
 class Camera():
-    CAMERA_PROJECTION_PERSPECTIVE = 0
-    CAMERA_PROJECTION_ORTHOGRAPHIC =1
 
     def __init__(self):
         self.camera_queue = deque()
