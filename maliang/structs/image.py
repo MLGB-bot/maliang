@@ -31,7 +31,7 @@ class MImage:
     def load_raw(self, image_path, w, h, format, header_size):
         return pr.load_image_raw(image_path, w, h, format, header_size)
 
-    def gen_texture(self):
+    def load_texture(self):
         if self.texture:
             return self.texture
         self.texture = texture = mod_texture.MTexture()
