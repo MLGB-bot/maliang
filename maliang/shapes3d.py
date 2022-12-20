@@ -15,10 +15,9 @@ class Shapes3d(ShapeConfig):
         stroke_color = self.init_stroke_color(stroke_color)
         pr.draw_line_3d(pr.Vector3(x1, y1, z1), pr.Vector3(x2, y2, z2), pr.Color(*stroke_color))
 
-    def circle3d(self, x, y, z, diam, rotation=(0, 0, 0), stroke_color: tuple = None):
+    def circle3d(self, x, y, z, diam, rotation_axis=(0, 0, 0), rotation_angle=0.0, stroke_color: tuple = None):
         stroke_color = self.init_stroke_color(stroke_color)
-        rotation_axis = pr.Vector3(*[1 if i else 0 for i in rotation])
-        pr.draw_circle_3d(pr.Vector3(x, y, z), diam * 0.5, rotation_axis, rotation, pr.Color(*stroke_color))
+        pr.draw_circle_3d(pr.Vector3(x, y, z), diam * 0.5, rotation_axis, rotation_angle, pr.Color(*stroke_color))
 
     def triangle3d(self, x1, y1, z1, x2, y2, z2, x3, y3, z3, stroke_color: tuple = None):
         stroke_color = self.init_stroke_color(stroke_color)
