@@ -1,7 +1,8 @@
 import os
 import pyray as pr
 from maliang.units import ResourceLoader
-from maliang.structs import MModel, MMesh, MBoundingBox, MColor
+from maliang.structs import MModel, MMesh, MBoundingBox, MColor, MCamera3D, MTexture
+
 
 class Model():
     def __init__(self):
@@ -24,7 +25,12 @@ class Model():
     def unload_model_keep_meshes(self, model: MModel):
         pr.unload_model_keep_meshes(model.pr_model)
 
-    def draw_boundingbox(self, boundingbox: MBoundingBox, color=(0,0,0)):
+    def draw_boundingbox(self, boundingbox: MBoundingBox, color=(0, 0, 0)):
         boundingbox.draw(MColor(*color))
 
-    # def draw_billboard(self, camera, ):
+    def draw_billboard(self, camera: MCamera3D, texture: MTexture, x, y, z, size: tuple | list, tint=None, up=(0, 1, 0),
+                       origin=(0, 0), rotation: float = 0.0, source=None):
+        if not source:
+            source = pr.Rectangle(0, 0, texture.width, texture.height)
+        pr.draw_billboard_pro(camera.pr_camera, texture.pr_texture, source, pr.Vector3(x, y, z), pr.Vector3(*up),
+                              pr.Vector2(*size), pr.Vector2(*origin), rotation, MColor(*(tint or pr.WHITE)).to_pyray())
