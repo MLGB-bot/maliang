@@ -34,3 +34,6 @@ class Model():
             source = pr.Rectangle(0, 0, texture.width, texture.height)
         pr.draw_billboard_pro(camera.pr_camera, texture.pr_texture, source, pr.Vector3(x, y, z), pr.Vector3(*up),
                               pr.Vector2(*size), pr.Vector2(*origin), rotation, MColor(*(tint or pr.WHITE)).to_pyray())
+
+    def set_model_mesh_material(self, model: MModel, mesh_id: int, material_id: int):
+        model.set_mesh_matrrial(mesh_id, material_id)

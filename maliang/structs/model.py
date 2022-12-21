@@ -27,3 +27,5 @@ class MModel:
         boundingbox.pr_boundingbox = pr.get_model_bounding_box(self.pr_model)
         return boundingbox
 
+    def set_mesh_matrrial(self, mesh_id: int, material_id: int):
+        pr.set_model_mesh_material(self.pr_model, mesh_id, material_id)
