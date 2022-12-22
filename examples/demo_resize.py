@@ -3,7 +3,7 @@ import random
 from maliang import Maliang
 from maliang.units import *
 
-app = Maliang(width=100, height=100, double_buffer=False, fps=30)
+app = Maliang(width=100, height=100, double_buffer=False, fps=10)
 app.set_trace_log_level(4)
 
 

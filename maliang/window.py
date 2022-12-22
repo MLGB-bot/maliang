@@ -31,6 +31,7 @@ class Window():
             pr.clear_background(color.to_pyray())
         else:
             pr.draw_rectangle(0, 0, self.width, self.height, color.to_pyray())
+        self.background_color = tuple(color)
 
     def window_should_close(self) -> bool:
         return pr.window_should_close()
