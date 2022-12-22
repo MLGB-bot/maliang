@@ -18,3 +18,15 @@ class Environment():
 
     def set_trace_log_level(self, log_level):
         pr.set_trace_log_level(log_level)
+
+    def set_clipboard_text(self, text):
+        pr.set_clipboard_text(text)
+
+    def get_clipboard_text(self, ):
+        return pr.get_clipboard_text()
+
+    def enable_event_waiting(self):
+        pr.enable_event_waiting()
+
+    def disable_event_waiting(self):
+        pr.disable_event_waiting()
