@@ -2,7 +2,7 @@ import pyray as pr
 from maliang.structs import MColor, MImage
 
 
-class _window():
+class Window():
     def __init__(self, width=100, height=100, title='',
                  background_color=(235, 235, 235, 255)):
         self.width = width
