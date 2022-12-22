@@ -1,5 +1,5 @@
 import pyray as pr
-from maliang.structs import MTexture
+from maliang.structs import MTexture, MBoundingBox
 from maliang.shape_conf import ShapeConfig
 
 
@@ -79,3 +79,25 @@ class Shapes3d(ShapeConfig):
     def grid(self, slices=0, spacing=0.0):
         # Draw a grid (centered at (0, 0, 0))
         pr.draw_grid(slices, spacing)
+
+    # collision detection functions
+    # 碰撞检测
+    def check_collision_spheres(self, x1, y1, z1, diam1, x2, y2, z2, diam2, ) -> bool:
+        return pr.check_collision_spheres(
+            pr.Vector3(x1, y1, z1), diam1 * 0.5,
+            pr.Vector3(x2, y2, z2), diam2 * 0.5,
+        )
+
+    def check_collision_boxes(self, box1: MBoundingBox, box2: MBoundingBox ) -> bool:
+        return pr.check_collision_boxes(
+            box1.pr_boundingbox,
+            box2.pr_boundingbox,
+        )
+
+    def check_collision_box_sphere(self, box: MBoundingBox, sphere_axis, sphere_diam) -> bool:
+        return pr.check_collision_box_sphere(
+            box.pr_boundingbox,
+            pr.Vector3(*sphere_axis),
+            sphere_diam
+        )
+
