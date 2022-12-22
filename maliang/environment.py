@@ -1,14 +1,14 @@
 import pyray as pr
 
-
-
 class Environment():
-    def __init__(self, width, height, ):
-        self.width = width
-        self.height = height
+    def __init__(self, fps=0):
+        self.fps = fps
+        self.init_fps(fps)
 
-    def resize(self, width, height):
-        raise NotImplementedError
+    def init_fps(self, fps):
+        if isinstance(fps, int):
+            self.fps = fps
+            pr.set_target_fps(fps)
 
     def smooth(self):
         pr.rl_enable_smooth_lines()
