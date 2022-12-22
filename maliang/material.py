@@ -1,17 +1,20 @@
 import os
 import pyray as pr
-from maliang.structs import MMaterial, MModel
-from maliang.units import ResourceLoader, ImageMode
+from maliang.structs import MMaterial
+from maliang.units import ResourceLoader
 
 class Model():
     def __init__(self):
         pass
 
     def load_materials(self, filename, count: int):
-        image_path = os.path.join(ResourceLoader.static_dir, filename)
-        material = MMaterial()
-        material.pr_material = pr.load_materials(image_path, count)
-        return material
+        filepath = os.path.join(ResourceLoader.static_dir, filename)
+        data_list = []
+        for pr_matetial in pr.load_materials(filepath, count):
+            material = MMaterial()
+            material.pr_material = pr_matetial
+            data_list.append(material)
+        return data_list
 
     def load_material_default(self):
         material = MMaterial()

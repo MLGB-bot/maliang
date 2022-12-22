@@ -1,7 +1,7 @@
 import os
 import pyray as pr
 from maliang.units import ResourceLoader
-from maliang.structs import MModel, MMesh, MBoundingBox, MColor, MCamera3D, MTexture
+from maliang.structs import MModel, MMesh, MBoundingBox, MColor, MCamera3D, MTexture, MModelAnimation
 
 
 class Model():
@@ -37,3 +37,22 @@ class Model():
 
     def set_model_mesh_material(self, model: MModel, mesh_id: int, material_id: int):
         model.set_mesh_matrrial(mesh_id, material_id)
+
+    def load_model_animations(self, filename, count: int):
+        filepath = os.path.join(ResourceLoader.static_dir, filename)
+        data_list = []
+        for pr_animation in pr.load_model_animations(filepath, count):
+            animation = MModelAnimation()
+            animation.pr_model_animaation = pr_animation
+            data_list.append(animation)
+        return data_list
+
+    def update_model_animation(self, model: MModel, animation: MModelAnimation, frame: int):
+        pr.update_model_animation(model.pr_model, animation.pr_model_animation, frame)
+
+    def unload_animations(self, animations: tuple[MModelAnimation]|list[MModelAnimation]):
+        pr.unload_model_animations([i.pr_model_animation for i in animations], len(animations))
+
+    def is_model_animation_valid(self, model: MModel, animation: MModelAnimation) -> bool:
+        return pr.is_model_animation_valid(model.pr_model, animation.pr_model_animation)
+

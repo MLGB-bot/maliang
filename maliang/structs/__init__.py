@@ -4,6 +4,7 @@ from maliang.structs.image import MImage
 from maliang.structs.mesh import MMesh
 from maliang.structs.material import MMaterial
 from maliang.structs.model import MModel
+from maliang.structs.model_animation import MModelAnimation
 from maliang.structs.boundingbox import MBoundingBox
 from maliang.structs.texture import MTexture
 from maliang.structs.font import MFont
