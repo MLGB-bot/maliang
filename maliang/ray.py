@@ -12,5 +12,5 @@ class Ray():
         return ray
 
     def draw_ray(self, ray: MRay, color):
-        pr.draw_ray(ray.pr_ray, MColor(*color).to_pyray())
+        ray.draw(MColor(*color))
 
