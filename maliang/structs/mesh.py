@@ -18,11 +18,11 @@ class MMesh:
 
     def draw(self, material: mod_material.MMaterial, transform):
         matrix = mod_matrix.MMatrix(*transform)
-        pr.draw_mesh(self.pr_mesh, material.pr_material, matrix)
+        pr.draw_mesh(self.pr_mesh, material.pr_material, matrix.pr_matrix)
 
     def draw_instanced(self, material: mod_material.MMaterial, transform, instances):
         matrix = mod_matrix.MMatrix(*transform)
-        pr.draw_mesh_instanced(self.pr_mesh, material.pr_material, matrix, instances)
+        pr.draw_mesh_instanced(self.pr_mesh, material.pr_material, matrix.pr_matrix, instances)
 
     def export(self, filename):
         pr.export_mesh(self.pr_mesh, filename)

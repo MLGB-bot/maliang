@@ -1,5 +1,6 @@
 import pyray as pr
 
-class MMatrix(pr.Matrix):
+class MMatrix():
     def __init__(self, *args, **kwargs):
-        pr.Matrix.__init__(self, *args, **kwargs)
+        self.pr_matrix = pr.Matrix(*args, **kwargs)
+
