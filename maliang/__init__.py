@@ -86,6 +86,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
 
     @decorate_by_buffer_value
     def _on_setup(self):
+        self.background(*self.background_color) # setup defaule background color
         # 执行setup中的操作
         self.on_setup()
 
@@ -115,17 +116,18 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
             if self.is_window_resized():
                 if self.buffer_texture:
                     new_buffer_texture = self.load_render_texture()  # create new sized buffer texture
-                    # # copy old texture to new resized texture
-                    # pr.begin_texture_mode(new_buffer_texture)
-                    # pr.draw_texture_pro(
-                    #     self.buffer_texture.texture,
-                    #     pr.Rectangle(0, 0, self.buffer_texture.texture.width, -self.buffer_texture.texture.height),
-                    #     pr.Rectangle(0, 0, self.buffer_texture.texture.width, self.buffer_texture.texture.height),
-                    #     pr.Vector2(0, 0),
-                    #     0,
-                    #     pr.WHITE
-                    # )
-                    # pr.end_texture_mode()
+                    # copy old texture to new resized texture
+                    pr.begin_texture_mode(new_buffer_texture)
+                    self.background(*self.background_color)
+                    pr.draw_texture_pro(
+                        self.buffer_texture.texture,
+                        pr.Rectangle(0, 0, self.buffer_texture.texture.width, -self.buffer_texture.texture.height),
+                        pr.Rectangle(0, 0, self.buffer_texture.texture.width, self.buffer_texture.texture.height),
+                        pr.Vector2(0, 0),
+                        0,
+                        pr.WHITE
+                    )
+                    pr.end_texture_mode()
                     self.unload_render_texture()
                     self.buffer_texture = new_buffer_texture
         self.on_exit()
