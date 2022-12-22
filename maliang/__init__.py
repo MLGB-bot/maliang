@@ -105,31 +105,34 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
         self.unload_render_texture()
         pr.close_window()
 
+    def on_lastframe_resize(self):
+        # on window resize
+        if self.is_window_resized():
+            if self.buffer_texture:
+                new_buffer_texture = self.load_render_texture()  # create new sized buffer texture
+                # copy old texture to new resized texture
+                pr.begin_texture_mode(new_buffer_texture)
+                self.background(*self.background_color)
+                pr.draw_texture_pro(
+                    self.buffer_texture.texture,
+                    pr.Rectangle(0, 0, self.buffer_texture.texture.width, -self.buffer_texture.texture.height),
+                    pr.Rectangle(0, 0, self.buffer_texture.texture.width, self.buffer_texture.texture.height),
+                    pr.Vector2(0, 0),
+                    0,
+                    pr.WHITE
+                )
+                pr.end_texture_mode()
+                self.unload_render_texture()
+                self.buffer_texture = new_buffer_texture
+
     def loop(self):
         self._on_setup()
         while not pr.window_should_close():
+            self.on_lastframe_resize()
             self._on_draw()
             self.release_matrix()
             # done: auto clean fonts created in runtime
             ResourceLoader.task_unload_fonts_runtime()
-            # on window resize
-            if self.is_window_resized():
-                if self.buffer_texture:
-                    new_buffer_texture = self.load_render_texture()  # create new sized buffer texture
-                    # copy old texture to new resized texture
-                    pr.begin_texture_mode(new_buffer_texture)
-                    self.background(*self.background_color)
-                    pr.draw_texture_pro(
-                        self.buffer_texture.texture,
-                        pr.Rectangle(0, 0, self.buffer_texture.texture.width, -self.buffer_texture.texture.height),
-                        pr.Rectangle(0, 0, self.buffer_texture.texture.width, self.buffer_texture.texture.height),
-                        pr.Vector2(0, 0),
-                        0,
-                        pr.WHITE
-                    )
-                    pr.end_texture_mode()
-                    self.unload_render_texture()
-                    self.buffer_texture = new_buffer_texture
         self.on_exit()
 
     def run(self):
