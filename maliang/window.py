@@ -1,20 +1,29 @@
 import pyray as pr
 from maliang.structs import MColor, MImage
-
+from maliang.units.modes import WindowFlags
 
 class Window():
     def __init__(self, width=100, height=100, title='',
                  background_color=(235, 235, 235, 255)):
-        self.width = width
-        self.height = height
+
+        self.set_window_state(WindowFlags.FLAG_WINDOW_RESIZABLE)
+
         self.background_color = tuple(MColor(*background_color))
         self.title = title
-        self.init_window()
+        self.init_window(width, height)
         while not pr.is_window_ready():
             pass
 
-    def init_window(self):
-        return pr.init_window(self.width, self.height, self.title)
+    def init_window(self, width, height):
+        return pr.init_window(width, height, self.title)
+
+    @property
+    def width(self):
+        return self.get_screen_width()
+
+    @property
+    def height(self):
+        return self.get_screen_height()
 
     def background(self, *color):
         color = MColor(*color)
