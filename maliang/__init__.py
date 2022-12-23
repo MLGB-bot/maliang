@@ -9,6 +9,7 @@ from maliang.transform import Transform
 from maliang.mouse import Mouse
 from maliang.keyboard import Keyboard
 from maliang.ray import Ray
+from maliang.shader import Shader
 from maliang.events import Events
 from maliang.image import Image
 from maliang.font import Font
@@ -17,7 +18,8 @@ from maliang.texture import Texture
 from maliang.units import ResourceLoader
 
 
-class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse, Keyboard, Ray, Image, Font, Text, Texture, Camera):
+class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse, Keyboard,
+              Ray, Shader, Image, Font, Text, Texture, Camera):
     def __init__(self, width=100, height=100, title='', double_buffer=True, fps=None,
                  background_color=(235, 235, 235, 255), ):
         Environment.__init__(self, fps=fps)
@@ -33,6 +35,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
         Texture.__init__(self)
         Camera.__init__(self)
         Ray.__init__(self)
+        Shader.__init__(self)
         Window.__init__(self, width=width, height=height, title=title, background_color=background_color)
         self.frame_count = 0
         self.double_buffer = double_buffer

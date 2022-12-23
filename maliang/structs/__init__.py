@@ -9,4 +9,5 @@ from maliang.structs.boundingbox import MBoundingBox
 from maliang.structs.texture import MTexture
 from maliang.structs.font import MFont
 from maliang.structs.ray import MRay
+from maliang.structs.shader import MShader
 from maliang.structs.audio import MSound, MusicStream, AudioStream
