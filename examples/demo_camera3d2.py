@@ -4,7 +4,7 @@ from maliang import Maliang
 from maliang.units import *
 import pyray as pr
 
-app = Maliang(width=800, height=450, double_buffer=True, fps=80)
+app = Maliang(width=800, height=450, double_buffer=False, fps=80)
 app.set_trace_log_level(4)
 
 MAX_BUILDINGS = 1000
@@ -16,7 +16,7 @@ camera.position = (10, 10, 10)
 camera.target = (0, 0, 0)
 camera.up = (0, 1, 0)
 camera.fovy = 45.0
-camera.projection = app.CAMERA_PROJECTION_PERSPECTIVE
+camera.projection = CameraProjection.PERSPECTIVE
 
 camera.set_mode(CameraMode.CAMERA_FREE)
 
