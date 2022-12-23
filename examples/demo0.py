@@ -103,7 +103,8 @@ def demo():
         #               stroke_width=5,
         #               stroke_color=pr.BLACK
         #              )
-        # app.line(0, 0, app.width, app.height, 1, stroke_color=pr.BLACK)
+        app.line(0.1, 0.1, app.width-10.4, app.height-10.7, 1, stroke_color=pr.BLACK)
+        app.line(0.1, 0.1, app.width-10.4, app.height-10.7, stroke_width=0, stroke_color=pr.BLACK, )
         # app.stroke(pr.PINK, )
         # app.line(0, app.height, app.width, 0, stroke_width=10)
         #
@@ -144,7 +145,7 @@ def demo():
         # img1 = app.load_screen()
         # print(img1.pr_img)
         app.no_fill()
-        app.circle(app.mouse_x, app.mouse_y, 20, stroke_color=pr.RED)
+        app.circle(app.mouse_x, app.mouse_y, 20.5, stroke_color=pr.RED)
 
     def on_mouse_wheel(*args):
         print("on_mouse_wheel", args)
