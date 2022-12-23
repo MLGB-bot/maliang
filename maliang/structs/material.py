@@ -3,7 +3,9 @@ import maliang.structs.texture as mod_texture
 
 
 class MMaterial:
+    MATERIAL_MAP_DIFFUSE   = 0  # Albedo material
     MATERIAL_MAP_ALBEDO    = 0  # Albedo material (same as: MATERIAL_MAP_DIFFUSE)
+    MATERIAL_MAP_SPECULAR  = 1  # Metalness material
     MATERIAL_MAP_METALNESS = 1  # Metalness material (same as: MATERIAL_MAP_SPECULAR)
     MATERIAL_MAP_NORMAL    = 2  # Normal material
     MATERIAL_MAP_ROUGHNESS = 3  # Roughness material
