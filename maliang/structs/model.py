@@ -9,6 +9,11 @@ class MModel:
     def __init__(self):
         self.pr_model = None
 
+    def unload(self):
+        if self.pr_model:
+            pr.unload_model(self.pr_model)
+            self.pr_model = None
+
     @property
     def transform(self):
         return self.pr_model.transform

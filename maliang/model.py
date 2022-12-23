@@ -15,9 +15,7 @@ class Model():
         return model
 
     def load_model_from_mesh(self, mesh: MMesh):
-        model = MModel()
-        model.pr_model = pr.load_model_from_mesh(mesh.pr_mesh)
-        return model
+        return mesh.load_model()
 
     def unload_model(self, model: MModel):
         pr.unload_model(model.pr_model)

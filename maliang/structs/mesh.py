@@ -2,6 +2,7 @@ import pyray as pr
 import maliang.structs.material as mod_material
 import maliang.structs.matrix as mod_matrix
 import maliang.structs.boundingbox as mod_boundingbox
+import maliang.structs.model as mod_model
 
 class MMesh:
     def __init__(self):
@@ -34,3 +35,8 @@ class MMesh:
 
     def gen_trngents(self):
         pr.gen_mesh_tangents(self.pr_mesh)
+
+    def load_model(self) -> mod_model.MModel:
+        model = mod_model.MModel()
+        model.pr_model = pr.load_model_from_mesh(self.pr_mesh)
+        return model
