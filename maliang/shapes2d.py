@@ -61,8 +61,8 @@ class Shapes2d(ShapeConfig):
         stroke_color = self.init_stroke_color(stroke_color)
         if stroke_width and stroke_color:
             pr.draw_line_ex(
-                pr.Vector2(f2i(x1), f2i(y1)),
-                pr.Vector2(f2i(x2), f2i(y2)),
+                pr.Vector2(x1, y1),
+                pr.Vector2(x2, y2),
                 stroke_width,
                 pr.Color(*stroke_color),
             )
@@ -72,15 +72,15 @@ class Shapes2d(ShapeConfig):
     @staticmethod
     def _init_rect_mode(x, y, w, h, rect_mode):
         if rect_mode == RectMode.CORNER:
-            return f2i(x), f2i(y), f2i(w), f2i(h)
+            return x, y, w, h
         elif rect_mode == RectMode.CENTER:
-            return f2i(x - w * 0.5), f2i(y - h * 0.5), f2i(w), f2i(h)
+            return x - w * 0.5, y - h * 0.5, w, h
         elif rect_mode == RectMode.RADIUS:
-            return f2i(x - w), f2i(y - h), f2i(2 * w), f2i(2 * h)
+            return x - w, y - h, 2 * w, 2 * h
         elif rect_mode == RectMode.CORNERS:
-            return f2i(min(x, w)), f2i(min(y, h)), f2i(abs(x - w)), f2i(abs(y - h))
+            return min(x, w), min(y, h), abs(x - w), abs(y - h)
         else:
-            return f2i(x), f2i(y), f2i(w), f2i(h)
+            return x, y, w, h
 
     def rect(self, x, y, w, h, stroke_width=None, stroke_color: tuple = None, filled_color: tuple = None, mode=None):
         stroke_width = self.init_stroke_width(stroke_width)
@@ -100,13 +100,13 @@ class Shapes2d(ShapeConfig):
     @staticmethod
     def _init_circle_mode(x, y, diam, rect_mode):
         if rect_mode == CircleMode.CORNER:
-            return f2i(x + diam * 0.5), f2i(y + diam * 0.5), diam * 0.5
+            return x + diam * 0.5, y + diam * 0.5, diam * 0.5
         elif rect_mode == CircleMode.CENTER:
-            return f2i(x), f2i(y), diam*0.5
+            return x, y, diam*0.5
         elif rect_mode == CircleMode.RADIUS:
-            return f2i(x), f2i(y), diam
+            return x, y, diam
         else:
-            return f2i(x), f2i(y), diam*0.5
+            return x, y, diam*0.5
 
 
     def circle(self, x, y, diam, stroke_width=None, stroke_color: tuple = None, filled_color: tuple = None, segments=30,
@@ -129,15 +129,15 @@ class Shapes2d(ShapeConfig):
     @staticmethod
     def _init_ellipse_mode(x, y, w, h, rect_mode):
         if rect_mode == EllipseMode.CORNER:
-            return f2i(x + w * 0.5), f2i(y + h * 0.5), w * 0.5, h * 0.5
+            return (x + w * 0.5), (y + h * 0.5), w * 0.5, h * 0.5
         elif rect_mode == EllipseMode.CENTER:
-            return f2i(x), f2i(y), w * 0.5, h * 0.5
+            return (x), (y), w * 0.5, h * 0.5
         elif rect_mode == EllipseMode.RADIUS:
-            return f2i(x), f2i(y), w, h
+            return (x), (y), w, h
         elif rect_mode == EllipseMode.CORNERS:
-            return f2i(0.5 * (x + w)), f2i(0.5 * (y + h)), abs(x - w) * 0.5, abs(y - h) * 0.5
+            return (0.5 * (x + w)), (0.5 * (y + h)), abs(x - w) * 0.5, abs(y - h) * 0.5
         else:
-            return f2i(x), f2i(y), w * 0.5, h * 0.5
+            return (x), (y), w * 0.5, h * 0.5
 
     def ellipse(self, x, y, w, h, stroke_width=None, stroke_color: tuple = None, filled_color: tuple = None, mode=None):
         stroke_width = self.init_stroke_width(stroke_width)
@@ -179,13 +179,13 @@ class Shapes2d(ShapeConfig):
     def init_ring_mode(x, y, d1, d2, rect_mode):
         if rect_mode == CircleMode.CORNER:
             dm = max(d1, d2)
-            return f2i(x + dm * 0.5), f2i(y + dm * 0.5), d1 * 0.5, d2 * 0.5
+            return (x + dm * 0.5), (y + dm * 0.5), d1 * 0.5, d2 * 0.5
         elif rect_mode == CircleMode.CENTER:
-            return f2i(x), f2i(y), d1 * 0.5, d2 * 0.5
+            return (x), (y), d1 * 0.5, d2 * 0.5
         elif rect_mode == CircleMode.RADIUS:
-            return f2i(x), f2i(y), d1, d2
+            return (x), (y), d1, d2
         else:
-            return f2i(x), f2i(y), d1 * 0.5, d2 * 0.5
+            return (x), (y), d1 * 0.5, d2 * 0.5
 
     def ring(self, x, y, d_in, d_out, stroke_width=None, stroke_color: tuple = None, filled_color: tuple = None,
              segments=30, mode=None):
@@ -315,15 +315,15 @@ class Shapes2d(ShapeConfig):
 
     def _rev_rect_mode(self, x, y, w, h, rect_mode):
         if rect_mode == RectMode.CORNER:
-            return f2i(x), f2i(y), f2i(w), f2i(h)
+            return (x), (y), (w), (h)
         elif rect_mode == RectMode.CENTER:
-            return int(x + w * 0.5), int(y + h * 0.5), f2i(w), f2i(h)
+            return (x + w * 0.5), (y + h * 0.5), (w), (h)
         elif rect_mode == RectMode.RADIUS:
-            return int(x + w * 0.5), int(y + h * 0.5), f2i(0.5 * w), f2i(0.5 * h)
+            return (x + w * 0.5), (y + h * 0.5), (0.5 * w), (0.5 * h)
         elif rect_mode == RectMode.CORNERS:
-            return f2i(x), f2i(y), f2i(abs(x + w)), f2i(abs(y + h))
+            return (x), (y), (abs(x + w)), (abs(y + h))
         else:
-            return f2i(x), f2i(y), f2i(w), f2i(h)
+            return (x), (y), (w), (h)
 
     def get_collision_rec(self, x1, y1, w1, h1, x2, y2, w2, h2, mode=None):
         mode = mode or self._rect_mode
