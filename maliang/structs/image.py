@@ -98,7 +98,7 @@ class MImage:
     def alpha_premultiply(self):
         pr.image_alpha_premultiply(self.pr_image)
 
-    def mipmaps(self, ):  # 计算所提供图像的所有mipmap级别
+    def gen_mipmaps(self, ):  # 计算所提供图像的所有mipmap级别
         pr.image_mipmaps(self.pr_image)
 
     @decorate_on_image_change
@@ -146,10 +146,15 @@ class MImage:
         pr.image_color_replace(self.pr_image, color.to_pyray(), replaced_color.to_pyray())
 
     def load_colors(self):  # 将图像中的颜色数据加载为颜色阵列(RGBA-32位)
-        pr_color = pr.load_image_colors(self.pr_image)
-        color = mod_color.MColor(pr_color.r, pr_color.g, pr_color.b, pr_color.a)
-        pr.unload_image_colors(pr_color)
-        return color
+        pr_colors = pr.load_image_colors(self.pr_image)
+        length = self.width * self.height
+        data_list = []
+        for i in range(length):
+            pr_color = pr_colors[i]
+            color = mod_color.MColor(pr_color.r, pr_color.g, pr_color.b, pr_color.a)
+            data_list.append(color)
+        pr.unload_image_colors(pr_colors)
+        return data_list
 
     def load_palette(self, max_palette_size, color_count):  # 从图像 Load调色板作为颜色阵列(RGBA-32位)
         pr_color = pr.load_image_palette(self.pr_image, max_palette_size, color_count)
