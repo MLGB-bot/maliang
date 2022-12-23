@@ -3,7 +3,7 @@ import pyray as pr
 from maliang.structs import MMaterial
 from maliang.units import ResourceLoader
 
-class Model():
+class Material():
     def __init__(self):
         pass
 

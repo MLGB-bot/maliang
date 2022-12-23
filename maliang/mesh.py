@@ -2,7 +2,7 @@ import pyray as pr
 from maliang.structs import MMesh, MImage
 
 
-class Model():
+class Mesh():
     def __init__(self):
         pass
 
