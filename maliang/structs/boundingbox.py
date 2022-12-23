@@ -25,3 +25,15 @@ class MBoundingBox:
     def draw(self, color: mod_color.MColor=mod_color.MColor(0,0,0)):
         pr.draw_bounding_box(self.pr_boundingbox, color.to_pyray())
 
+    def init_from_cube(self, x, y, z, size_x, size_y, size_z):
+        min = pr.Vector3(
+            x - size_x * 0.5,
+            y - size_y * 0.5,
+            z - size_z * 0.5,
+        )
+        max = pr.Vector3(
+            x + size_x * 0.5,
+            y + size_y * 0.5,
+            z + size_z * 0.5,
+        )
+        self.pr_boundingbox = pr.BoundingBox(min, max)

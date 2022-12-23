@@ -28,31 +28,31 @@ class Shapes3d(ShapeConfig):
         stroke_color = self.init_stroke_color(stroke_color)
         pr.draw_triangle_strip_3d([pr.Vector3(*i) for i in points], len(points), pr.Color(*stroke_color))
 
-    def cube(self, x, y, z, width, height, length, stroke_color: tuple = None,
+    def cube(self, x, y, z, size_x, size_y, size_z, stroke_color: tuple = None,
              filled_color: tuple = None):
         filled_color = self.init_filled_color(filled_color)
         stroke_color = self.init_stroke_color(stroke_color)
         if filled_color:
-            pr.draw_cube_v(pr.Vector3(x, y, z), pr.Vector3(width, height, length), pr.Color(*filled_color))
+            pr.draw_cube_v(pr.Vector3(x, y, z), pr.Vector3(size_x, size_y, size_z), pr.Color(*filled_color))
         if stroke_color:
-            pr.draw_cube_wires_v(pr.Vector3(x, y, z), pr.Vector3(width, height, length), pr.Color(*stroke_color))
+            pr.draw_cube_wires_v(pr.Vector3(x, y, z), pr.Vector3(size_x, size_y, size_z), pr.Color(*stroke_color))
 
-    def cube_texture(self, texture: MTexture, x, y, z, width, height, length, filled_color: tuple = None, source=None):
+    def cube_texture(self, texture: MTexture, x, y, z, size_x, size_y, size_z, filled_color: tuple = None, source=None):
         filled_color = self.init_filled_color(filled_color)
         if not source:
-            pr.draw_cube_texture(texture.pr_texture, pr.Vector3(x, y, z), width, height, length,
+            pr.draw_cube_texture(texture.pr_texture, pr.Vector3(x, y, z), size_x, size_y, size_z,
                                  pr.Color(*filled_color))
         else:
-            pr.draw_cube_texture_rec(texture.pr_texture, pr.Rectangle(*source), pr.Vector3(x, y, z), width, height,
-                                     length, pr.Color(*filled_color))
+            pr.draw_cube_texture_rec(texture.pr_texture, pr.Rectangle(*source), pr.Vector3(x, y, z),
+                                     size_x, size_y, size_z, pr.Color(*filled_color))
 
     def sphere(self, x, y, z, diam, rings=16, slices=16, stroke_color: tuple = None, filled_color=None,):
         filled_color = self.init_filled_color(filled_color)
         stroke_color = self.init_stroke_color(stroke_color)
         if filled_color:
-            pr.draw_sphere_ex(pr.Vector3(x, y, z), diam*0.5, rings, slices, pr.Color(*filled_color))
+            pr.draw_sphere_ex(pr.Vector3(x, y, z), diam, rings, slices, pr.Color(*filled_color))
         if stroke_color:
-            pr.draw_sphere_wires(pr.Vector3(x, y, z), diam * 0.5, rings, slices, pr.Color(*filled_color))
+            pr.draw_sphere_wires(pr.Vector3(x, y, z), diam, rings, slices, pr.Color(*stroke_color))
 
     def cylinder(self, x, y, z, diam_top, diam_bottom, height, slices=16, stroke_color: tuple = None, filled_color=None):
         filled_color = self.init_filled_color(filled_color)
