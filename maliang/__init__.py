@@ -78,7 +78,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
                                     )
                 pr.end_drawing()
                 # single buffer switch to double buffer
-                if self.double_buffer and self.frame_count % 2 == 0:
+                if self.double_buffer and self.frame_count and self.frame_count % 2 == 0:
                     self.unload_render_texture()
                     self.buffer_texture = None
             else:
