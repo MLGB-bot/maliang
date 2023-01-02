@@ -118,7 +118,7 @@ class MImage:
         pr.image_rotate_cw(self.pr_image)
 
     @decorate_on_image_change
-    def Rotate_ccw(self):  # 逆时针旋转图像 90度
+    def rotate_ccw(self):  # 逆时针旋转图像 90度
         pr.image_rotate_ccw(self.pr_image)
 
     @decorate_on_image_change
