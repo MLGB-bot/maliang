@@ -38,7 +38,6 @@ class MFont:
         self._bin = None
         self._len = 0
         self._type = '.ttf'
-        self._pil = None  # Pillow engine font
 
         # interface engine
         self.engine_id = 0
