@@ -19,6 +19,7 @@ from maliang.font import Font
 from maliang.text import Text
 from maliang.texture import Texture
 from maliang.units import ResourceLoader
+from maliang.units.modes import *
 
 
 class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse, Keyboard,
