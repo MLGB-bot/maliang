@@ -2,7 +2,7 @@ import pyray as pr
 from maliang.units import RectMode, EllipseMode, CircleMode, f2i
 from maliang.shape_conf import ShapeConfig
 from raylib._raylib_cffi import ffi
-
+import raylib as rl
 
 class Shapes2d(ShapeConfig):
     def __init__(self):
@@ -49,7 +49,8 @@ class Shapes2d(ShapeConfig):
                 if shape == "circle":
                     pr.draw_circle(x, y, stroke_width * 0.5, pr.Color(*stroke_color))
                 elif shape == 'rect':
-                    pr.draw_rectangle(x, y, stroke_width, stroke_width, pr.Color(*stroke_color))
+                    self.rect(x, y, stroke_width, stroke_width, stroke_width=0,
+                         stroke_color=None, filled_color=stroke_color, mode=RectMode.CENTER)
             elif stroke_width == 1:
                 # 画一个像素
                 pr.draw_pixel(x, y, pr.Color(*stroke_color))
@@ -90,12 +91,12 @@ class Shapes2d(ShapeConfig):
         mode = mode or self._rect_mode
         _x, _y, _w, _h = self._init_rect_mode(x, y, w, h, mode)
         if filled_color:
-            pr.draw_rectangle(_x, _y, _w, _h, pr.Color(*filled_color))
+            rl.DrawRectangleRec(pr.Rectangle(_x, _y, _w, _h), pr.Color(*filled_color))
         if stroke_width and stroke_color:
             if stroke_width == 1:
-                pr.draw_rectangle_lines(_x, _y, _w, _h, pr.Color(*stroke_color))
+                rl.DrawRectangleLinesEx(pr.Rectangle(_x, _y, _w, _h), 1, pr.Color(*stroke_color))
             else:
-                pr.draw_rectangle_lines_ex(pr.Rectangle(_x, _y, _w, _h), stroke_width, pr.Color(*stroke_color))
+                rl.DrawRectangleLinesEx(pr.Rectangle(_x, _y, _w, _h), stroke_width, pr.Color(*stroke_color))
 
     @staticmethod
     def _init_circle_mode(x, y, diam, rect_mode):
