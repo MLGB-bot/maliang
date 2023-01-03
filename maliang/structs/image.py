@@ -170,6 +170,9 @@ class MImage:
         pr_color = pr.get_image_color(self.pr_image, x, y)
         return mod_color.MColor(pr_color.r, pr_color.g, pr_color.b, pr_color.a)
 
+    def set_color(self, x, y, color: mod_color.MColor):
+        return self.draw_pixel(x, y, color)
+
     # Image drawing functions
     # NOTE: Image software-rendering functions (CPU)
     @decorate_on_image_change
