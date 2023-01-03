@@ -2,6 +2,7 @@ import pyray as pr
 
 class Environment():
     def __init__(self, fps=0):
+        self.set_trace_log_level(7)
         self.fps = fps
         self.init_fps(fps)
 
