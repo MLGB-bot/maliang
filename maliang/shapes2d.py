@@ -47,15 +47,16 @@ class Shapes2d(ShapeConfig):
             if stroke_width > 1:
                 # 画一个圆
                 if shape == "circle":
-                    pr.draw_circle(x, y, stroke_width * 0.5, pr.Color(*stroke_color))
+                    self.circle(x, y, diam=stroke_width, stroke_width=0,
+                         stroke_color=None, filled_color=stroke_color, mode=CircleMode.CENTER)
                 elif shape == 'rect':
                     self.rect(x, y, stroke_width, stroke_width, stroke_width=0,
                          stroke_color=None, filled_color=stroke_color, mode=RectMode.CENTER)
             elif stroke_width == 1:
                 # 画一个像素
-                pr.draw_pixel(x, y, pr.Color(*stroke_color))
+                rl.DrawPixelV(pr.Vector2(x, y), pr.Color(*stroke_color))
         elif stroke_color:
-            pr.draw_pixel(x, y, pr.Color(*stroke_color))
+            rl.DrawPixelV(pr.Vector2(x, y), pr.Color(*stroke_color))
 
     def line(self, x1, y1, x2, y2, stroke_width=None, stroke_color: tuple = None):
         stroke_width = self.init_stroke_width(stroke_width)
