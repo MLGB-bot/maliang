@@ -9,7 +9,7 @@ import traceback
 
 from maliang import Maliang
 
-app = Maliang(width=300, height=300, double_buffer=False, fps=30)
+app = Maliang(width=300, height=300, fps=30)
 app.set_window_title("Conway Life Game")
 
 class Cells():

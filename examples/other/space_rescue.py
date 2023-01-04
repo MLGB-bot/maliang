@@ -6,7 +6,7 @@ from types import NoneType
 import maliang
 from maliang import Maliang
 
-app = Maliang(width=280, height=320, double_buffer=False, fps=30)
+app = Maliang(width=280, height=320, fps=30)
 app.set_window_title("Space Rescue")
 app.smooth()
 
