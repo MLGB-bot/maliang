@@ -4,33 +4,36 @@
 ◆ 如果一个细胞为ON，邻居中超过3个为ON，它变为OFF。（模拟生命数量过多）
 ◆ 如果一个细胞为OFF，邻居中恰好有3个为ON，它变为ON。（模拟繁殖）
 """
+
 import random
-import traceback
 
 from maliang import Maliang
 
 app = Maliang(width=300, height=300, fps=30)
 app.set_window_title("Conway Life Game")
 
+
 class Cells():
+    background_color = (235, 235, 235, 255)
+    grid_color = (200, 200, 200, 255)
+    cell_color = (0, 0, 0, 235)
+
+    cell_size = 4
+    cell_num_x = int(app.width / cell_size)
+    cell_num_y = int(app.height / cell_size)
+    cells = {}
+
     def __init__(self):
-        self.cells = []
-        self.cell_size = 4
-        self.cell_num_x = int(app.width / self.cell_size)
-        self.cell_num_y = int(app.height / self.cell_size)
-        # colors
-        self.background_color = (235, 235, 235, 255)
-        self.grid_color = (200, 200, 200, 255)
-        self.cell_color = (0, 0, 0, 235)
+        pass
 
     # 1 init random cells
     def init_random_cells(self):
         for x in range(self.cell_num_x):
-            line_cells = []
             for y in range(self.cell_num_y):
-                line_cells.append(random.choice((True, False)))
+                # line_cells.append(random.choice((True, False)))
                 # line_cells.append(random.random() > 0.90)
-            self.cells.append(line_cells)
+                if random.choice((True, False)):
+                    self.cells[(x, y)] = True
 
     def display_grids(self):
         if self.cell_size > 1:
@@ -41,15 +44,6 @@ class Cells():
             for y in range(self.cell_num_y):
                 _y = y * self.cell_size
                 app.line(0, _y, app.width, _y, stroke_width=1, stroke_color=self.grid_color)
-
-    def display_cells(self):
-        for x in range(self.cell_num_x):
-            for y in range(self.cell_num_y):
-                if self.cells[x][y]:
-                    if self.cell_size == 1:
-                        app.point(x, y, stroke_width=1, stroke_color=self.cell_color)
-                    else:
-                        app.rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)
 
     def get_neighboor_coors(self, x, y):
         left_x = x - 1
@@ -64,43 +58,49 @@ class Cells():
         down_y = y + 1
         if down_y >= self.cell_num_y:
             down_y = down_y - self.cell_num_y
-        return (left_x, up_y), (x, up_y), (right_x, up_y), \
-               (left_x, y), (right_x, y), \
-               (left_x, down_y), (x, down_y), (right_x, down_y)
+
+        for _x in (left_x, x, right_x):
+            for _y in (up_y, y, down_y):
+                if _x == x and _y == y:
+                    continue
+                yield _x, _y
+
+    def rev_cell(self, x, y):
+        if self.cells.get((x, y), False):
+            del self.cells[(x, y)]
+        else:
+            self.cells[(x, y)] = True
 
     def update_cells(self):
         raw_cells = {}
 
         def get_raw_cell(x, y):
-            if (x, y) in raw_cells:
-                return raw_cells[(x, y)]
-            else:
-                return self.cells[x][y]
+            return raw_cells[(x, y)] if (x, y) in raw_cells else (x, y) in self.cells
 
         for x in range(self.cell_num_x):
             for y in range(self.cell_num_y):
                 # get neighboors
-                lived_neighboors = 0
-                for neighboor in self.get_neighboor_coors(x, y):
-                    # if raw_cells[neighboor[0]][neighboor[1]]:
-                    if get_raw_cell(neighboor[0], neighboor[1]):
-                        lived_neighboors += 1
-                #
-                if self.cells[x][y]:
+                lived_neighboors = sum([get_raw_cell(neighboor_x, neighboor_y)
+                                        for neighboor_x, neighboor_y in self.get_neighboor_coors(x, y)])
+                if (x, y) in self.cells:
                     if 2 <= lived_neighboors <= 3:
-                        continue
+                        pass
                     else:
                         raw_cells[(x, y)] = True
-                        self.cells[x][y] = False
-                        continue
+                        del self.cells[(x, y)]
                 else:
                     if lived_neighboors == 3:
                         raw_cells[(x, y)] = False
-                        self.cells[x][y] = True
+                        self.cells[(x, y)] = True
+
                 # # random error
                 # if random.random() < 0.0001:
-                #     self.cells[x][y] = not self.cells[x][y]
+                #     self.rev_cell(x, y)
 
+                # show cell
+                if (x, y) in self.cells:
+                    app.point(x * self.cell_size, y * self.cell_size, stroke_width=self.cell_size,
+                              stroke_color=self.cell_color, shape='rect')
 
 cells = Cells()
 
@@ -115,23 +115,17 @@ def on_draw():
     if app.is_mouse_clicked():
         on_mouse_clicked()
 
-    cells.update_cells()
     app.background(*cells.background_color)
     cells.display_grids()
-    cells.display_cells()
+    cells.update_cells()
 
 
 def on_mouse_clicked(*args):
     x = int(app.mouse_x / cells.cell_size)
     y = int(app.mouse_y / cells.cell_size)
     # print(app.mouse_x, app.mouse_y,x,y, len(cells.cells), len(cells.cells[0]))
-    try:
-        cells.cells[x][y] = not cells.cells[x][y]
-        # app.rect(x * cells.cell_size, y * cells.cell_size, cells.cell_size, cells.cell_size, filled_color=(255, 0, 0))
-    except IndexError:
-        pass
-    except:
-        traceback.print_exc()
+    if 0 <= x < cells.cell_num_x and (0 <= y < cells.cell_num_x):
+        cells.rev_cell(x, y)
 
 
 app.regist_event('on_setup', on_setup)
