@@ -128,7 +128,10 @@ def on_draw():
 
     global exit_alert
     if app.should_exit():
-        exit_alert = True
+        if exit_alert:
+            app.exit()
+        else:
+            exit_alert = True
 
     app.background(*cells.background_color)
     cells.display_grids()
