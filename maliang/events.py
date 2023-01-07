@@ -20,7 +20,7 @@ class Events:
             "on_char_pressed": None,
         }
         self.events_registed = []
-        self.events_not_trigger = ('on_setup', 'on_draw', 'on_close')
+        self.events_not_trigger = ('on_setup', 'on_draw', 'on_exit')
 
 
     def regist_event(self, event_name, func):
