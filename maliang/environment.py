@@ -3,7 +3,6 @@ import pyray as pr
 class Environment():
     def __init__(self, fps=0):
         self.set_trace_log_level(7)
-        self.fps = fps
         self.init_fps(fps)
 
     def init_fps(self, fps):
@@ -31,3 +30,6 @@ class Environment():
 
     def disable_event_waiting(self):
         pr.disable_event_waiting()
+
+    def draw_fps(self, x, y):
+        pr.draw_fps(x, y)
