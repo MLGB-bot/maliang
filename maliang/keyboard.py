@@ -8,7 +8,7 @@ class Keyboard:
         self.released_keys = []
         self.clicked_keys = []
         self.exit_key = 0
-        pr.set_exit_key(0)
+        self.set_exit_key(0)
 
     def set_exit_key(self, key: int):
         """
@@ -17,6 +17,7 @@ class Keyboard:
         :return:
         """
         self.exit_key = key
+        pr.set_exit_key(key)
 
     @property
     def pressed_keys(self):

@@ -4,7 +4,7 @@ class Events:
         self.events = {
             'on_setup': None,
             'on_draw': None,
-            'on_close': None,
+            'on_exit': None,
             # mouse
             "on_mouse_clicked": None,
             "on_mouse_double_clicked": None,

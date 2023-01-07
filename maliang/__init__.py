@@ -48,9 +48,14 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
         self.frame_counter = FrameCounter()
         self.double_buffer = double_buffer
         self.buffer_texture = self.load_render_texture()
+        self.alive = True
 
     def get_frame_count(self):
         return self.frame_counter.value
+
+    @property
+    def frame_count(self):
+        return self.get_frame_count()
 
     def load_render_texture(self):
         return pr.load_render_texture(self.width, self.height)
@@ -113,9 +118,12 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
             if hasattr(self, 'catpure_events'):
                 self.catpure_events()
         self.frame_counter.add(1)
+        # check whether should exit window
+        if not self.check_alive():
+            # should be closed
+            self.alive = not self.on_exit()
 
-
-    def on_exit(self):
+    def on_finish(self):
         self.unload_render_texture()
         pr.close_window()
 
@@ -139,15 +147,39 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
                 self.unload_render_texture()
                 self.buffer_texture = new_buffer_texture
 
+    def check_alive(self):
+        if pr.window_should_close():
+            if self.exit_key and self.is_key_clicked(self.exit_key):
+                return False
+            # 点击关闭按钮
+            if self.is_key_clicked(256):
+                # ESC clicked
+                if self.exit_key == 256:
+                    return False
+                else:
+                    return True
+            else:
+                return False
+        return True
+
+    def on_exit(self):
+        return True
+
+    def exit(self):
+        self.alive = False
+
+    def should_exit(self):
+        return not self.check_alive()
+
     def loop(self):
         self._on_setup()
-        while not pr.window_should_close():
+        while self.alive:
             self.on_lastframe_resize()
             self._on_draw()
             self.release_matrix()
             # done: auto clean fonts created in runtime
             ResourceLoader.task_unload_fonts_runtime()
-        self.on_exit()
+        self.on_finish()
 
     def run(self):
         self.loop()
