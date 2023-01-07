@@ -1,13 +1,3 @@
-# -*- coding:utf-8 -*-
-
-
-"""
-By:
-Time:
-Intro:
-
-"""
-
 
 class Events:
     def __init__(self):
