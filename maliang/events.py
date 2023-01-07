@@ -4,6 +4,7 @@ class Events:
         self.events = {
             'on_setup': None,
             'on_draw': None,
+            'on_close': None,
             # mouse
             "on_mouse_clicked": None,
             "on_mouse_double_clicked": None,
@@ -19,20 +20,21 @@ class Events:
             "on_char_pressed": None,
         }
         self.events_registed = []
+        self.events_not_trigger = ('on_setup', 'on_draw', 'on_close')
 
 
     def regist_event(self, event_name, func):
         if event_name in self.events:
             setattr(self, event_name, func)
             self.events[event_name] = func
-        if event_name not in self.events_registed and event_name not in ('on_setup', 'on_draw'):
+        if event_name not in self.events_registed and event_name not in self.events_not_trigger:
             self.events_registed.append(event_name)
 
     def unregist_event(self, event_name):
         if event_name in self.events:
             setattr(self, event_name, None)
             self.events[event_name] = None
-        if event_name in self.events_registed and event_name not in ('on_setup', 'on_draw'):
+        if event_name in self.events_registed and event_name not in self.events_not_trigger:
             self.events_registed.remove(event_name)
 
     def catpure_events(self):
