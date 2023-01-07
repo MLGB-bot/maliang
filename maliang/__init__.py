@@ -18,8 +18,8 @@ from maliang.image import Image
 from maliang.font import Font
 from maliang.text import Text
 from maliang.texture import Texture
-from maliang.units import ResourceLoader
 from maliang.units.modes import *
+from maliang.units import ResourceLoader, FrameCounter
 
 
 class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse, Keyboard,
@@ -45,9 +45,12 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
         Shader.__init__(self)
         Window.__init__(self, width=width, height=height, title=title,
                         background_color=background_color, full_screen=full_screen)
-        self.frame_count = 0
+        self.frame_counter = FrameCounter()
         self.double_buffer = double_buffer
         self.buffer_texture = self.load_render_texture()
+
+    def get_frame_count(self):
+        return self.frame_counter.value
 
     def load_render_texture(self):
         return pr.load_render_texture(self.width, self.height)
@@ -80,7 +83,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
                                     )
                 pr.end_drawing()
                 # single buffer switch to double buffer
-                if self.double_buffer and self.frame_count and self.frame_count % 2 == 0:
+                if self.double_buffer and self.frame_counter.odd_even == 0:
                     self.unload_render_texture()
                     self.buffer_texture = None
             else:
@@ -109,7 +112,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
                 self.keyboard_watcher()
             if hasattr(self, 'catpure_events'):
                 self.catpure_events()
-        self.frame_count += 1
+        self.frame_counter.add(1)
 
 
     def on_exit(self):
