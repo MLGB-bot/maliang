@@ -7,8 +7,19 @@ class Environment():
 
     def init_fps(self, fps):
         if isinstance(fps, int):
-            self.fps = fps
-            pr.set_target_fps(fps)
+            self.set_fps(fps)
+
+    def set_fps(self, fps):
+        pr.set_target_fps(fps)
+
+    def get_fps(self):
+        return pr.get_fps()
+
+    def get_frame_time(self):
+        return pr.get_frame_time()
+
+    def get_time(self):
+        return pr.get_time()
 
     def smooth(self):
         pr.rl_enable_smooth_lines()
