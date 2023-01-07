@@ -7,24 +7,26 @@
 
 import random
 
+import maliang
 from maliang import Maliang
 
-app = Maliang(width=300, height=300, fps=30)
-app.set_window_title("Conway Life Game")
-
+app = Maliang(width=600, height=600, fps=0, full_screen=False, title='Conway Life Game')
 
 class Cells():
-    background_color = (235, 235, 235, 255)
-    grid_color = (200, 200, 200, 255)
-    cell_color = (0, 0, 0, 235)
-
-    cell_size = 4
-    cell_num_x = int(app.width / cell_size)
-    cell_num_y = int(app.height / cell_size)
-    cells = {}
-
     def __init__(self):
-        pass
+        self.background_color = (235, 235, 235, 255)
+        self.grid_color = (200, 200, 200, 255)
+        self.cell_color = (0, 0, 0, 235)
+        self.cell_size = 20
+        self.cells = {}
+
+    @property
+    def cell_num_x(self):
+        return int(app.width / self.cell_size)
+
+    @property
+    def cell_num_y(self):
+        return int(app.height / self.cell_size)
 
     # 1 init random cells
     def init_random_cells(self):
@@ -99,25 +101,48 @@ class Cells():
 
                 # show cell
                 if (x, y) in self.cells:
-                    app.point(x * self.cell_size, y * self.cell_size, stroke_width=self.cell_size,
-                              stroke_color=self.cell_color, shape='rect')
+                    if self.cell_size == 1:
+                        app.point(x * self.cell_size, y * self.cell_size, stroke_width=self.cell_size,
+                                  stroke_color=self.cell_color, shape='rect')
+                    else:
+                        app.rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size, filled_color=self.cell_color)
 
 cells = Cells()
-
+exit_alert = False
 
 def on_setup():
     cells.init_random_cells()
     app.no_stroke()
     app.fill(*cells.cell_color)
+    app.set_exit_key(maliang.KeyboardKeys.KEY_Q)
 
 
 def on_draw():
     if app.is_mouse_clicked():
         on_mouse_clicked()
+    if app.is_key_clicked(maliang.KeyboardKeys.KEY_F):
+        if app.is_window_fullscreen():
+            app.unfull_screen()
+        else:
+            app.full_screen()
+
+    global exit_alert
+    if app.should_exit():
+        exit_alert = True
 
     app.background(*cells.background_color)
     cells.display_grids()
     cells.update_cells()
+    # app.draw_fps(0, 0)
+    if exit_alert:
+        app.rect(0, 100, app.width, 200)
+        app.text("Exit? [Y/N]", 40, 180, text_size=30, text_color=(255, ))
+        if app.is_key_clicked(maliang.KeyboardKeys.KEY_Y):
+            app.exit()
+        elif app.is_key_clicked(maliang.KeyboardKeys.KEY_N):
+            exit_alert = False
+        elif app.is_key_clicked(maliang.KeyboardKeys.KEY_ESCAPE):
+            exit_alert = False
 
 
 def on_mouse_clicked(*args):
