@@ -45,6 +45,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
         Shader.__init__(self)
         Window.__init__(self, width=width, height=height, title=title,
                         background_color=background_color, full_screen=full_screen)
+        self.set_exit_key(0)
         self.frame_counter = FrameCounter()
         self.double_buffer = double_buffer
         self.buffer_texture = self.load_render_texture()
@@ -148,28 +149,16 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
                 self.buffer_texture = new_buffer_texture
 
     def check_alive(self):
-        if pr.window_should_close():
-            if self.exit_key and self.is_key_clicked(self.exit_key):
-                return False
-            # 点击关闭按钮
-            if self.is_key_clicked(256):
-                # ESC clicked
-                if self.exit_key == 256:
-                    return False
-                else:
-                    return True
-            else:
-                return False
-        return True
+        return not pr.window_should_close()
+
+    def should_exit(self):
+        return pr.window_should_close()
 
     def on_exit(self):
         return True
 
     def exit(self):
         self.alive = False
-
-    def should_exit(self):
-        return not self.check_alive()
 
     def loop(self):
         self._on_setup()

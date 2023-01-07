@@ -1,14 +1,12 @@
 import pyray as pr
 from collections import deque
-
+import raylib as rl
 
 class Keyboard:
     def __init__(self):
         self._pressed_keys = deque(maxlen=128)  # 键盘按下的keys
         self.released_keys = []
         self.clicked_keys = []
-        self.exit_key = 0
-        self.set_exit_key(0)
 
     def set_exit_key(self, key: int):
         """
@@ -16,8 +14,7 @@ class Keyboard:
         :param key:
         :return:
         """
-        self.exit_key = key
-        pr.set_exit_key(key)
+        rl.SetExitKey(key)
 
     @property
     def pressed_keys(self):
@@ -60,7 +57,7 @@ class Keyboard:
         return pr.is_key_pressed(key)
 
     def is_key_released(self, key:int):
-        return pr.is_key_released(key)
+        return rl.IsKeyReleased(key)
 
     def event_trigger_on_key_clicked(self):
         # 如果没有keyboard_watcher
