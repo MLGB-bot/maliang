@@ -6,7 +6,7 @@ class Window():
     def __init__(self, width=100, height=100, title='',
                  background_color=(235, 235, 235, 255)):
 
-        self.set_window_state(WindowFlags.FLAG_WINDOW_RESIZABLE)
+        # self.set_window_state(WindowFlags.FLAG_WINDOW_RESIZABLE)
 
         self.background_color = tuple(MColor(*background_color))
         self.title = title
