@@ -4,25 +4,31 @@ from maliang.units.modes import WindowFlags
 
 class Window():
     def __init__(self, width=100, height=100, title='',
-                 background_color=(235, 235, 235, 255)):
+                 background_color=(235, 235, 235, 255),
+                 full_screen=False):
 
         # self.set_window_state(WindowFlags.FLAG_WINDOW_RESIZABLE)
-
         self.background_color = tuple(MColor(*background_color))
         self.title = title
-        self.init_window(width, height)
+        self.init_window(width, height, full_screen)
+
+    def init_window(self, width, height, full_screen=False):
+        pr.init_window(width, height, self.title)
         while not pr.is_window_ready():
             pass
-
-    def init_window(self, width, height):
-        return pr.init_window(width, height, self.title)
+        if full_screen:
+            self.full_screen()
 
     @property
     def width(self):
+        if self.is_window_fullscreen():
+            return self.get_monitor_width(self.get_current_monitor())
         return self.get_screen_width()
 
     @property
     def height(self):
+        if self.is_window_fullscreen():
+            return self.get_monitor_height(self.get_current_monitor())
         return self.get_screen_height()
 
     def background(self, *color):
@@ -165,3 +171,18 @@ class Window():
     def get_monitor_name(self, monitor: int):
         return pr.get_monitor_name(monitor)
 
+    def full_screen(self, monitor=None):
+        if monitor == None:
+            monitor = self.get_current_monitor()
+        monitor_width = self.get_monitor_width(monitor)
+        monitor_height = self.get_monitor_height(monitor)
+        self.set_window_state(WindowFlags.FLAG_FULLSCREEN_MODE)
+        self.size(monitor_width, monitor_height)
+
+    def unfull_screen(self, flag=None):
+        if flag is None:
+            flag = WindowFlags.FLAG_VSYNC_HINT
+        self.set_window_state(flag)
+
+    def size(self, x, y):
+        pr.set_window_size(x, y)

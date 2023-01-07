@@ -25,7 +25,7 @@ from maliang.units.modes import *
 class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse, Keyboard,
                 Model, Mesh, Material, Ray, Shader, Image, Font, Text, Texture, Camera):
     def __init__(self, width=100, height=100, title='', double_buffer=True, fps=None,
-                 background_color=(235, 235, 235, 255), ):
+                 background_color=(235, 235, 235, 255), full_screen=False):
         Environment.__init__(self, fps=fps)
         Shapes2d.__init__(self)
         Shapes3d.__init__(self)
@@ -43,7 +43,8 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
         Material.__init__(self)
         Ray.__init__(self)
         Shader.__init__(self)
-        Window.__init__(self, width=width, height=height, title=title, background_color=background_color)
+        Window.__init__(self, width=width, height=height, title=title,
+                        background_color=background_color, full_screen=full_screen)
         self.frame_count = 0
         self.double_buffer = double_buffer
         self.buffer_texture = self.load_render_texture()
