@@ -7,17 +7,17 @@ class Events:
             'on_exit': None,
             # mouse
             "on_mouse_clicked": None,
+            "on_mouse_released": None,
+            "on_mouse_down": None,
             "on_mouse_double_clicked": None,
             "on_mouse_dragged": None,
             "on_mouse_moved": None,
-            "on_mouse_pressed": None,
-            "on_mouse_released": None,
             "on_mouse_wheel": None,
             # keyboard
             "on_key_clicked": None,
             "on_key_released": None,
-            "on_key_pressed": None,
-            "on_char_pressed": None,
+            "on_key_down": None,
+            "on_char_down": None,
         }
         self.events_registed = []
         self.events_not_trigger = ('on_setup', 'on_draw', 'on_exit')

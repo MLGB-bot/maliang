@@ -85,7 +85,7 @@ class Mouse:
             return True, delta
         return False, None
 
-    def event_trigger_on_mouse_pressed(self):
+    def event_trigger_on_mouse_down(self):
         buttons = self.pressed_buttons
         return bool(buttons), buttons
 

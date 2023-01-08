@@ -28,24 +28,22 @@ class Keyboard:
 
     def keyboard_watcher(self):
         # 1 移除已经松开的key
-        released_keys = []
+        self.released_keys = []
         for _key in self._pressed_keys:
             if not self.is_key_down(_key):
-                released_keys.append(_key)
-        for _key in released_keys:
+                self.released_keys.append(_key)
+        for _key in self.released_keys:
             self._delete_key(_key)
         # 2 获取当前按下的key 添加到pressed_keys
-        clicked_keys = []
+        self.clicked_keys = []
         while True:
             clicked_key = pr.get_key_pressed()
             if clicked_key:
                 self._append_key(clicked_key)
-                clicked_keys.append(clicked_key)
+                self.clicked_keys.append(clicked_key)
             else:
                 break
-        # keys in current loop frame
-        self.released_keys = released_keys
-        self.clicked_keys = clicked_keys
+
 
     def is_key_up(self, key: int):
         return pr.is_key_up(key)
@@ -74,7 +72,7 @@ class Keyboard:
             return True, self.released_keys
         return False, None
 
-    def event_trigger_on_key_pressed(self):
+    def event_trigger_on_key_down(self):
         # 如果没有keyboard_watcher
         # key_pressed = pr.get_key_pressed()
         # if key_pressed:
@@ -85,7 +83,7 @@ class Keyboard:
         return False, None
 
 
-    def event_trigger_on_char_pressed(self):
+    def event_trigger_on_char_down(self):
         char_pressed = pr.get_char_pressed()
         if char_pressed:
             return True, char_pressed
