@@ -179,6 +179,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
         # create buffer texture
         if not self.buffer_texture:
             self.buffer_texture = self.load_render_texture()
+            # draw one more time
             self.redraw_count = 1
 
     def run(self):
