@@ -10,7 +10,7 @@ import random
 import maliang
 from maliang import Maliang
 
-app = Maliang(width=600, height=600, fps=0, full_screen=False, title='Conway Life Game')
+app = Maliang(width=600, height=600, fps=0, full_screen=False, title='Conway Life Game', double_buffer=False)
 
 class Cells():
     def __init__(self):
@@ -115,11 +115,12 @@ def on_setup():
     app.no_stroke()
     app.fill(*cells.cell_color)
     app.set_exit_key(maliang.KeyboardKeys.KEY_Q)
-
+    app.rect(0, 0, 10, 10)
+    # app.no_loop()
 
 def on_draw():
-    if app.is_mouse_clicked():
-        on_mouse_clicked()
+    # if app.is_mouse_clicked():
+    #     on_mouse_clicked()
     if app.is_key_clicked(maliang.KeyboardKeys.KEY_F):
         if app.is_window_fullscreen():
             app.unfull_screen()
@@ -149,13 +150,25 @@ def on_draw():
 
 
 def on_mouse_clicked(*args):
+    # app.rect(app.mouse_x, app.mouse_y, 10, 10)
+    app.re_draw()
     x = int(app.mouse_x / cells.cell_size)
     y = int(app.mouse_y / cells.cell_size)
     # print(app.mouse_x, app.mouse_y,x,y, len(cells.cells), len(cells.cells[0]))
     if 0 <= x < cells.cell_num_x and (0 <= y < cells.cell_num_x):
         cells.rev_cell(x, y)
 
+def on_key_clicked(*args):
+    keys = args[0]
+    if maliang.KeyboardKeys.KEY_SPACE in keys:
+        if app.get_loop():
+            app.no_loop()
+        else:
+            app.loop()
 
 app.regist_event('on_setup', on_setup)
 app.regist_event('on_draw', on_draw)
-app.loop()
+app.regist_event('on_mouse_clicked', on_mouse_clicked)
+app.regist_event('on_key_clicked', on_key_clicked)
+
+app.run()
