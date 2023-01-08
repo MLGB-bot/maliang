@@ -168,6 +168,9 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
     def exit(self):
         self.alive = False
 
+    def get_loop(self):
+        return self.__loop
+
     def loop(self):
         self.__loop = True
 
@@ -176,6 +179,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
         # create buffer texture
         if not self.buffer_texture:
             self.buffer_texture = self.load_render_texture()
+            self.redraw_count = 1
 
     def run(self):
         self._on_setup()
