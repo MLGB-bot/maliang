@@ -133,8 +133,8 @@ def demo():
     def on_mouse_moved(*args):
         print("on_mouse_moved", args)
 
-    def on_mouse_pressed(*args):
-        print("on_mouse_pressed", args)
+    def on_mouse_down(*args):
+        print("on_mouse_down", args)
 
     def on_mouse_released(*args):
         print("on_mouse_released", args)
@@ -156,20 +156,16 @@ def demo():
     def on_mouse_double_clicked(*args):
         print("on_mouse_double_clicked", args)
 
-    # app.regist_event('on_mouse_moved', on_mouse_moved)
-    # app.regist_event('on_mouse_pressed', on_mouse_pressed)
-    # app.regist_event('on_mouse_released', on_mouse_released)
+    app.regist_event('on_mouse_down', on_mouse_down)
+    app.regist_event('on_mouse_released', on_mouse_released)
     app.regist_event('on_mouse_clicked', on_mouse_clicked)
+    # app.regist_event('on_mouse_moved', on_mouse_moved)
     # app.regist_event('on_mouse_wheel', on_mouse_wheel)
     # app.regist_event('on_mouse_dragged', on_mouse_dragged)
-    app.regist_event('on_mouse_double_clicked', on_mouse_double_clicked)
+    # app.regist_event('on_mouse_double_clicked', on_mouse_double_clicked)
 
-    def on_key_pressed(*args):
-        print("on_key_pressed", args)
-
-
-    def on_char_pressed(*args):
-        print("on_char_pressed", args)
+    def on_key_down(*args):
+        print("on_key_down", args)
 
     def on_key_clicked(*args):
         print("on_key_clicked", args)
@@ -177,11 +173,14 @@ def demo():
     def on_key_released(*args):
         print("on_key_released", args)
 
-    # app.regist_event('on_key_clicked', on_key_clicked)
-    # app.regist_event('on_key_released', on_key_released)
-    # app.regist_event('on_key_pressed', on_key_pressed)
-    app.regist_event('on_char_pressed', on_char_pressed)
-    app.loop()
+    def on_char_down(*args):
+        print("on_char_down", args)
+
+    app.regist_event('on_key_clicked', on_key_clicked)
+    app.regist_event('on_key_released', on_key_released)
+    app.regist_event('on_key_down', on_key_down)
+    # app.regist_event('on_char_down', on_char_down)
+    app.run()
 
 
 if __name__ == '__main__':

@@ -96,7 +96,7 @@ class SpaceShip():
             tmp_bullet.format_p()
             self.bullets.append(tmp_bullet)
 
-        if app.is_mouse_pressed() and len(self.bullets) < self.max_bullets \
+        if app.is_mouse_down(0) and len(self.bullets) < self.max_bullets \
                     and (self.x - app.mouse_x) ** 2 + (self.y - app.mouse_y) ** 2 <= 5000:
             # app.triangle(self.x - self.size * 0.5, self.y, self.x + self.size * 0.5, self.y,
             #              # 2 * self.x - app.mouse_x, 2 * self.y - app.mouse_y,
@@ -155,4 +155,4 @@ def on_draw():
 
 app.regist_event('on_setup', on_setup)
 app.regist_event('on_draw', on_draw)
-app.loop()
+app.run()

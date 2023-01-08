@@ -44,4 +44,4 @@ def on_draw():
 
 app.regist_event('on_setup', on_setup)
 app.regist_event('on_draw', on_draw)
-app.loop()
+app.run()
