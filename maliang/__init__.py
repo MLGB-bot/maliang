@@ -50,6 +50,8 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
         self.double_buffer = double_buffer
         self.buffer_texture = self.load_render_texture()
         self.alive = True
+        self.__loop = True
+        self.redraw_count = 0
 
     def get_frame_count(self):
         return self.frame_counter.value
@@ -89,7 +91,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
                                     )
                 pr.end_drawing()
                 # single buffer switch to double buffer
-                if self.double_buffer and self.frame_counter.odd_even == 0:
+                if self.double_buffer and self.frame_counter.odd_even == 0 and self.__loop:
                     self.unload_render_texture()
                     self.buffer_texture = None
             else:
@@ -97,6 +99,17 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
                 func(self, *args, **kwargs)
                 pr.end_drawing()
         return inner
+
+    def listen_to_events(self):
+        if hasattr(self, 'events_registed') and self.events_registed:
+            if hasattr(self, 'keyboard_watcher'):
+                self.keyboard_watcher()
+            if hasattr(self, 'catpure_events'):
+                self.catpure_events()
+
+    def chack_alive(self):
+        if self.should_exit():
+            self.alive = not self.on_exit()
 
     def on_setup(self):
         pass
@@ -111,17 +124,21 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
         self.on_setup()
 
     @decorate_by_buffer_value
-    def _on_draw(self):
-        self.on_draw()
-        if hasattr(self, 'events_registed') and self.events_registed:
-            if hasattr(self, 'keyboard_watcher'):
-                self.keyboard_watcher()
-            if hasattr(self, 'catpure_events'):
-                self.catpure_events()
-        self.frame_counter.add(1)
+    def _on_draw(self,):
+        if self.__loop:
+            self.on_draw()
+            self.frame_counter.add(1)
+        elif self.redraw_count > 0:
+            self.on_draw()
+            self.redraw_count -= 1
+            self.frame_counter.add(1)
+
+        self.listen_to_events()
         # check whether should exit window
-        if self.should_exit():
-            self.alive = not self.on_exit()
+        self.chack_alive()
+
+    def re_draw(self):
+        self.redraw_count += 1
 
     def on_lastframe_resize(self):
         # on window resize
@@ -152,6 +169,15 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
         self.alive = False
 
     def loop(self):
+        self.__loop = True
+
+    def no_loop(self):
+        self.__loop = False
+        # create buffer texture
+        if not self.buffer_texture:
+            self.buffer_texture = self.load_render_texture()
+
+    def run(self):
         self._on_setup()
         while self.alive:
             self.on_lastframe_resize()
@@ -162,5 +188,3 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
         self.unload_render_texture()
         pr.close_window()
 
-    def run(self):
-        self.loop()
