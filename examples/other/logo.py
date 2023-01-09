@@ -1,6 +1,6 @@
 from maliang import Maliang
 
-app = Maliang(width=200, height=200, fps=0, title="Logo")
+app = Maliang(width=300, height=300, fps=0, title="Logo")
 
 
 def on_setup():
