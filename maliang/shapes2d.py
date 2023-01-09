@@ -149,7 +149,8 @@ class Shapes2d(ShapeConfig):
         filled_color = self.init_filled_color(filled_color)
         mode = mode or self._ellipse_mode
         _x, _y, _w, _h = self._init_ellipse_mode(x, y, w, h, mode)
-
+        _x = f2i(_x)
+        _y = f2i(_y)
         if filled_color:
             pr.draw_ellipse(_x, _y, _w, _h, pr.Color(*filled_color))
         if stroke_width and stroke_color:
