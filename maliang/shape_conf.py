@@ -50,25 +50,25 @@ class ShapeConfig(object):
             self.stroke_width = width
 
     @classmethod
-    def init_stroke_width(self, stroke_width):
-        if stroke_width is not None:
-            return stroke_width
+    def init_stroke_width(self, kwargs):
+        if kwargs and "stroke_width" in kwargs:
+            return kwargs['stroke_width']
         elif self._stroke:
             return self.stroke_width
         return None
 
     @classmethod
-    def init_stroke_color(self, stroke_color):
-        if stroke_color:
-            return self.format_color(stroke_color)
+    def init_stroke_color(self, kwargs):
+        if kwargs and "stroke_color" in kwargs:
+            return self.format_color(kwargs['stroke_color']) if kwargs['stroke_color'] else None
         elif self._stroke:
             return self.stroke_color
         return None
 
     @classmethod
-    def init_filled_color(self, filled_color: tuple):
-        if filled_color:
-            return self.format_color(filled_color)
+    def init_filled_color(self, kwargs):
+        if kwargs and "filled_color" in kwargs:
+            return self.format_color(kwargs['filled_color']) if kwargs['filled_color'] else None
         elif self._fill:
             return self.filled_color
         return None

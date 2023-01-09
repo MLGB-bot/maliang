@@ -40,9 +40,9 @@ class Shapes2d(ShapeConfig):
             self._circle_mode = mode
 
 
-    def point(self, x, y, stroke_width=None, stroke_color: tuple = None, shape="circle"):
-        stroke_width = self.init_stroke_width(stroke_width)
-        stroke_color = self.init_stroke_color(stroke_color)
+    def point(self, x, y, shape="circle", **kwargs):
+        stroke_width = self.init_stroke_width(kwargs)
+        stroke_color = self.init_stroke_color(kwargs)
         if stroke_width and stroke_color:
             if stroke_width > 1:
                 # 画一个圆
@@ -58,9 +58,9 @@ class Shapes2d(ShapeConfig):
         elif stroke_color:
             rl.DrawPixelV(pr.Vector2(x, y), pr.Color(*stroke_color))
 
-    def line(self, x1, y1, x2, y2, stroke_width=None, stroke_color: tuple = None):
-        stroke_width = self.init_stroke_width(stroke_width)
-        stroke_color = self.init_stroke_color(stroke_color)
+    def line(self, x1, y1, x2, y2, **kwargs):
+        stroke_width = self.init_stroke_width(kwargs)
+        stroke_color = self.init_stroke_color(kwargs)
         if stroke_width and stroke_color:
             pr.draw_line_ex(
                 pr.Vector2(x1, y1),
@@ -84,10 +84,10 @@ class Shapes2d(ShapeConfig):
         else:
             return x, y, w, h
 
-    def rect(self, x, y, w, h, stroke_width=None, stroke_color: tuple = None, filled_color: tuple = None, mode=None):
-        stroke_width = self.init_stroke_width(stroke_width)
-        stroke_color = self.init_stroke_color(stroke_color)
-        filled_color = self.init_filled_color(filled_color)
+    def rect(self, x, y, w, h, mode=None, **kwargs):
+        stroke_width = self.init_stroke_width(kwargs)
+        stroke_color = self.init_stroke_color(kwargs)
+        filled_color = self.init_filled_color(kwargs)
 
         mode = mode or self._rect_mode
         _x, _y, _w, _h = self._init_rect_mode(x, y, w, h, mode)
@@ -111,11 +111,10 @@ class Shapes2d(ShapeConfig):
             return x, y, diam*0.5
 
 
-    def circle(self, x, y, diam, stroke_width=None, stroke_color: tuple = None, filled_color: tuple = None, segments=30,
-               mode=None):
-        stroke_width = self.init_stroke_width(stroke_width)
-        stroke_color = self.init_stroke_color(stroke_color)
-        filled_color = self.init_filled_color(filled_color)
+    def circle(self, x, y, diam, segments=30, mode=None, **kwargs):
+        stroke_width = self.init_stroke_width(kwargs)
+        stroke_color = self.init_stroke_color(kwargs)
+        filled_color = self.init_filled_color(kwargs)
         mode = mode or self._circle_mode
         _x, _y, _r = self._init_circle_mode(x, y, diam, mode)
 
@@ -143,10 +142,10 @@ class Shapes2d(ShapeConfig):
         else:
             return (x), (y), w * 0.5, h * 0.5
 
-    def ellipse(self, x, y, w, h, stroke_width=None, stroke_color: tuple = None, filled_color: tuple = None, mode=None):
-        stroke_width = self.init_stroke_width(stroke_width)
-        stroke_color = self.init_stroke_color(stroke_color)
-        filled_color = self.init_filled_color(filled_color)
+    def ellipse(self, x, y, w, h, mode=None, **kwargs):
+        stroke_width = self.init_stroke_width(kwargs)
+        stroke_color = self.init_stroke_color(kwargs)
+        filled_color = self.init_filled_color(kwargs)
         mode = mode or self._ellipse_mode
         _x, _y, _w, _h = self._init_ellipse_mode(x, y, w, h, mode)
         _x = f2i(_x)
@@ -160,11 +159,10 @@ class Shapes2d(ShapeConfig):
                 # todo draw ellipse stroke lines
                 pr.draw_ellipse_lines(_x, _y, _w, _h, pr.Color(*stroke_color))
 
-    def arc(self, x, y, rx, ry, start_angle, end_angle, stroke_width=None, stroke_color: tuple = None,
-            filled_color: tuple = None, segments=30):
-        stroke_width = self.init_stroke_width(stroke_width)
-        stroke_color = self.init_stroke_color(stroke_color)
-        filled_color = self.init_filled_color(filled_color)
+    def arc(self, x, y, rx, ry, start_angle, end_angle, segments=30, **kwargs):
+        stroke_width = self.init_stroke_width(kwargs)
+        stroke_color = self.init_stroke_color(kwargs)
+        filled_color = self.init_filled_color(kwargs)
         if rx == ry:
             if filled_color:
                 pr.draw_circle_sector(pr.Vector2(x, y), rx, start_angle, end_angle, segments, pr.Color(*filled_color))
@@ -192,11 +190,10 @@ class Shapes2d(ShapeConfig):
         else:
             return (x), (y), d1 * 0.5, d2 * 0.5
 
-    def ring(self, x, y, d_in, d_out, stroke_width=None, stroke_color: tuple = None, filled_color: tuple = None,
-             segments=30, mode=None):
-        stroke_width = self.init_stroke_width(stroke_width)
-        stroke_color = self.init_stroke_color(stroke_color)
-        filled_color = self.init_filled_color(filled_color)
+    def ring(self, x, y, d_in, d_out, segments=30, mode=None, **kwargs):
+        stroke_width = self.init_stroke_width(kwargs)
+        stroke_color = self.init_stroke_color(kwargs)
+        filled_color = self.init_filled_color(kwargs)
 
         mode = mode or self._circle_mode
         _x, _y, _ri, _ro = self.init_ring_mode(x, y, d_in, d_out, mode)
@@ -212,11 +209,10 @@ class Shapes2d(ShapeConfig):
                 pr.draw_ring(pr.Vector2(_x, _y), _ri - stroke_width * 0.5, _ri + stroke_width * 0.5, 0, 360, segments,
                              pr.Color(*stroke_color))
 
-    def triangle(self, x1, y1, x2, y2, x3, y3, stroke_width=None, stroke_color: tuple = None,
-                 filled_color: tuple = None):
-        stroke_width = self.init_stroke_width(stroke_width)
-        stroke_color = self.init_stroke_color(stroke_color)
-        filled_color = self.init_filled_color(filled_color)
+    def triangle(self, x1, y1, x2, y2, x3, y3, **kwargs):
+        stroke_width = self.init_stroke_width(kwargs)
+        stroke_color = self.init_stroke_color(kwargs)
+        filled_color = self.init_filled_color(kwargs)
         if filled_color:
             pr.draw_triangle(pr.Vector2(x1, y1), pr.Vector2(x2, y2), pr.Vector2(x3, y3), pr.Color(*filled_color))
         if stroke_width and stroke_color:
@@ -228,11 +224,10 @@ class Shapes2d(ShapeConfig):
                 pr.draw_line_ex(pr.Vector2(x2, y2), pr.Vector2(x3, y3), stroke_width, pr.Color(*stroke_color), )
                 pr.draw_line_ex(pr.Vector2(x3, y3), pr.Vector2(x1, y1), stroke_width, pr.Color(*stroke_color), )
 
-    def poly(self, x, y, r, sides, r_angle=0, stroke_width=None, stroke_color: tuple = None,
-             filled_color: tuple = None):
-        stroke_width = self.init_stroke_width(stroke_width)
-        stroke_color = self.init_stroke_color(stroke_color)
-        filled_color = self.init_filled_color(filled_color)
+    def poly(self, x, y, r, sides, r_angle=0, **kwargs):
+        stroke_width = self.init_stroke_width(kwargs)
+        stroke_color = self.init_stroke_color(kwargs)
+        filled_color = self.init_filled_color(kwargs)
         if filled_color:
             pr.draw_poly(pr.Vector2(x, y), sides, r, r_angle, pr.Color(*filled_color))
         if stroke_width and stroke_color:
