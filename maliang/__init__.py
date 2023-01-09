@@ -1,3 +1,5 @@
+from maliang.__version__ import __version__
+
 import pyray as pr
 from maliang.structs import MColor
 from maliang.window import Window
@@ -20,7 +22,6 @@ from maliang.text import Text
 from maliang.texture import Texture
 from maliang.units.modes import *
 from maliang.units import ResourceLoader, FrameCounter
-from maliang.version import __version__
 
 
 class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse, Keyboard,
