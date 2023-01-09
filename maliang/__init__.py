@@ -45,7 +45,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
         Shader.__init__(self)
         Window.__init__(self, width=width, height=height, title=title,
                         background_color=background_color, full_screen=full_screen)
-        self.set_exit_key(0)
+        self.set_exit_key(KeyboardKeys.KEY_NULL)
         self.frame_counter = FrameCounter()
         self.double_buffer = double_buffer
         self.buffer_texture = self.load_render_texture()
