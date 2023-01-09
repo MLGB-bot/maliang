@@ -23,7 +23,7 @@ from maliang.units import ResourceLoader, FrameCounter
 
 
 class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse, Keyboard,
-                Model, Mesh, Material, Ray, Shader, Image, Font, Text, Texture, Camera):
+              Model, Mesh, Material, Ray, Shader, Image, Font, Text, Texture, Camera):
     def __init__(self, width=100, height=100, title='', double_buffer=True, fps=None,
                  background_color=(235, 235, 235, 255), full_screen=False):
         Environment.__init__(self, fps=fps)
@@ -73,6 +73,31 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
     def set_static_absolute_dir(self, absolute_dir):
         return ResourceLoader.set_static_absolute_dir(absolute_dir)
 
+    def refresh_buffer_texture(self):
+        new_buffer_texture = self.load_render_texture()  # create new sized buffer texture
+        # copy old texture to new resized texture
+        pr.begin_texture_mode(new_buffer_texture)
+        self.background(*self.background_color)
+        pr.draw_texture_pro(
+            self.buffer_texture.texture,
+            pr.Rectangle(0, 0, self.buffer_texture.texture.width, -self.buffer_texture.texture.height),
+            pr.Rectangle(0, 0, self.buffer_texture.texture.width, self.buffer_texture.texture.height),
+            pr.Vector2(0, 0),
+            0,
+            pr.WHITE
+        )
+        pr.end_texture_mode()
+        self.unload_render_texture()
+        self.buffer_texture = new_buffer_texture
+
+    def check_window_resized(self):
+        if self.is_window_resized():
+            if self.buffer_texture:
+                self.refresh_buffer_texture()
+            if hasattr(self, "on_window_resized"):
+                # trigger event
+                getattr(self, "on_window_resized")()
+
     @staticmethod
     def decorate_by_buffer_value(func):
         def inner(self, *args, **kwargs):
@@ -98,6 +123,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
                 pr.begin_drawing()
                 func(self, *args, **kwargs)
                 pr.end_drawing()
+
         return inner
 
     def listen_to_events(self):
@@ -119,12 +145,13 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
 
     @decorate_by_buffer_value
     def _on_setup(self):
-        self.background(*self.background_color) # setup defaule background color
+        self.background(*self.background_color)  # setup defaule background color
         # 执行setup中的操作
         self.on_setup()
 
     @decorate_by_buffer_value
-    def _on_draw(self,):
+    def _on_draw(self, ):
+        self.check_window_resized()
         if self.__loop:
             self.on_draw()
             self.frame_counter.add(1)
@@ -139,25 +166,6 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
 
     def re_draw(self):
         self.redraw_count += 1
-
-    def on_lastframe_resize(self):
-        # on window resize
-        if self.buffer_texture and self.is_window_resized():
-            new_buffer_texture = self.load_render_texture()  # create new sized buffer texture
-            # copy old texture to new resized texture
-            pr.begin_texture_mode(new_buffer_texture)
-            self.background(*self.background_color)
-            pr.draw_texture_pro(
-                self.buffer_texture.texture,
-                pr.Rectangle(0, 0, self.buffer_texture.texture.width, -self.buffer_texture.texture.height),
-                pr.Rectangle(0, 0, self.buffer_texture.texture.width, self.buffer_texture.texture.height),
-                pr.Vector2(0, 0),
-                0,
-                pr.WHITE
-            )
-            pr.end_texture_mode()
-            self.unload_render_texture()
-            self.buffer_texture = new_buffer_texture
 
     def should_exit(self):
         return pr.window_should_close()
@@ -185,11 +193,9 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
     def run(self):
         self._on_setup()
         while self.alive:
-            self.on_lastframe_resize()
             self._on_draw()
             self.release_matrix()
             # done: auto clean fonts created in runtime
             ResourceLoader.task_unload_fonts_runtime()
         self.unload_render_texture()
         pr.close_window()
-

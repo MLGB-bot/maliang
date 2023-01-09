@@ -18,10 +18,14 @@ class Events:
             "on_key_released": None,
             "on_key_down": None,
             "on_char_down": None,
+            # window
+            "on_window_resized": None,
         }
         self.events_registed = []
-        self.events_not_trigger = ('on_setup', 'on_draw', 'on_exit')
+        self.events_not_trigger = ('on_setup', 'on_draw', 'on_exit', 'on_window_resized')
 
+    def _default_event(self):
+        pass
 
     def regist_event(self, event_name, func):
         if event_name in self.events:
@@ -32,7 +36,7 @@ class Events:
 
     def unregist_event(self, event_name):
         if event_name in self.events:
-            setattr(self, event_name, None)
+            setattr(self, event_name, self._default_event)
             self.events[event_name] = None
         if event_name in self.events_registed and event_name not in self.events_not_trigger:
             self.events_registed.remove(event_name)
@@ -49,5 +53,3 @@ class Events:
                             self.events[event_name](args)
                         else:
                             self.events[event_name]()
-
-
