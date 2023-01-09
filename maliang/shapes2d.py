@@ -62,14 +62,14 @@ class Shapes2d(ShapeConfig):
         stroke_width = self.init_stroke_width(kwargs)
         stroke_color = self.init_stroke_color(kwargs)
         if stroke_width and stroke_color:
-            pr.draw_line_ex(
+            rl.DrawLineEx(
                 pr.Vector2(x1, y1),
                 pr.Vector2(x2, y2),
                 stroke_width,
                 pr.Color(*stroke_color),
             )
         elif stroke_color:
-            pr.draw_line(f2i(x1), f2i(y1), f2i(x2), f2i(y2), pr.Color(*stroke_color), )
+            rl.DrawLineV(pr.Vector2(x1, y1), pr.Vector2(x2, y2), pr.Color(*stroke_color))
 
     @staticmethod
     def _init_rect_mode(x, y, w, h, rect_mode):
