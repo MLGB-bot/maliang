@@ -20,6 +20,7 @@ from maliang.text import Text
 from maliang.texture import Texture
 from maliang.units.modes import *
 from maliang.units import ResourceLoader, FrameCounter
+from maliang.version import __version__
 
 
 class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse, Keyboard,
