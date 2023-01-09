@@ -147,3 +147,4 @@ class Image():
             _x, _y, _w, _h = init_mode(mode)
             texture = img.load_texture()
             texture.draw_pro(_x, _y, _w, _h, tint=MColor(*tint_color).to_pyray())
+            return texture
