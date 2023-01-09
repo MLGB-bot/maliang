@@ -118,12 +118,12 @@ class Shapes2d(ShapeConfig):
         mode = mode or self._circle_mode
         _x, _y, _r = self._init_circle_mode(x, y, diam, mode)
 
-        _x = f2i(_x)
-        _y = f2i(_y)
         if filled_color:
             rl.DrawCircleV(pr.Vector2(_x, _y), _r, pr.Color(*filled_color))
         if stroke_width and stroke_color:
             if stroke_width == 1:
+                _x = f2i(_x)
+                _y = f2i(_y)
                 pr.draw_circle_lines(_x, _y, _r, pr.Color(*stroke_color))
             elif stroke_width > 1:
                 pr.draw_ring(pr.Vector2(_x, _y), _r - stroke_width * 0.5, _r + stroke_width * 0.5, 0, 360, segments,
