@@ -172,17 +172,16 @@ class Shapes2d(ShapeConfig):
         stroke_color = self.init_stroke_color(kwargs)
         filled_color = self.init_filled_color(kwargs)
         mode = mode or self._ellipse_mode
-        _x, _y, _w, _h = self._init_ellipse_mode(x, y, w, h, mode)
+        _x, _y, rw, rh = self._init_ellipse_mode(x, y, w, h, mode)
         _x = f2i(_x)
         _y = f2i(_y)
         if filled_color:
-            rl.DrawEllipse(_x, _y, _w, _h, filled_color.to_pyray())
+            rl.DrawEllipse(_x, _y, rw, rh, filled_color.to_pyray())
         if stroke_width and stroke_color:
             if stroke_width == 1:
-                rl.DrawEllipseLines(_x, _y, _w, _h, stroke_color.to_pyray())
+                rl.DrawEllipseLines(_x, _y, rw, rh, stroke_color.to_pyray())
             elif stroke_width > 1:
-                # todo draw ellipse stroke lines
-                rl.DrawEllipseLines(_x, _y, _w, _h, stroke_color.to_pyray())
+                self.draw_ellipse_line_py(_x, _y, rw, rh, stroke_width, tuple(stroke_color))
 
     def arc(self, x, y, rx, ry, start_angle, end_angle, segments=30, **kwargs):
         stroke_width = self.init_stroke_width(kwargs)
