@@ -149,6 +149,11 @@ class Shapes2d(ShapeConfig):
                 pr.draw_ring(pr.Vector2(_x, _y), _r - stroke_width * 0.5, _r + stroke_width * 0.5, 0, 360, segments,
                              stroke_color.to_pyray())
 
+    def circle_gradient(self, x, y, diam, colors, mode=None):
+        mode = mode or self._circle_mode
+        _x, _y, _r = self._init_circle_mode(x, y, diam, mode)
+        rl.DrawCircleGradient(_x, _y, _r, *[self.format_color(color).to_pyray() for color in colors])
+
     @staticmethod
     def _init_ellipse_mode(x, y, w, h, rect_mode):
         if rect_mode == EllipseMode.CORNER:
