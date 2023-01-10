@@ -110,14 +110,14 @@ class Shapes2d(ShapeConfig):
         if stroke_width and stroke_color:
             rl.DrawRectangleRoundedLines(pr.Rectangle(_x, _y, _w, _h), roundness, segments, stroke_width, stroke_color.to_pyray())
 
-    def rect_gradient(self, x, y, w, h, colors=None, direction=0, mode=None):
+    def rect_gradient(self, x, y, w, h, colors=None, direction="xy", mode=None):
         mode = mode or self._rect_mode
         _x, _y, _w, _h = self._init_rect_mode(x, y, w, h, mode)
-        if direction == 0:
+        if direction == 'xy':
             rl.DrawRectangleGradientEx(pr.Rectangle(_x, _y, _w, _h), *[self.format_color(color).to_pyray() for color in colors])
-        elif direction == 1:
+        elif direction == 'x':
             rl.DrawRectangleGradientH(f2i(_x), f2i(_y), f2i(_w), f2i(_h), *[self.format_color(color).to_pyray() for color in colors])
-        elif direction == 2:
+        elif direction == 'y':
             rl.DrawRectangleGradientV(f2i(_x), f2i(_y), f2i(_w), f2i(_h), *[self.format_color(color).to_pyray() for color in colors])
 
     @staticmethod
