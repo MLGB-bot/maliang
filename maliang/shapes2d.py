@@ -231,7 +231,7 @@ class Shapes2d(ShapeConfig):
             elif stroke_width > 1:
                 pr.draw_ring(pr.Vector2(_x, _y), _ri - stroke_width * 0.5, _ri + stroke_width * 0.5, 0, 360, segments,
                              stroke_color.to_pyray())
-                pr.draw_ring(pr.Vector2(_x, _y), _ri - stroke_width * 0.5, _ri + stroke_width * 0.5, 0, 360, segments,
+                pr.draw_ring(pr.Vector2(_x, _y), _ro - stroke_width * 0.5, _ro + stroke_width * 0.5, 0, 360, segments,
                              stroke_color.to_pyray())
 
     def triangle(self, x1, y1, x2, y2, x3, y3, **kwargs):
