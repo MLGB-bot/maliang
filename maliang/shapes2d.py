@@ -54,9 +54,9 @@ class Shapes2d(ShapeConfig):
                          stroke_color=None, filled_color=stroke_color, mode=RectMode.CENTER)
             elif stroke_width == 1:
                 # 画一个像素
-                rl.DrawPixelV(pr.Vector2(x, y), pr.Color(*stroke_color))
+                rl.DrawPixelV(pr.Vector2(x, y), stroke_color.to_pyray())
         elif stroke_color:
-            rl.DrawPixelV(pr.Vector2(x, y), pr.Color(*stroke_color))
+            rl.DrawPixelV(pr.Vector2(x, y), stroke_color.to_pyray())
 
     def line(self, x1, y1, x2, y2, **kwargs):
         stroke_width = self.init_stroke_width(kwargs)
@@ -66,10 +66,10 @@ class Shapes2d(ShapeConfig):
                 pr.Vector2(x1, y1),
                 pr.Vector2(x2, y2),
                 stroke_width,
-                pr.Color(*stroke_color),
+                stroke_color.to_pyray(),
             )
         elif stroke_color:
-            rl.DrawLineV(pr.Vector2(x1, y1), pr.Vector2(x2, y2), pr.Color(*stroke_color))
+            rl.DrawLineV(pr.Vector2(x1, y1), pr.Vector2(x2, y2), stroke_color.to_pyray())
 
     @staticmethod
     def _init_rect_mode(x, y, w, h, rect_mode):
@@ -92,12 +92,33 @@ class Shapes2d(ShapeConfig):
         mode = mode or self._rect_mode
         _x, _y, _w, _h = self._init_rect_mode(x, y, w, h, mode)
         if filled_color:
-            rl.DrawRectangleRec(pr.Rectangle(_x, _y, _w, _h), pr.Color(*filled_color))
+            rl.DrawRectangleRec(pr.Rectangle(_x, _y, _w, _h), filled_color.to_pyray())
         if stroke_width and stroke_color:
-            if stroke_width == 1:
-                rl.DrawRectangleLinesEx(pr.Rectangle(_x, _y, _w, _h), 1, pr.Color(*stroke_color))
-            else:
-                rl.DrawRectangleLinesEx(pr.Rectangle(_x, _y, _w, _h), stroke_width, pr.Color(*stroke_color))
+            rl.DrawRectangleLinesEx(pr.Rectangle(_x, _y, _w, _h), stroke_width, stroke_color.to_pyray())
+        elif stroke_color:
+            rl.DrawRectangleLines(f2i(_x), f2i(_y), f2i(_w), f2i(_h), stroke_color.to_pyray())
+
+    def rect_rounded(self, x, y, w, h, roundness:float=0, segments=30, mode=None, **kwargs):
+        stroke_width = self.init_stroke_width(kwargs)
+        stroke_color = self.init_stroke_color(kwargs)
+        filled_color = self.init_filled_color(kwargs)
+
+        mode = mode or self._rect_mode
+        _x, _y, _w, _h = self._init_rect_mode(x, y, w, h, mode)
+        if filled_color:
+            rl.DrawRectangleRounded(pr.Rectangle(_x, _y, _w, _h), roundness, segments, filled_color.to_pyray())
+        if stroke_width and stroke_color:
+            rl.DrawRectangleRoundedLines(pr.Rectangle(_x, _y, _w, _h), roundness, segments, stroke_width, stroke_color.to_pyray())
+
+    def rect_gradient(self, x, y, w, h, colors=None, direction=0, mode=None):
+        mode = mode or self._rect_mode
+        _x, _y, _w, _h = self._init_rect_mode(x, y, w, h, mode)
+        if direction == 0:
+            rl.DrawRectangleGradientEx(pr.Rectangle(_x, _y, _w, _h), *[self.format_color(color).to_pyray() for color in colors])
+        elif direction == 1:
+            rl.DrawRectangleGradientH(f2i(_x), f2i(_y), f2i(_w), f2i(_h), *[self.format_color(color).to_pyray() for color in colors])
+        elif direction == 2:
+            rl.DrawRectangleGradientV(f2i(_x), f2i(_y), f2i(_w), f2i(_h), *[self.format_color(color).to_pyray() for color in colors])
 
     @staticmethod
     def _init_circle_mode(x, y, diam, rect_mode):
@@ -119,15 +140,15 @@ class Shapes2d(ShapeConfig):
         _x, _y, _r = self._init_circle_mode(x, y, diam, mode)
 
         if filled_color:
-            rl.DrawCircleV(pr.Vector2(_x, _y), _r, pr.Color(*filled_color))
+            rl.DrawCircleV(pr.Vector2(_x, _y), _r, filled_color.to_pyray())
         if stroke_width and stroke_color:
             if stroke_width == 1:
                 _x = f2i(_x)
                 _y = f2i(_y)
-                pr.draw_circle_lines(_x, _y, _r, pr.Color(*stroke_color))
+                pr.draw_circle_lines(_x, _y, _r, stroke_color.to_pyray())
             elif stroke_width > 1:
                 pr.draw_ring(pr.Vector2(_x, _y), _r - stroke_width * 0.5, _r + stroke_width * 0.5, 0, 360, segments,
-                             pr.Color(*stroke_color))
+                             stroke_color.to_pyray())
 
     @staticmethod
     def _init_ellipse_mode(x, y, w, h, rect_mode):
@@ -151,13 +172,13 @@ class Shapes2d(ShapeConfig):
         _x = f2i(_x)
         _y = f2i(_y)
         if filled_color:
-            pr.draw_ellipse(_x, _y, _w, _h, pr.Color(*filled_color))
+            pr.draw_ellipse(_x, _y, _w, _h, filled_color.to_pyray())
         if stroke_width and stroke_color:
             if stroke_width == 1:
-                pr.draw_ellipse_lines(_x, _y, _w, _h, pr.Color(*stroke_color))
+                pr.draw_ellipse_lines(_x, _y, _w, _h, stroke_color.to_pyray())
             elif stroke_width > 1:
                 # todo draw ellipse stroke lines
-                pr.draw_ellipse_lines(_x, _y, _w, _h, pr.Color(*stroke_color))
+                pr.draw_ellipse_lines(_x, _y, _w, _h, stroke_color.to_pyray())
 
     def arc(self, x, y, rx, ry, start_angle, end_angle, segments=30, **kwargs):
         stroke_width = self.init_stroke_width(kwargs)
@@ -165,15 +186,15 @@ class Shapes2d(ShapeConfig):
         filled_color = self.init_filled_color(kwargs)
         if rx == ry:
             if filled_color:
-                pr.draw_circle_sector(pr.Vector2(x, y), rx, start_angle, end_angle, segments, pr.Color(*filled_color))
+                pr.draw_circle_sector(pr.Vector2(x, y), rx, start_angle, end_angle, segments, filled_color.to_pyray())
             if stroke_width and stroke_color:
                 if stroke_width == 1:
                     pr.draw_circle_sector_lines(pr.Vector2(x, y), rx, start_angle, end_angle, segments,
-                                                pr.Color(*stroke_color))
+                                                stroke_color.to_pyray())
                 elif stroke_width > 1:
                     # todo draw arc stroke lines
                     pr.draw_circle_sector_lines(pr.Vector2(x, y), rx, start_angle, end_angle, segments,
-                                                pr.Color(*stroke_color))
+                                                stroke_color.to_pyray())
         else:
             # todo from ellipse
             pass
@@ -199,42 +220,42 @@ class Shapes2d(ShapeConfig):
         _x, _y, _ri, _ro = self.init_ring_mode(x, y, d_in, d_out, mode)
 
         if filled_color:
-            pr.draw_ring(pr.Vector2(_x, _y), _ri, _ro, 0, 360, segments, pr.Color(*filled_color))
+            pr.draw_ring(pr.Vector2(_x, _y), _ri, _ro, 0, 360, segments, filled_color.to_pyray())
         if stroke_width and stroke_color:
             if stroke_width == 1:
-                pr.draw_ring_lines(pr.Vector2(_x, _y), _ri, _ro, 0, 360, segments, pr.Color(*stroke_color))
+                pr.draw_ring_lines(pr.Vector2(_x, _y), _ri, _ro, 0, 360, segments, stroke_color.to_pyray())
             elif stroke_width > 1:
                 pr.draw_ring(pr.Vector2(_x, _y), _ri - stroke_width * 0.5, _ri + stroke_width * 0.5, 0, 360, segments,
-                             pr.Color(*stroke_color))
+                             stroke_color.to_pyray())
                 pr.draw_ring(pr.Vector2(_x, _y), _ri - stroke_width * 0.5, _ri + stroke_width * 0.5, 0, 360, segments,
-                             pr.Color(*stroke_color))
+                             stroke_color.to_pyray())
 
     def triangle(self, x1, y1, x2, y2, x3, y3, **kwargs):
         stroke_width = self.init_stroke_width(kwargs)
         stroke_color = self.init_stroke_color(kwargs)
         filled_color = self.init_filled_color(kwargs)
         if filled_color:
-            pr.draw_triangle(pr.Vector2(x1, y1), pr.Vector2(x2, y2), pr.Vector2(x3, y3), pr.Color(*filled_color))
+            pr.draw_triangle(pr.Vector2(x1, y1), pr.Vector2(x2, y2), pr.Vector2(x3, y3), filled_color.to_pyray())
         if stroke_width and stroke_color:
             if stroke_width == 1:
                 pr.draw_triangle_lines(pr.Vector2(x1, y1), pr.Vector2(x2, y2), pr.Vector2(x3, y3),
-                                       pr.Color(*stroke_color))
+                                       stroke_color.to_pyray())
             elif stroke_width > 1:
-                pr.draw_line_ex(pr.Vector2(x1, y1), pr.Vector2(x2, y2), stroke_width, pr.Color(*stroke_color), )
-                pr.draw_line_ex(pr.Vector2(x2, y2), pr.Vector2(x3, y3), stroke_width, pr.Color(*stroke_color), )
-                pr.draw_line_ex(pr.Vector2(x3, y3), pr.Vector2(x1, y1), stroke_width, pr.Color(*stroke_color), )
+                pr.draw_line_ex(pr.Vector2(x1, y1), pr.Vector2(x2, y2), stroke_width, stroke_color.to_pyray(), )
+                pr.draw_line_ex(pr.Vector2(x2, y2), pr.Vector2(x3, y3), stroke_width, stroke_color.to_pyray(), )
+                pr.draw_line_ex(pr.Vector2(x3, y3), pr.Vector2(x1, y1), stroke_width, stroke_color.to_pyray(), )
 
     def poly(self, x, y, r, sides, r_angle=0, **kwargs):
         stroke_width = self.init_stroke_width(kwargs)
         stroke_color = self.init_stroke_color(kwargs)
         filled_color = self.init_filled_color(kwargs)
         if filled_color:
-            pr.draw_poly(pr.Vector2(x, y), sides, r, r_angle, pr.Color(*filled_color))
+            pr.draw_poly(pr.Vector2(x, y), sides, r, r_angle, filled_color.to_pyray())
         if stroke_width and stroke_color:
             if stroke_width == 1:
-                pr.draw_poly_lines(pr.Vector2(x, y), sides, r, r_angle, pr.Color(*stroke_color))
+                pr.draw_poly_lines(pr.Vector2(x, y), sides, r, r_angle, stroke_color.to_pyray())
             elif stroke_width > 1:
-                pr.draw_poly_lines_ex(pr.Vector2(x, y), sides, r, r_angle, stroke_width, pr.Color(*stroke_color))
+                pr.draw_poly_lines_ex(pr.Vector2(x, y), sides, r, r_angle, stroke_width, stroke_color.to_pyray())
 
     # collision detection functions
     # 碰撞检测

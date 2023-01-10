@@ -14,18 +14,31 @@ class ShapeConfig(object):
 
     _stroke = True
     _fill = True
-    stroke_width = 1
-    stroke_color = pr.BLACK
-    filled_color = pr.WHITE
+    _stroke_width = 1
+    _stroke_color = MColor(*pr.BLACK)
+    _filled_color = MColor(*pr.WHITE)
 
 
     def __init__(self):
         pass
 
+    @property
+    def filled_color(self):
+        return self._filled_color
+
+    @property
+    def stroke_color(self):
+        return self._stroke_color
+
+    @property
+    def stroke_width(self):
+        return self._stroke_width
+
     @classmethod
     def format_color(self, color):
-        obj_color = MColor(*color)
-        return tuple(obj_color)
+        if isinstance(color, MColor):
+            return color
+        return MColor(*color)
 
     @classmethod
     def no_fill(self):
@@ -39,22 +52,22 @@ class ShapeConfig(object):
     def fill(self, *color):
         self._fill = True
         if color:
-            self.filled_color = self.format_color(color)
+            self._filled_color = self.format_color(color)
 
     @classmethod
     def stroke(self, color: tuple = None, width: float = None):
         self._stroke = True
         if color is not None:
-            self.stroke_color = self.format_color(color)
+            self._stroke_color = self.format_color(color)
         if width is not None:
-            self.stroke_width = width
+            self._stroke_width = width
 
     @classmethod
     def init_stroke_width(self, kwargs):
         if kwargs and "stroke_width" in kwargs:
             return kwargs['stroke_width']
         elif self._stroke:
-            return self.stroke_width
+            return self._stroke_width
         return None
 
     @classmethod
@@ -62,7 +75,7 @@ class ShapeConfig(object):
         if kwargs and "stroke_color" in kwargs:
             return self.format_color(kwargs['stroke_color']) if kwargs['stroke_color'] else None
         elif self._stroke:
-            return self.stroke_color
+            return self._stroke_color
         return None
 
     @classmethod
@@ -70,5 +83,5 @@ class ShapeConfig(object):
         if kwargs and "filled_color" in kwargs:
             return self.format_color(kwargs['filled_color']) if kwargs['filled_color'] else None
         elif self._fill:
-            return self.filled_color
+            return self._filled_color
         return None
