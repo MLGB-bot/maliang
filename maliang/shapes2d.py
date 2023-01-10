@@ -190,14 +190,14 @@ class Shapes2d(ShapeConfig):
         filled_color = self.init_filled_color(kwargs)
         if rx == ry:
             if filled_color:
-                pr.draw_circle_sector(pr.Vector2(x, y), rx, start_angle, end_angle, segments, filled_color.to_pyray())
+                rl.DrawCircleSector(pr.Vector2(x, y), rx, start_angle, end_angle, segments, filled_color.to_pyray())
             if stroke_width and stroke_color:
                 if stroke_width == 1:
-                    pr.draw_circle_sector_lines(pr.Vector2(x, y), rx, start_angle, end_angle, segments,
+                    rl.DrawCircleSectorLines(pr.Vector2(x, y), rx, start_angle, end_angle, segments,
                                                 stroke_color.to_pyray())
                 elif stroke_width > 1:
                     # todo draw arc stroke lines
-                    pr.draw_circle_sector_lines(pr.Vector2(x, y), rx, start_angle, end_angle, segments,
+                    rl.DrawCircleSectorLines(pr.Vector2(x, y), rx, start_angle, end_angle, segments,
                                                 stroke_color.to_pyray())
         else:
             # todo from ellipse
