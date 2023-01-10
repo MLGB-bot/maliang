@@ -85,3 +85,12 @@ class ShapeConfig(object):
         elif self._fill:
             return self._filled_color
         return None
+
+    @classmethod
+    def calc_polygon_area(cls, points):
+        area = 0
+        for index, point in enumerate(points):
+            neighboor_index = (index + 1) % len(points)
+            area += point[0] * points[neighboor_index][1] - point[1] * points[neighboor_index][0]
+        return area * 0.5
+

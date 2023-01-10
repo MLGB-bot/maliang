@@ -94,9 +94,10 @@ class Shapes2d(ShapeConfig):
         if filled_color:
             rl.DrawRectangleRec(pr.Rectangle(_x, _y, _w, _h), filled_color.to_pyray())
         if stroke_width and stroke_color:
-            rl.DrawRectangleLinesEx(pr.Rectangle(_x, _y, _w, _h), stroke_width, stroke_color.to_pyray())
-        elif stroke_color:
-            rl.DrawRectangleLines(f2i(_x), f2i(_y), f2i(_w), f2i(_h), stroke_color.to_pyray())
+            if stroke_width == 1:
+                rl.DrawRectangleLines(f2i(_x), f2i(_y), f2i(_w), f2i(_h), stroke_color.to_pyray())
+            else:
+                rl.DrawRectangleLinesEx(pr.Rectangle(_x, _y, _w, _h), stroke_width, stroke_color.to_pyray())
 
     def rect_rounded(self, x, y, w, h, roundness:float=0, segments=30, mode=None, **kwargs):
         stroke_width = self.init_stroke_width(kwargs)
@@ -143,9 +144,7 @@ class Shapes2d(ShapeConfig):
             rl.DrawCircleV(pr.Vector2(_x, _y), _r, filled_color.to_pyray())
         if stroke_width and stroke_color:
             if stroke_width == 1:
-                _x = f2i(_x)
-                _y = f2i(_y)
-                pr.draw_circle_lines(_x, _y, _r, stroke_color.to_pyray())
+                rl.DrawCircleLines(f2i(_x), f2i(_y), _r, stroke_color.to_pyray())
             elif stroke_width > 1:
                 pr.draw_ring(pr.Vector2(_x, _y), _r - stroke_width * 0.5, _r + stroke_width * 0.5, 0, 360, segments,
                              stroke_color.to_pyray())
@@ -172,13 +171,13 @@ class Shapes2d(ShapeConfig):
         _x = f2i(_x)
         _y = f2i(_y)
         if filled_color:
-            pr.draw_ellipse(_x, _y, _w, _h, filled_color.to_pyray())
+            rl.DrawEllipse(_x, _y, _w, _h, filled_color.to_pyray())
         if stroke_width and stroke_color:
             if stroke_width == 1:
-                pr.draw_ellipse_lines(_x, _y, _w, _h, stroke_color.to_pyray())
+                rl.DrawEllipseLines(_x, _y, _w, _h, stroke_color.to_pyray())
             elif stroke_width > 1:
                 # todo draw ellipse stroke lines
-                pr.draw_ellipse_lines(_x, _y, _w, _h, stroke_color.to_pyray())
+                rl.DrawEllipseLines(_x, _y, _w, _h, stroke_color.to_pyray())
 
     def arc(self, x, y, rx, ry, start_angle, end_angle, segments=30, **kwargs):
         stroke_width = self.init_stroke_width(kwargs)
@@ -234,16 +233,25 @@ class Shapes2d(ShapeConfig):
         stroke_width = self.init_stroke_width(kwargs)
         stroke_color = self.init_stroke_color(kwargs)
         filled_color = self.init_filled_color(kwargs)
+
+        area = self.calc_polygon_area((
+            (x1, y1), (x2, y2), (x3, y3)
+        ))
+        if area > 0:
+            # 顺时针 -> 逆时针
+            x2, x3 = x3, x2
+            y2, y3 = y3, y2
+
         if filled_color:
-            pr.draw_triangle(pr.Vector2(x1, y1), pr.Vector2(x2, y2), pr.Vector2(x3, y3), filled_color.to_pyray())
+            rl.DrawTriangle(pr.Vector2(x1, y1), pr.Vector2(x2, y2), pr.Vector2(x3, y3), filled_color.to_pyray())
         if stroke_width and stroke_color:
             if stroke_width == 1:
-                pr.draw_triangle_lines(pr.Vector2(x1, y1), pr.Vector2(x2, y2), pr.Vector2(x3, y3),
+                rl.DrawTriangleLines(pr.Vector2(x1, y1), pr.Vector2(x2, y2), pr.Vector2(x3, y3),
                                        stroke_color.to_pyray())
             elif stroke_width > 1:
-                pr.draw_line_ex(pr.Vector2(x1, y1), pr.Vector2(x2, y2), stroke_width, stroke_color.to_pyray(), )
-                pr.draw_line_ex(pr.Vector2(x2, y2), pr.Vector2(x3, y3), stroke_width, stroke_color.to_pyray(), )
-                pr.draw_line_ex(pr.Vector2(x3, y3), pr.Vector2(x1, y1), stroke_width, stroke_color.to_pyray(), )
+                rl.DrawLineEx(pr.Vector2(x1, y1), pr.Vector2(x2, y2), stroke_width, stroke_color.to_pyray(), )
+                rl.DrawLineEx(pr.Vector2(x2, y2), pr.Vector2(x3, y3), stroke_width, stroke_color.to_pyray(), )
+                rl.DrawLineEx(pr.Vector2(x3, y3), pr.Vector2(x1, y1), stroke_width, stroke_color.to_pyray(), )
 
     def poly(self, x, y, r, sides, r_angle=0, **kwargs):
         stroke_width = self.init_stroke_width(kwargs)
