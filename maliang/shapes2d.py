@@ -44,7 +44,10 @@ class Shapes2d(ShapeConfig):
         stroke_width = self.init_stroke_width(kwargs)
         stroke_color = self.init_stroke_color(kwargs)
         if stroke_width and stroke_color:
-            if stroke_width > 1:
+            if stroke_width == 1:
+                # 画一个像素
+                rl.DrawPixelV(pr.Vector2(x, y), stroke_color.to_pyray())
+            elif stroke_width > 1:
                 # 画一个圆
                 if shape == "circle":
                     self.circle(x, y, diam=stroke_width, stroke_width=0,
@@ -52,11 +55,7 @@ class Shapes2d(ShapeConfig):
                 elif shape == 'rect':
                     self.rect(x, y, stroke_width, stroke_width, stroke_width=0,
                          stroke_color=None, filled_color=stroke_color, mode=RectMode.CENTER)
-            elif stroke_width == 1:
-                # 画一个像素
-                rl.DrawPixelV(pr.Vector2(x, y), stroke_color.to_pyray())
-        elif stroke_color:
-            rl.DrawPixelV(pr.Vector2(x, y), stroke_color.to_pyray())
+
 
     def line(self, x1, y1, x2, y2, **kwargs):
         stroke_width = self.init_stroke_width(kwargs)
@@ -71,8 +70,46 @@ class Shapes2d(ShapeConfig):
                     stroke_width,
                     stroke_color.to_pyray(),
                 )
-        elif stroke_color:
-            rl.DrawLineV(pr.Vector2(x1, y1), pr.Vector2(x2, y2), stroke_color.to_pyray())
+
+
+    def line_bezier(self, x1, y1, x2, y2, **kwargs):
+        stroke_width = self.init_stroke_width(kwargs)
+        stroke_color = self.init_stroke_color(kwargs)
+        if stroke_width and stroke_color:
+            rl.DrawLineBezier(
+                pr.Vector2(x1, y1),
+                pr.Vector2(x2, y2),
+                stroke_width,
+                stroke_color
+            )
+
+
+    def line_bezier_quad(self, x1, y1, x2, y2, cx, cy, **kwargs):
+        stroke_width = self.init_stroke_width(kwargs)
+        stroke_color = self.init_stroke_color(kwargs)
+        if stroke_width and stroke_color:
+            rl.DrawLineBezierQuad(
+                pr.Vector2(x1, y1),
+                pr.Vector2(x2, y2),
+                pr.Vector2(cx, cy),
+                stroke_width,
+                stroke_color
+            )
+
+
+    def line_bezier_cubic(self, x1, y1, x2, y2, cx1, cy1, cx2, cy2, **kwargs):
+        stroke_width = self.init_stroke_width(kwargs)
+        stroke_color = self.init_stroke_color(kwargs)
+        if stroke_width and stroke_color:
+            rl.DrawLineBezierCubic(
+                pr.Vector2(x1, y1),
+                pr.Vector2(x2, y2),
+                pr.Vector2(cx1, cy1),
+                pr.Vector2(cx2, cy2),
+                stroke_width,
+                stroke_color
+            )
+
 
     @staticmethod
     def _init_rect_mode(x, y, w, h, rect_mode):
