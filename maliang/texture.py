@@ -7,8 +7,6 @@ from maliang.structs import MTexture, MImage
 class Texture:
     def __init__(self):
         self._texture_mode = TextureMode.CORNER
-        self._tint = False
-        self._tint_color = pr.WHITE
 
     def load_texture(self, filename):
         image_path = os.path.join(ResourceLoader.static_dir, filename)

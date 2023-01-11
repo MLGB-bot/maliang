@@ -7,7 +7,7 @@ from maliang.structs import MColor, MImage, MTexture
 class Image():
     def __init__(self):
         self._image_mode = ImageMode.CORNER
-        self._tint = False
+        self._tint = True
         self._tint_color = pr.WHITE
 
 
