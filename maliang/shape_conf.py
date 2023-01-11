@@ -181,6 +181,20 @@ class ShapeConfig(object):
             rl.rlVertex2f(*point)
         rl.rlEnd()
 
+    @classmethod
+    def transfer_maliang_degree_to_raylib(cls, degree):
+        base = degree // 360
+        left = degree % 360
+        if left <= 90:
+            return (90 - left) + base * 360
+        else:
+            return (360 - left + 90) + base * 360
+
+    @classmethod
+    def maliang_coor_degree_to_raylib(cls, maliang_start, maliang_end):
+        start = cls.transfer_maliang_degree_to_raylib(maliang_end)
+        end  = start + maliang_end - maliang_start
+        return start, end
 
     @classmethod
     def draw_arc_py(cls, x, y, rx, ry, start_angle, end_angle, segments=30, shape=1,
