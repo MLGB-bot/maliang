@@ -159,7 +159,7 @@ class ShapeConfig(object):
 
     @classmethod
     def draw_triangles(cls, triangles, color):
-        rl.rlBegin(0x0004)  #
+        rl.rlBegin(0x0004)
         rl.rlColor4ub(*color)
         for point in triangles:
             rl.rlVertex2f(*point)
@@ -167,9 +167,17 @@ class ShapeConfig(object):
 
     @classmethod
     def draw_lines(cls, lines, color):
-        rl.rlBegin(0x0001)  #
+        rl.rlBegin(0x0001)
         rl.rlColor4ub(*color)
         for point in lines:
+            rl.rlVertex2f(*point)
+        rl.rlEnd()
+
+    @classmethod
+    def draw_quads(cls, quads, color):
+        rl.rlBegin(0x0007)
+        rl.rlColor4ub(*color)
+        for point in quads:
             rl.rlVertex2f(*point)
         rl.rlEnd()
 
