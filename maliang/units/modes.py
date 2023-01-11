@@ -9,6 +9,7 @@ __all__ = [
     "RectMode",
     "EllipseMode",
     "CircleMode",
+    "ArcShape",
     "MouseCursors",
     "MouseButtons",
     "KeyboardKeys",
@@ -98,6 +99,13 @@ class CircleMode:
     CORNER = 1  # 左上角
     CENTER = 2  # 中心点
     RADIUS = 3  # 中心点 半径
+
+
+class ArcShape:
+    PIE = 1
+    OPEN_PIE = 2
+    CHORD = 3
+    OPEN_CHORD = 4
 
 
 class MouseCursors:
