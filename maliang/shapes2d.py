@@ -181,26 +181,18 @@ class Shapes2d(ShapeConfig):
             if stroke_width == 1:
                 rl.DrawEllipseLines(_x, _y, rw, rh, stroke_color.to_pyray())
             elif stroke_width > 1:
-                self.draw_ellipse_line_py(_x, _y, rw, rh, stroke_width, tuple(stroke_color))
+                self.draw_ellipse_lines_py(_x, _y, rw, rh, stroke_width, tuple(stroke_color))
 
-    def arc(self, x, y, rx, ry, start_angle, end_angle, segments=30, **kwargs):
+    def arc(self, x, y, w, h, start_angle, end_angle, segments=30, shape=1, mode=None, **kwargs):
         stroke_width = self.init_stroke_width(kwargs)
         stroke_color = self.init_stroke_color(kwargs)
         filled_color = self.init_filled_color(kwargs)
-        if rx == ry:
-            if filled_color:
-                rl.DrawCircleSector(pr.Vector2(x, y), rx, start_angle, end_angle, segments, filled_color.to_pyray())
-            if stroke_width and stroke_color:
-                if stroke_width == 1:
-                    rl.DrawCircleSectorLines(pr.Vector2(x, y), rx, start_angle, end_angle, segments,
-                                                stroke_color.to_pyray())
-                elif stroke_width > 1:
-                    # todo draw arc stroke lines
-                    rl.DrawCircleSectorLines(pr.Vector2(x, y), rx, start_angle, end_angle, segments,
-                                                stroke_color.to_pyray())
-        else:
-            # todo from ellipse
-            pass
+        mode = mode or self._ellipse_mode
+        _x, _y, rw, rh = self._init_ellipse_mode(x, y, w, h, mode)
+        self.draw_arc_py(_x, _y, rw, rh, start_angle, end_angle, segments=segments, shape=shape,
+                                stroke_width=stroke_width,
+                                stroke_color=tuple(stroke_color) if stroke_color else None,
+                                filled_color=tuple(filled_color) if filled_color else None)
 
     @staticmethod
     def init_ring_mode(x, y, d1, d2, rect_mode):

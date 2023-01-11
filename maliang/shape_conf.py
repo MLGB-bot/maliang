@@ -99,13 +99,17 @@ class ShapeConfig(object):
 
     @classmethod
     def ellipse_coor_by_degree(cls, x, y, rx, ry, degree):
-        # DrawTriangleStrip(strip, 4, color);
         return (x + math.cos(math.radians(degree)) * rx,
                 y + math.sin(math.radians(degree)) * ry)
 
+    @classmethod
+    def circle_coor_by_degree(cls, x, y, r, degree):
+        return (x + math.cos(math.radians(degree)) * r,
+                y + math.sin(math.radians(degree)) * r)
+
 
     @classmethod
-    def draw_ellipse_line_py(cls, x, y, rx, ry, stroke_width, color):
+    def draw_ellipse_lines_py(cls, x, y, rx, ry, stroke_width, color):
         points0 = []  # 0~90
         points1 = []  # 90~180
         points2 = []  # 180~270
@@ -153,5 +157,109 @@ class ShapeConfig(object):
         stripes.append(stripes[1])
         rl.DrawTriangleStrip(stripes, len(stripes), color)
 
-if __name__ == '__main__':
-    print(ShapeConfig.ellipse_coor_by_degree(50, 50, 40, 30, 0))
+    @classmethod
+    def draw_triangles(cls, triangles, color):
+        rl.rlBegin(0x0004)  #
+        rl.rlColor4ub(*color)
+        for point in triangles:
+            rl.rlVertex2f(*point)
+        rl.rlEnd()
+
+    @classmethod
+    def draw_lines(cls, lines, color):
+        rl.rlBegin(0x0001)  #
+        rl.rlColor4ub(*color)
+        for point in lines:
+            rl.rlVertex2f(*point)
+        rl.rlEnd()
+
+
+    @classmethod
+    def draw_arc_py(cls, x, y, rx, ry, start_angle, end_angle, segments=30, shape=1,
+                            stroke_width=1, stroke_color=None, filled_color=None):
+        # DrawEllipse
+        """
+        :param x:
+        :param y:
+        :param rx:
+        :param ry:
+        :param start_angle:
+        :param end_angle:
+        :param stroke_width:
+        :param stroke_color:
+        :param filled_color:
+        :param segments:
+        :param shape:
+            PIE: 1
+            OPEN_PIE: 2
+            CHORD: 3
+            OPEN_CHORD: 4
+        :return:
+        """
+        points = []
+        steper = (end_angle - start_angle) // segments or 1
+        degree = start_angle
+        for degree in range(start_angle, end_angle, steper):
+            _x, _y = cls.circle_coor_by_degree(x, y, rx, degree) if rx==ry \
+                else cls.ellipse_coor_by_degree(x, y, rx, ry, degree)
+            points.append((_x, _y))
+        if degree < end_angle:
+            _x, _y = cls.circle_coor_by_degree(x, y, rx, end_angle) if rx==ry \
+                else cls.ellipse_coor_by_degree(x, y, rx, ry, end_angle)
+            points.append((_x, _y))
+
+        triangles = []
+        stripes = []
+        lines = []
+        for i in range(0, len(points) - 1):
+            point = points[i]
+            next_point = points[i + 1]
+            if filled_color:
+                if shape in (1, 2):
+                    triangles.append((x, y))
+                elif shape in (3, 4):
+                    triangles.append(points[-1])
+                triangles.append(next_point)
+                triangles.append(point)
+            if stroke_width and stroke_color:
+                if stroke_width == 1:
+                    lines.append(point)
+                    lines.append(next_point)
+                else:
+                    delta = (next_point[0] - point[0], next_point[1] - point[1])
+                    length = math.dist(point, next_point)
+                    scale = stroke_width / (2 * length)
+                    radius = -scale * delta[1], scale * delta[0]
+                    if not stripes:
+                        # 第一个点
+                        stripes.append((point[0] - radius[0], point[1] - radius[1]))
+                        stripes.append((point[0] + radius[0], point[1] + radius[1]))
+                    # 中间点
+                    stripes.append((next_point[0] - radius[0], next_point[1] - radius[1]))
+                    stripes.append((next_point[0] + radius[0], next_point[1] + radius[1]))
+
+        if triangles:
+            cls.draw_triangles(triangles, filled_color)
+
+        if stripes:
+            if shape == 1:
+                # PIE
+                rl.DrawLineEx(pr.Vector2(*points[0]), pr.Vector2(x, y), stroke_width, stroke_color)
+                rl.DrawLineEx(pr.Vector2(*points[-1]), pr.Vector2(x, y), stroke_width, stroke_color)
+            elif shape == 3:
+                # CHORD
+                rl.DrawLineEx(pr.Vector2(*points[0]), pr.Vector2(*points[-1]), stroke_width, stroke_color)
+            rl.DrawTriangleStrip(stripes, len(stripes), stroke_color)
+        elif lines:
+            if shape == 1:
+                # PIE
+                lines.append(points[0])
+                lines.append((x, y))
+                lines.append(points[-1])
+                lines.append((x, y))
+            elif shape == 3:
+                # CHORD
+                lines.append(points[0])
+                lines.append(points[-1])
+            cls.draw_lines(lines, stroke_color)
+
