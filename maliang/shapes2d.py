@@ -62,12 +62,15 @@ class Shapes2d(ShapeConfig):
         stroke_width = self.init_stroke_width(kwargs)
         stroke_color = self.init_stroke_color(kwargs)
         if stroke_width and stroke_color:
-            rl.DrawLineEx(
-                pr.Vector2(x1, y1),
-                pr.Vector2(x2, y2),
-                stroke_width,
-                stroke_color.to_pyray(),
-            )
+            if stroke_width == 1:
+                rl.DrawLineV(pr.Vector2(x1, y1), pr.Vector2(x2, y2), stroke_color.to_pyray())
+            elif stroke_width > 1:
+                rl.DrawLineEx(
+                    pr.Vector2(x1, y1),
+                    pr.Vector2(x2, y2),
+                    stroke_width,
+                    stroke_color.to_pyray(),
+                )
         elif stroke_color:
             rl.DrawLineV(pr.Vector2(x1, y1), pr.Vector2(x2, y2), stroke_color.to_pyray())
 
