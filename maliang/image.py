@@ -120,14 +120,16 @@ class Image():
     def no_tint(self):
         self._tint = False
 
-    def init_tint_color(self, tint_color):
+    def init_tint_color(self, kwargs):
+        if kwargs and "tint_color" in kwargs:
+            return kwargs["tint_color"] or pr.WHITE
         if self._tint:
-            return tint_color or self._tint_color
+            return self._tint_color
         return pr.WHITE
 
-    def image(self, img: MImage, x: int, y: int, w=0, h=0, tint_color=None, mode=None):
+    def image(self, img: MImage, x: int, y: int, w=0, h=0, mode=None, **kwargs):
         if img.pr_image:
-            tint_color = self.init_tint_color(tint_color)
+            tint_color = self.init_tint_color(kwargs)
             w = w or img.pr_image.width
             h = h or img.pr_image.height
             mode = mode or self._image_mode
