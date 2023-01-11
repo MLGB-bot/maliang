@@ -304,17 +304,17 @@ class Shapes2d(ShapeConfig):
                 rl.DrawLineEx(pr.Vector2(x2, y2), pr.Vector2(x3, y3), stroke_width, stroke_color.to_pyray(), )
                 rl.DrawLineEx(pr.Vector2(x3, y3), pr.Vector2(x1, y1), stroke_width, stroke_color.to_pyray(), )
 
-    def poly(self, x, y, r, sides, r_angle=0, **kwargs):
+    def poly(self, x, y, r, sides, rotation=0, **kwargs):
         stroke_width = self.init_stroke_width(kwargs)
         stroke_color = self.init_stroke_color(kwargs)
         filled_color = self.init_filled_color(kwargs)
         if filled_color:
-            pr.draw_poly(pr.Vector2(x, y), sides, r, r_angle, filled_color.to_pyray())
+            pr.draw_poly(pr.Vector2(x, y), sides, r, rotation, filled_color.to_pyray())
         if stroke_width and stroke_color:
             if stroke_width == 1:
-                pr.draw_poly_lines(pr.Vector2(x, y), sides, r, r_angle, stroke_color.to_pyray())
+                pr.draw_poly_lines(pr.Vector2(x, y), sides, r, rotation, stroke_color.to_pyray())
             elif stroke_width > 1:
-                pr.draw_poly_lines_ex(pr.Vector2(x, y), sides, r, r_angle, stroke_width, stroke_color.to_pyray())
+                pr.draw_poly_lines_ex(pr.Vector2(x, y), sides, r, rotation, stroke_width, stroke_color.to_pyray())
 
     # collision detection functions
     # 碰撞检测
