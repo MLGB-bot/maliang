@@ -246,7 +246,7 @@ class Shapes2d(ShapeConfig):
         else:
             return (x), (y), d1 * 0.5, d2 * 0.5
 
-    def ring(self, x, y, d_in, d_out, segments=30, mode=None, **kwargs):
+    def ring(self, x, y, d_in, d_out, start_angle=0, end_angle=360, segments=30, mode=None, **kwargs):
         stroke_width = self.init_stroke_width(kwargs)
         stroke_color = self.init_stroke_color(kwargs)
         filled_color = self.init_filled_color(kwargs)
@@ -255,15 +255,29 @@ class Shapes2d(ShapeConfig):
         _x, _y, _ri, _ro = self.init_ring_mode(x, y, d_in, d_out, mode)
 
         if filled_color:
-            pr.draw_ring(pr.Vector2(_x, _y), _ri, _ro, 0, 360, segments, filled_color.to_pyray())
+            rl.DrawRing(pr.Vector2(_x, _y), _ri, _ro, start_angle, end_angle, segments, filled_color.to_pyray())
         if stroke_width and stroke_color:
             if stroke_width == 1:
-                pr.draw_ring_lines(pr.Vector2(_x, _y), _ri, _ro, 0, 360, segments, stroke_color.to_pyray())
+                rl.DrawRingLines(pr.Vector2(_x, _y), _ri, _ro, start_angle, end_angle, segments, stroke_color.to_pyray())
             elif stroke_width > 1:
-                pr.draw_ring(pr.Vector2(_x, _y), _ri - stroke_width * 0.5, _ri + stroke_width * 0.5, 0, 360, segments,
+                rl.DrawRing(pr.Vector2(_x, _y), _ri - stroke_width * 0.5, _ri + stroke_width * 0.5, start_angle, end_angle, segments,
                              stroke_color.to_pyray())
-                pr.draw_ring(pr.Vector2(_x, _y), _ro - stroke_width * 0.5, _ro + stroke_width * 0.5, 0, 360, segments,
+                rl.DrawRing(pr.Vector2(_x, _y), _ro - stroke_width * 0.5, _ro + stroke_width * 0.5, start_angle, end_angle, segments,
                              stroke_color.to_pyray())
+                # draw lines
+                rl.DrawLineEx(
+                    pr.Vector2(*self.circle_coor_by_degree(_x, _y, _ri, start_angle)),
+                    pr.Vector2(*self.circle_coor_by_degree(_x, _y, _ro, start_angle)),
+                    stroke_width,
+                    stroke_color.to_pyray(),
+                )
+                rl.DrawLineEx(
+                    pr.Vector2(*self.circle_coor_by_degree(_x, _y, _ri, end_angle)),
+                    pr.Vector2(*self.circle_coor_by_degree(_x, _y, _ro, end_angle)),
+                    stroke_width,
+                    stroke_color.to_pyray(),
+                )
+
 
     def triangle(self, x1, y1, x2, y2, x3, y3, **kwargs):
         stroke_width = self.init_stroke_width(kwargs)
