@@ -134,17 +134,23 @@ class ShapeConfig(object):
         ]
 
         stripes = []
-        for i in range(0, len(points) - 1):
+        for i in range(0, len(points) - 2):
             point = points[i]
             next_point = points[i + 1]
             delta = (next_point[0] - point[0], next_point[1] - point[1])
             length = math.dist(point, next_point)
             scale = stroke_width / (2 * length)
             radius = -scale * delta[1], scale * delta[0]
-            stripes.append((point[0] - radius[0], point[1] - radius[1]))
-            stripes.append((point[0] + radius[0], point[1] + radius[1]))
+            if not stripes:
+                # 第一个点
+                stripes.append((point[0] - radius[0], point[1] - radius[1]))
+                stripes.append((point[0] + radius[0], point[1] + radius[1]))
+            # 中间点
             stripes.append((next_point[0] - radius[0], next_point[1] - radius[1]))
             stripes.append((next_point[0] + radius[0], next_point[1] + radius[1]))
+        # 最后一个点 直接合并到起点
+        stripes.append(stripes[0])
+        stripes.append(stripes[1])
         rl.DrawTriangleStrip(stripes, len(stripes), color)
 
 if __name__ == '__main__':
