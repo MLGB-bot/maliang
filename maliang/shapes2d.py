@@ -80,7 +80,7 @@ class Shapes2d(ShapeConfig):
                 pr.Vector2(x1, y1),
                 pr.Vector2(x2, y2),
                 stroke_width,
-                stroke_color
+                stroke_color.to_pyray()
             )
 
 
@@ -93,7 +93,7 @@ class Shapes2d(ShapeConfig):
                 pr.Vector2(x2, y2),
                 pr.Vector2(cx, cy),
                 stroke_width,
-                stroke_color
+                stroke_color.to_pyray()
             )
 
 
@@ -107,7 +107,7 @@ class Shapes2d(ShapeConfig):
                 pr.Vector2(cx1, cy1),
                 pr.Vector2(cx2, cy2),
                 stroke_width,
-                stroke_color
+                stroke_color.to_pyray()
             )
 
 
