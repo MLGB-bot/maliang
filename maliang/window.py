@@ -8,7 +8,7 @@ class Window():
                  full_screen=False):
 
         # self.set_window_state(WindowFlags.FLAG_WINDOW_RESIZABLE)
-        self.background_color = tuple(MColor(*background_color))
+        self.background_color = MColor(*background_color)
         self.title = title
         self.init_window(width, height, full_screen)
 
@@ -21,12 +21,20 @@ class Window():
 
     @property
     def width(self):
+        """
+
+        :return: 视窗宽度 Width of the window
+        """
         if self.is_window_fullscreen():
             return self.get_monitor_width(self.get_current_monitor())
         return self.get_screen_width()
 
     @property
     def height(self):
+        """
+
+        :return: 视窗高度 Width of the window
+        """
         if self.is_window_fullscreen():
             return self.get_monitor_height(self.get_current_monitor())
         return self.get_screen_height()
@@ -37,7 +45,7 @@ class Window():
             pr.clear_background(color.to_pyray())
         else:
             pr.draw_rectangle(0, 0, self.width, self.height, color.to_pyray())
-        self.background_color = tuple(color)
+        self.background_color = color
 
     def window_should_close(self) -> bool:
         return pr.window_should_close()
