@@ -26,8 +26,9 @@ class Window:
                 self.fullscreen_height = height
             else:
                 pr.init_window(0, 0, self.title)
-                self.fullscreen_width = self.get_screen_width()
-                self.fullscreen_height = self.get_screen_height()
+                monitor = Monitor.get_current_monitor()
+                self.fullscreen_width = Monitor.get_monitor_width(monitor)
+                self.fullscreen_height = Monitor.get_monitor_height(monitor)
         else:
             pr.init_window(width, height, self.title)
         while not pr.is_window_ready():
