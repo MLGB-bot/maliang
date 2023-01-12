@@ -2,6 +2,7 @@ import pyray as pr
 from maliang.structs import MColor, MImage
 from maliang.units.modes import WindowFlags
 
+
 class Window():
     def __init__(self, width=100, height=100, title='',
                  background_color=(235, 235, 235, 255),
@@ -10,24 +11,54 @@ class Window():
         # self.set_window_state(WindowFlags.FLAG_WINDOW_RESIZABLE)
         self.background_color = MColor(*background_color)
         self.title = title
+        self.fullscreen_width = 0
+        self.fullscreen_height = 0
         self.init_window(width, height, full_screen)
 
     def init_window(self, width, height, full_screen=False):
-        pr.init_window(width, height, self.title)
+        #  way1
+        if full_screen:
+            pr.set_config_flags(WindowFlags.FLAG_FULLSCREEN_MODE)
+            if width and height:
+                pr.init_window(width, height, self.title)
+                self.fullscreen_width = width
+                self.fullscreen_height = height
+            else:
+                pr.init_window(0, 0, self.title)
+                self.fullscreen_width = self.get_screen_width()
+                self.fullscreen_height = self.get_screen_height()
+        else:
+            pr.init_window(width, height, self.title)
         while not pr.is_window_ready():
             pass
-        if full_screen:
-            self.full_screen()
+
+    def fullscreen(self, width=0, height=0):
+        if not (width and height):
+            monitor = self.get_current_monitor()
+            width = self.get_monitor_width(monitor)
+            height = self.get_monitor_height(monitor)
+        self.resize(width, height)
+        self.toggle_fullscreen()
+        self.fullscreen_width = width
+        self.fullscreen_height = height
+
+    def un_fullscreen(self, width=0, height=0):
+        self.toggle_fullscreen()
+        if width and height:
+            self.resize(width, height)
+
+    def resize(self, w, h):
+        pr.set_window_size(w, h)
+        if self.is_window_fullscreen():
+            self.fullscreen_width = w
+            self.fullscreen_height = h
 
     @property
     def width(self):
         """
-
         :return: 视窗宽度 Width of the window
         """
-        if self.is_window_fullscreen():
-            return self.get_monitor_width(self.get_current_monitor())
-        return self.get_screen_width()
+        return self.fullscreen_width if self.is_window_fullscreen() else self.get_screen_width()
 
     @property
     def height(self):
@@ -35,9 +66,7 @@ class Window():
 
         :return: 视窗高度 Width of the window
         """
-        if self.is_window_fullscreen():
-            return self.get_monitor_height(self.get_current_monitor())
-        return self.get_screen_height()
+        return self.fullscreen_height if self.is_window_fullscreen() else self.get_screen_height()
 
     def background(self, *color):
         color = MColor(*color)
@@ -178,19 +207,3 @@ class Window():
 
     def get_monitor_name(self, monitor: int):
         return pr.get_monitor_name(monitor)
-
-    def full_screen(self, monitor=None):
-        if monitor == None:
-            monitor = self.get_current_monitor()
-        monitor_width = self.get_monitor_width(monitor)
-        monitor_height = self.get_monitor_height(monitor)
-        self.set_window_state(WindowFlags.FLAG_FULLSCREEN_MODE)
-        self.size(monitor_width, monitor_height)
-
-    def unfull_screen(self, flag=None):
-        if flag is None:
-            flag = WindowFlags.FLAG_VSYNC_HINT
-        self.set_window_state(flag)
-
-    def size(self, x, y):
-        pr.set_window_size(x, y)
