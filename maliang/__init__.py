@@ -78,6 +78,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
 
     def refresh_buffer_texture(self):
         new_buffer_texture = self.load_render_texture()  # create new sized buffer texture
+        print(self.width, self.height)
         # copy old texture to new resized texture
         pr.begin_texture_mode(new_buffer_texture)
         self.background(*self.background_color)
@@ -94,7 +95,8 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
         self.buffer_texture = new_buffer_texture
 
     def check_window_resized(self):
-        if self.is_window_resized():
+        if self.resized or self.is_window_resized():
+            self.resized = False
             if self.buffer_texture:
                 self.refresh_buffer_texture()
             if hasattr(self, "on_window_resized"):

@@ -14,6 +14,7 @@ class Window():
         self.fullscreen_width = 0
         self.fullscreen_height = 0
         self.init_window(width, height, full_screen)
+        self.resized = False    # is window resized
 
     def init_window(self, width, height, full_screen=False):
         #  way1
@@ -41,17 +42,23 @@ class Window():
         self.toggle_fullscreen()
         self.fullscreen_width = width
         self.fullscreen_height = height
+        self.resized = True
 
     def un_fullscreen(self, width=0, height=0):
         self.toggle_fullscreen()
         if width and height:
             self.resize(width, height)
+        self.resized = True
 
     def resize(self, w, h):
-        pr.set_window_size(w, h)
+        # base api to resize window
+        self.set_window_size(w, h)
+        # need to update width and height attr in fullscreen mode
         if self.is_window_fullscreen():
             self.fullscreen_width = w
             self.fullscreen_height = h
+        # Trig window resize event
+        self.resized = True
 
     @property
     def width(self):
