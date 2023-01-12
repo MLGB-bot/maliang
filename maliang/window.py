@@ -193,7 +193,7 @@ class Window():
         # Set monitor for the current window (fullscreen mode)
         pr.set_window_monitor(monitor)
 
-    def get_monotor_position(self, monitor: int):
+    def get_monitor_position(self, monitor: int):
         position = pr.get_monitor_position(monitor)
         return position.x, position.y
 
