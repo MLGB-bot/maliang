@@ -78,7 +78,6 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
 
     def refresh_buffer_texture(self):
         new_buffer_texture = self.load_render_texture()  # create new sized buffer texture
-        print(self.width, self.height)
         # copy old texture to new resized texture
         pr.begin_texture_mode(new_buffer_texture)
         self.background(*self.background_color)
