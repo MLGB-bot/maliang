@@ -38,11 +38,11 @@ class Window:
             monitor = Monitor.get_current_monitor()
             width = Monitor.get_monitor_width(monitor)
             height = Monitor.get_monitor_height(monitor)
-        # self.toggle_fullscreen()  #全屏下无法正常工作
-        # 顺序不能颠倒
-        self.set_window_state(WindowFlags.FLAG_FULLSCREEN_MODE)
+        self.toggle_fullscreen()
         self.resize(width, height)
-
+        # # 顺序不能颠倒
+        # self.set_window_state(WindowFlags.FLAG_FULLSCREEN_MODE)
+        # self.resize(width, height)
         self.fullscreen_width = width
         self.fullscreen_height = height
         self.resized = True
@@ -55,11 +55,14 @@ class Window:
 
     def resize(self, w, h):
         # base api to resize window
-        self.set_window_size(w, h)
         # need to update width and height attr in fullscreen mode
         if self.is_window_fullscreen():
-            self.fullscreen_width = w
+            self.fullscreen_width  = w
             self.fullscreen_height = h
+            # self.set_window_state(WindowFlags.FLAG_FULLSCREEN_MODE)
+            self.set_window_size(w, h)
+        else:
+            self.set_window_size(w, h)
         # Trig window resize event
         self.resized = True
 
