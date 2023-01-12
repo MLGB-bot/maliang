@@ -5,6 +5,8 @@ class Events:
             'on_setup': None,
             'on_draw': None,
             'on_exit': None,
+            # window
+            "on_resize": None,
             # mouse
             "on_mouse_clicked": None,
             "on_mouse_released": None,
@@ -18,11 +20,9 @@ class Events:
             "on_key_released": None,
             "on_key_down": None,
             "on_char_down": None,
-            # window
-            "on_window_resized": None,
         }
         self.events_registed = []
-        self.events_not_trigger = ('on_setup', 'on_draw', 'on_exit', 'on_window_resized')
+        self.events_not_trigger = ('on_setup', 'on_draw', 'on_exit', 'on_resize')
 
     def _default_event(self):
         pass

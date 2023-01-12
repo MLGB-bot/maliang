@@ -98,9 +98,9 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
             self.resized = False
             if self.buffer_texture:
                 self.refresh_buffer_texture()
-            if hasattr(self, "on_window_resized"):
+            if hasattr(self, "on_resize"):
                 # trigger event
-                getattr(self, "on_window_resized")()
+                getattr(self, "on_resize")()
 
     @staticmethod
     def decorate_by_buffer_value(func):
