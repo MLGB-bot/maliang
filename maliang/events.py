@@ -53,3 +53,10 @@ class Events:
                             self.events[event_name](args)
                         else:
                             self.events[event_name]()
+
+    def refresh_events(self):
+        pass
+
+    def __setattr__(self, key, value):
+        # todo
+        pass
