@@ -2,7 +2,7 @@ from maliang.__version__ import __version__
 
 import pyray as pr
 from maliang.structs import MColor
-from maliang.window import Window
+from maliang.window import Window, Monitor
 from maliang.camera import Camera
 from maliang.environment import Environment
 from maliang.shapes2d import Shapes2d
