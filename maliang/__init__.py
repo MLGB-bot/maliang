@@ -27,7 +27,7 @@ from maliang.units import ResourceLoader, FrameCounter
 class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse, Keyboard,
               Model, Mesh, Material, Ray, Shader, Image, Font, Text, Texture, Camera):
     def __init__(self, width=100, height=100, title='', buffer_proxy=False, fps=0,
-                 background_color=(235, 235, 235, 255), full_screen=False):
+                 background_color=(235, 235, 235, 255), fullscreen=False):
         Events.__init__(self)
         Environment.__init__(self, fps=fps)
         Shapes2d.__init__(self)
@@ -46,7 +46,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
         Ray.__init__(self)
         Shader.__init__(self)
         Window.__init__(self, width=width, height=height, title=title,
-                        background_color=background_color, full_screen=full_screen)
+                        background_color=background_color, fullscreen=fullscreen)
         self.set_exit_key(KeyboardKeys.KEY_NULL)
         self.smooth()
         self.frame_counter = FrameCounter()

@@ -6,19 +6,26 @@ from maliang.units.modes import WindowFlags
 class Window:
     def __init__(self, width=100, height=100, title='',
                  background_color=(235, 235, 235, 255),
-                 full_screen=False):
+                 fullscreen=False):
 
         # self.set_window_state(WindowFlags.FLAG_WINDOW_RESIZABLE)
         self.background_color = MColor(*background_color)
         self.title = title
         self.fullscreen_width = 0
         self.fullscreen_height = 0
-        self.init_window(width, height, full_screen)
+        self.init_window(width, height, fullscreen)
         self.resized = False    # is window resized
 
-    def init_window(self, width, height, full_screen=False):
-        #  way1
-        if full_screen:
+    def init_window(self, width, height, fullscreen=False):
+        """
+        create a window in the begining of program
+
+        :param width: window width
+        :param height: window height
+        :param fullscreen: whether window is full
+        :return:
+        """
+        if fullscreen:
             pr.set_config_flags(WindowFlags.FLAG_FULLSCREEN_MODE)
             if width and height:
                 pr.init_window(width, height, self.title)
