@@ -1,4 +1,5 @@
 import pyray as pr
+import raylib as rl
 from maliang.units import MouseButtons
 
 class Mouse:
@@ -8,11 +9,11 @@ class Mouse:
 
     @property
     def mouse_x(self):
-        return pr.get_mouse_x()
+        return rl.GetMouseX()
 
     @property
     def mouse_y(self):
-        return pr.get_mouse_y()
+        return rl.GetMouseY()
 
     @property
     def mouse(self):
