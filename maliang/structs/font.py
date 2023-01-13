@@ -56,6 +56,7 @@ class MFont:
         font_runtime = pr.load_font_from_memory(self._type, self._bin, self._len, text_size, codepoints,
                                                 codepoints_count[0])
         pr.unload_codepoints(codepoints)
+        del codepoints_count
         # add to resource
         mod_resource.ResourceLoader.loaded_fonts_runtime.append(font_runtime)
         # pr.unload_font(font_runtime)

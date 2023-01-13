@@ -6,15 +6,15 @@ from maliang.structs.font import FontEngines
 from maliang.structs import MFont
 
 
-class Font(FontEngines):
+class Font:
     def __init__(self):
         pass
 
-    def load_font(self, filename='', filetype='.ttf', engine_id=1, engine_font_size=64, engine=None):
+    def load_font(self, filename='', filetype='.ttf', engine=None, engine_font_size=64, ):
         _path = os.path.join(ResourceLoader.static_dir, filename) if filename else ''
-        if engine_id == self.FONT_RAYLIB:
+        if not engine:
             font = MFont()
-            font.engine_id = self.FONT_RAYLIB
+            font.engine_id = FontEngines.FONT_RAYLIB
             font._type = filetype
             # with open(_path, 'rb') as f:
             #     font._bin = f.read()
@@ -24,7 +24,7 @@ class Font(FontEngines):
             font._bin = file_data
             font._len = file_size[0]
             return font
-        elif engine:
+        else:
             font = MFont()
             font.font_size = engine_font_size
             if _path:
@@ -34,7 +34,7 @@ class Font(FontEngines):
                     _path = filename
             font._type = filetype
             # set engine info
-            font.engine_id = engine_id
+            font.engine_id = 0
             font.engine_font = engine.api_auto_load(_path, filetype, engine_font_size)
             font.engine = engine
             return font

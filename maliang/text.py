@@ -16,22 +16,28 @@ class Text:
     def text_font(self, font: MFont):
         self.__text_font = font
 
-    def text(self, text, x=0, y=0, text_size=None, text_color=None, font: MFont = None):
-        font = font or self.__text_font
-        text_size = text_size or self.__text_size
-        text_color = text_color or self.__text_color
-        if font:
-            font.text(text, x, y, text_size=text_size, text_color=tuple(MColor(*text_color)), space_x=1)
+    def init_text_color(self, text_color):
+        if isinstance(text_color, MColor):
+            return text_color
         else:
-            pr.draw_text_ex(pr.get_font_default(), text, pr.Vector2(x, y), text_size, 1, MColor(*text_color).to_pyray())
+            return MColor(*text_color)
 
-    def text_image(self, text, text_size=12, text_color=None, font: MFont = None):
+    def text(self, text, x=0, y=0, text_size=None, text_color=None, font: MFont = None, space_x=1):
         font = font or self.__text_font
         text_size = text_size or self.__text_size
-        text_color = text_color or self.__text_color
+        text_color = self.init_text_color(text_color or self.__text_color)
         if font:
-            img = font.text_image(text, text_size=text_size, text_color=tuple(MColor(*text_color)), space_x=1)
+            font.text(text, x, y, text_size=text_size, text_color=tuple(text_color), space_x=space_x)
+        else:
+            pr.draw_text_ex(pr.get_font_default(), text, pr.Vector2(x, y), text_size, space_x, text_color.to_pyray())
+
+    def text_image(self, text, text_size=12, text_color=None, font: MFont = None, space_x=1):
+        font = font or self.__text_font
+        text_size = text_size or self.__text_size
+        text_color = self.init_text_color(text_color or self.__text_color)
+        if font:
+            img = font.text_image(text, text_size=text_size, text_color=tuple(text_color), space_x=space_x)
         else:
             img = MImage()
-            img.pr_image = pr.image_text_ex(pr.get_font_default(), text, text_size, 1, MColor(*text_color).to_pyray())
+            img.pr_image = pr.image_text_ex(pr.get_font_default(), text, text_size, space_x, text_color.to_pyray())
         return img
