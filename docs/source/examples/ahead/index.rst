@@ -3,6 +3,14 @@
 
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 3
 
     window
+    on_setup
+    on_draw
+    background
+    width
+    height
+    resize
+    fullscreen
+

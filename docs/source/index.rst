@@ -12,6 +12,11 @@ Welcome to maliang's documentation!
 
    install
    examples/index
+   apis/index
+
+
+
+
 
 Indices and tables
 ==================

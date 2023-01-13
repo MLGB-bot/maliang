@@ -6,18 +6,17 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-# import os, sys
-# print(os.path.join(os.path.abspath("../../"), "examples"))
-# # sys.path.insert(0, os.path.join(os.path.abspath("../../"), "examples") )
-# sys.path.insert(0, os.path.abspath("../../") )
+import os, sys
+sys.path.insert(0, os.path.abspath("../../") )
 
-# import maliang
+import maliang
 
 project = 'maliang'
 copyright = '2023, 1258843771@qq.com'
 author = '1258843771@qq.com'
-release = '0.0.1'
-# release = maliang.__version__
+# release = '0.0.1'
+release = maliang.__version__
+version = maliang.__version__
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -25,6 +24,7 @@ release = '0.0.1'
 extensions = [
     'recommonmark',
     'sphinx.ext.autosectionlabel',
+    'sphinx.ext.autodoc',
 ]
 # autosectionlabel_prefix_document = True
 
