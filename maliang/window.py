@@ -1,3 +1,4 @@
+import pyray as pr
 import raylib as rl
 from maliang.structs import MColor, MImage
 from maliang.units.modes import WindowFlags
@@ -28,16 +29,16 @@ class Window:
         if fullscreen:
             rl.SetConfigFlags(WindowFlags.FLAG_FULLSCREEN_MODE)
             if width and height:
-                rl.InitWindow(width, height, self.title)
+                pr.init_window(width, height, self.title)
                 self.fullscreen_width = width
                 self.fullscreen_height = height
             else:
-                rl.InitWindow(0, 0, self.title)
+                pr.init_window(0, 0, self.title)
                 monitor = Monitor.get_current_monitor()
                 self.fullscreen_width = Monitor.get_monitor_width(monitor)
                 self.fullscreen_height = Monitor.get_monitor_height(monitor)
         else:
-            rl.InitWindow(width, height, self.title)
+            pr.init_window(width, height, self.title)
         while not Window.is_window_ready():
             pass
 
