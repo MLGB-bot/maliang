@@ -1,4 +1,4 @@
-import pyray as pr
+import raylib as rl
 from maliang.structs import MColor, MImage
 from maliang.units.modes import WindowFlags
 
@@ -14,34 +14,42 @@ class Window:
         self.fullscreen_width = 0
         self.fullscreen_height = 0
         self.init_window(width, height, fullscreen)
-        self.resized = False    # is window resized
+        self.resized = False  # is window resized
 
-    def init_window(self, width, height, fullscreen=False):
+    def init_window(self, width, height, fullscreen: bool = False):
         """
         create a window in the begining of program
 
         :param width: window width
         :param height: window height
-        :param fullscreen: whether window is full
-        :return:
+        :param fullscreen: whether window is fullscreen
+        :return: None
         """
         if fullscreen:
-            pr.set_config_flags(WindowFlags.FLAG_FULLSCREEN_MODE)
+            rl.SetConfigFlags(WindowFlags.FLAG_FULLSCREEN_MODE)
             if width and height:
-                pr.init_window(width, height, self.title)
+                rl.InitWindow(width, height, self.title)
                 self.fullscreen_width = width
                 self.fullscreen_height = height
             else:
-                pr.init_window(0, 0, self.title)
+                rl.InitWindow(0, 0, self.title)
                 monitor = Monitor.get_current_monitor()
                 self.fullscreen_width = Monitor.get_monitor_width(monitor)
                 self.fullscreen_height = Monitor.get_monitor_height(monitor)
         else:
-            pr.init_window(width, height, self.title)
-        while not pr.is_window_ready():
+            rl.InitWindow(width, height, self.title)
+        while not Window.is_window_ready():
             pass
 
     def fullscreen(self, width=0, height=0):
+        """
+
+        set window fullscreen
+
+        :param width: fullscreen window width
+        :param height: fullscreen window height
+        :return:
+        """
         if not (width and height):
             monitor = Monitor.get_current_monitor()
             width = Monitor.get_monitor_width(monitor)
@@ -56,28 +64,38 @@ class Window:
         self.resized = True
 
     def un_fullscreen(self, width=0, height=0):
+        """
+
+        from fullscreen to window
+
+        :param width: window width
+        :param height: window height
+        :return:
+        """
         self.toggle_fullscreen()
         if width and height:
             self.resize(width, height)
         self.resized = True
 
-    def resize(self, w, h):
-        # base api to resize window
-        # need to update width and height attr in fullscreen mode
+    def resize(self, width, height):
+        """
+        reset window size to (width, height)
+
+        :param width:
+        :param height:
+        :return:
+        """
+        self.set_window_size(width, height)
         if self.is_window_fullscreen():
-            self.fullscreen_width  = w
-            self.fullscreen_height = h
-            # self.set_window_state(WindowFlags.FLAG_FULLSCREEN_MODE)
-            self.set_window_size(w, h)
-        else:
-            self.set_window_size(w, h)
-        # Trig window resize event
+            self.fullscreen_width = width
+            self.fullscreen_height = height
+        # Trig window on_resize event
         self.resized = True
 
     @property
     def width(self):
         """
-        :return: 视窗宽度 Width of the window
+        :return: Width of the window
         """
         return self.fullscreen_width if self.is_window_fullscreen() else self.get_screen_width()
 
@@ -85,187 +103,225 @@ class Window:
     def height(self):
         """
 
-        :return: 视窗高度 Width of the window
+        :return: Width of the window
         """
         return self.fullscreen_height if self.is_window_fullscreen() else self.get_screen_height()
 
     def background(self, *color):
+        """
+        set window background color( RGBA Mode).
+
+        :param color:
+            background(i)          #  (i, i, i, 255) \n
+            background(i, a)       #  (i, i, i, a) \n
+            background(r, g, b)    #  (r, g, b, 255) \n
+            background(r, g, b, a) #  (r, g, b, a) \n
+        :return:
+        """
         color = MColor(*color)
         if color.a == 255:
-            pr.clear_background(color.to_pyray())
+            rl.ClearBackground(color.to_pyray())
         else:
-            pr.draw_rectangle(0, 0, self.width, self.height, color.to_pyray())
+            rl.DrawRectangle(0, 0, self.width, self.height, color.to_pyray())
         self.background_color = color
 
     @classmethod
     def window_should_close(self) -> bool:
-        return pr.window_should_close()
+        """Check if <ExitKey> pressed or Close icon pressed """
+        return rl.WindowShouldClose()
 
     @classmethod
     def close_window(self):
-        pr.close_window()
+        """Close window and unload OpenGL context"""
+        rl.CloseWindow()
 
     @classmethod
     def is_window_ready(self) -> bool:
-        return pr.is_window_ready()
+        """Check if window has been initialized successfully"""
+        return rl.IsWindowReady()
 
     @classmethod
     def is_window_fullscreen(self) -> bool:
-        return pr.is_window_fullscreen()
+        """Check if window is currently fullscreen"""
+        return rl.IsWindowFullscreen()
 
     @classmethod
     def is_window_hidden(self) -> bool:
-        return pr.is_window_hidden()
+        """Check if window is currently hidden (only PLATFORM_DESKTOP)"""
+        return rl.IsWindowHidden()
 
     @classmethod
     def is_window_minimized(self) -> bool:
-        return pr.is_window_minimized()
+        """Check if window is currently minimized (only PLATFORM_DESKTOP)"""
+        return rl.IsWindowMinimized()
 
     @classmethod
     def is_window_maximized(self) -> bool:
-        return pr.is_window_maximized()
+        """Check if window is currently maximized (only PLATFORM_DESKTOP)"""
+        return rl.IsWindowMaximized()
 
     @classmethod
     def is_window_focused(self) -> bool:
-        return pr.is_window_focused()
+        """Check if window is currently focused (only PLATFORM_DESKTOP)"""
+        return rl.IsWindowFocused()
 
     @classmethod
     def is_window_resized(self) -> bool:
-        return pr.is_window_resized()
+        """Check if window has been resized last frame"""
+        return rl.IsWindowResized()
 
     @classmethod
     def is_window_state(self, flag: int) -> bool:
-        return pr.is_window_state(flag)
+        """Check if one specific window flag is enabled"""
+        return rl.IsWindowState(flag)
 
     @classmethod
     def set_window_state(self, flags: int):
-        pr.set_window_state(flags)
+        """Set window configuration state using flags (only PLATFORM_DESKTOP)"""
+        rl.SetWindowState(flags)
 
     @classmethod
     def clear_window_state(self, flags: int):
-        pr.clear_window_state(flags)
+        """Clear window configuration state flags"""
+        rl.ClearWindowState(flags)
 
     @classmethod
     def toggle_fullscreen(self):
-        pr.toggle_fullscreen()
+        """Toggle window state: fullscreen/windowed (only PLATFORM_DESKTOP)"""
+        rl.ToggleFullscreen()
 
     @classmethod
     def maximize_window(self):
-        # Set window state: maximized, if resizable (only PLATFORM_DESKTOP)
-        pr.maximize_window()
+        """Set window state: maximized, if resizable (only PLATFORM_DESKTOP)"""
+        rl.MaximizeWindow()
 
     @classmethod
     def minimize_window(self):
-        # Set window state: minimized, if resizable (only PLATFORM_DESKTOP)
-        pr.minimize_window()
+        """Set window state: minimized, if resizable (only PLATFORM_DESKTOP)"""
+        rl.MinimizeWindow()
 
     @classmethod
     def restore_window(self):
-        # Set window state: not minimized/maximized (only PLATFORM_DESKTOP)
-        pr.restore_window()
+        """Set window state: not minimized/maximized (only PLATFORM_DESKTOP)"""
+        rl.RestoreWindow()
 
     @classmethod
     def set_window_icon(self, image: MImage):
-        # Set icon for window (only PLATFORM_DESKTOP)
-        pr.set_window_icon(image.pr_image)
+        """Set icon for window (only PLATFORM_DESKTOP)"""
+        rl.SetWindowIcon(image.pr_image)
 
     @classmethod
     def set_window_title(self, title):
-        # Set title for window (only PLATFORM_DESKTOP)
-        pr.set_window_title(title)
+        """Set title for window (only PLATFORM_DESKTOP)"""
+        rl.SetWindowTitle(title)
 
     @classmethod
     def set_window_position(self, x: int, y: int):
-        # Set window position on screen (only PLATFORM_DESKTOP)
-        pr.set_window_position(x, y)
+        """Set window position on screen (only PLATFORM_DESKTOP)"""
+        rl.SetWindowPosition(x, y)
 
     @classmethod
     def set_window_min_size(self, width: int, height: int):
-        # Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)
-        pr.set_window_min_size(width, height)
+        """Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)"""
+        rl.SetWindowMinSize(width, height)
 
     @classmethod
     def set_window_size(self, width: int, height: int):
-        # Set window dimensions
-        pr.set_window_size(width, height)
+        """Set window dimensions"""
+        rl.SetWindowSize(width, height)
 
     @classmethod
     def set_window_opacity(self, opacity: float):
-        # Set window opacity [0.0f..1.0f] (only PLATFORM_DESKTOP)
-        pr.set_window_opacity(opacity)
+        """Set window opacity [0.0f..1.0f] (only PLATFORM_DESKTOP)"""
+        rl.SetWindowOpacity(opacity)
 
     @classmethod
     def get_window_handle(self):
-        # Get native window handle
-        handler = pr.get_window_handle()
+        """Get native window handle"""
+        handler = rl.GetWindowHandle()
         return handler
 
     @classmethod
     def get_screen_width(self) -> int:
-        return pr.get_screen_width()
+        """Get current screen width"""
+        return rl.GetScreenWidth()
 
     @classmethod
     def get_screen_height(self) -> int:
-        return pr.get_screen_height()
+        """Get current screen height"""
+        return rl.GetScreenHeight()
 
     @classmethod
     def get_render_width(self) -> int:
-        return pr.get_render_width()
+        """Get current render width (it considers HiDPI)"""
+        return rl.GetRenderWidth()
 
     @classmethod
     def get_render_height(self) -> int:
-        return pr.get_render_height()
+        """Get current render height (it considers HiDPI)"""
+        return rl.GetRenderHeight()
 
     @classmethod
     def get_window_position(self):
-        position = pr.get_window_position()
+        """Get window position XY on monitor"""
+        position = rl.GetWindowPosition()
         return position.x, position.y
 
     @classmethod
     def get_window_scale_dpi(self):
-        scale_dpi = pr.get_window_scale_dpi()
+        """Get window scale DPI factor"""
+        scale_dpi = rl.GetWindowScaleDPI()
         return scale_dpi.x, scale_dpi.y
 
 
 class Monitor:
     @classmethod
     def get_monitor_count(cls) -> int:
-        return pr.get_monitor_count()
+        """Get number of connected monitors"""
+        return rl.GetMonitorCount()
 
     @classmethod
     def get_current_monitor(cls) -> int:
-        return pr.get_current_monitor()
+        """Get current connected monitor"""
+        return rl.GetCurrentMonitor()
 
     @classmethod
     def set_window_monitor(cls, monitor: int):
-        # Set monitor for the current window (fullscreen mode)
-        pr.set_window_monitor(monitor)
+        """Set monitor for the current window (fullscreen mode)"""
+        rl.SetWindowMonitor(monitor)
 
     @classmethod
     def get_monitor_position(cls, monitor: int):
-        position = pr.get_monitor_position(monitor)
+        """Get specified monitor position"""
+        position = rl.GetMonitorPosition(monitor)
         return position.x, position.y
 
     @classmethod
     def get_monitor_width(cls, monitor: int) -> int:
-        return pr.get_monitor_width(monitor)
+        """Get specified monitor width (current video mode used by monitor)"""
+        return rl.GetMonitorWidth(monitor)
 
     @classmethod
     def get_monitor_height(cls, monitor: int) -> int:
-        return pr.get_monitor_height(monitor)
+        """Get specified monitor height (current video mode used by monitor)"""
+        return rl.GetMonitorHeight(monitor)
 
     @classmethod
     def get_monitor_physical_width(cls, monitor: int) -> int:
-        return pr.get_monitor_physical_width(monitor)
+        """Get specified monitor physical width in millimetres"""
+        return rl.GetMonitorPhysicalWidth(monitor)
 
     @classmethod
     def get_monitor_physical_height(cls, monitor: int) -> int:
-        return pr.get_monitor_physical_height(monitor)
+        """Get specified monitor physical height in millimetres"""
+        return rl.GetMonitorPhysicalHeight(monitor)
 
     @classmethod
     def get_monitor_refresh_rate(cls, monitor: int) -> int:
-        return pr.get_monitor_refresh_rate(monitor)
+        """Get specified monitor refresh rate"""
+        return rl.GetMonitorRefreshRate(monitor)
 
     @classmethod
     def get_monitor_name(cls, monitor: int):
-        return pr.get_monitor_name(monitor)
+        """Get the human-readable, UTF-8 encoded name of the primary monitor"""
+        return rl.GetMonitorName(monitor)
