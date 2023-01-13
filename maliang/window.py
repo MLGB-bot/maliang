@@ -323,6 +323,6 @@ class Monitor:
         return rl.GetMonitorRefreshRate(monitor)
 
     @classmethod
-    def get_monitor_name(cls, monitor: int):
+    def get_monitor_name(cls, monitor: int) -> str:
         """Get the human-readable, UTF-8 encoded name of the primary monitor"""
-        return rl.GetMonitorName(monitor)
+        return pr.get_monitor_name(monitor)
