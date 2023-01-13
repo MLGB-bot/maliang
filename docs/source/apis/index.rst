@@ -8,8 +8,7 @@ APIS
 
 
     window
-    monitor
-
+    MImage
 
 
 

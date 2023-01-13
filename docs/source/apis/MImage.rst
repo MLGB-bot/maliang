@@ -1,8 +1,8 @@
-class maliang.Monitor
+class maliang.MImage
 ==========================
 
 
-.. autoclass:: maliang.window.Monitor
+.. autoclass:: maliang.structs.MImage
     :members:
     :undoc-members:
     :show-inheritance:
