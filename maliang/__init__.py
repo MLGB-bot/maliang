@@ -26,7 +26,7 @@ from maliang.units import ResourceLoader, FrameCounter
 
 class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse, Keyboard,
               Model, Mesh, Material, Ray, Shader, Image, Font, Text, Texture, Camera):
-    def __init__(self, width=100, height=100, title='', double_buffer=True, fps=60,
+    def __init__(self, width=100, height=100, title='', buffer_proxy=False, fps=60,
                  background_color=(235, 235, 235, 255), full_screen=False):
         Events.__init__(self)
         Environment.__init__(self, fps=fps)
@@ -50,7 +50,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
         self.set_exit_key(KeyboardKeys.KEY_NULL)
         self.smooth()
         self.frame_counter = FrameCounter()
-        self.double_buffer = double_buffer
+        self.buffer_proxy = buffer_proxy
         self.buffer_texture = self.load_render_texture()
         self.alive = True
         self.__loop = True
@@ -120,7 +120,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
                                     )
                 pr.end_drawing()
                 # single buffer switch to double buffer
-                if self.__loop and self.double_buffer and self.frame_counter.odd_even == 0:
+                if self.__loop and (not self.buffer_proxy) and self.frame_counter.odd_even == 0:
                     self.unload_render_texture()
                     self.buffer_texture = None
             else:
