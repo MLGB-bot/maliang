@@ -1,7 +1,7 @@
 import pyray as pr
 import maliang.structs.ray as mod_ray
 
-class MCamera():
+class MCamera:
     def __init__(self, pr_camera):
         self.pr_camera = pr_camera
 

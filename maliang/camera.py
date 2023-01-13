@@ -14,7 +14,7 @@ class Camera():
     def camera_3d(self, position=(0, 0, 0), target=(0, 0, 0), up=(0, 0, 0), fovy=1.0, projection=0):
         return MCamera3D(pr.Camera3D( pr.Vector3(*position), pr.Vector3(*target), pr.Vector3(*up), fovy, projection))
 
-    def begin_camera(self, camera: MCamera2D|MCamera2D):
+    def begin_camera(self, camera: MCamera2D|MCamera3D):
         camera.begin_mode()
         self.camera_queue.append(camera.dimension)
 
