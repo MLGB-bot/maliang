@@ -34,9 +34,9 @@ class Window:
                 self.fullscreen_height = height
             else:
                 pr.init_window(0, 0, self.title)
-                monitor = Monitor.get_current_monitor()
-                self.fullscreen_width = Monitor.get_monitor_width(monitor)
-                self.fullscreen_height = Monitor.get_monitor_height(monitor)
+                monitor = self.get_current_monitor()
+                self.fullscreen_width = self.get_monitor_width(monitor)
+                self.fullscreen_height = self.get_monitor_height(monitor)
         else:
             pr.init_window(width, height, self.title)
         while not Window.is_window_ready():
@@ -52,9 +52,9 @@ class Window:
         :return:
         """
         if not (width and height):
-            monitor = Monitor.get_current_monitor()
-            width = Monitor.get_monitor_width(monitor)
-            height = Monitor.get_monitor_height(monitor)
+            monitor = self.get_current_monitor()
+            width = self.get_monitor_width(monitor)
+            height = self.get_monitor_height(monitor)
         self.toggle_fullscreen()
         self.resize(width, height)
         # # 顺序不能颠倒
@@ -275,7 +275,7 @@ class Window:
         return scale_dpi.x, scale_dpi.y
 
 
-class Monitor:
+    # Monitor
     @classmethod
     def get_monitor_count(cls) -> int:
         """Get number of connected monitors"""
