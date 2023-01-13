@@ -2,13 +2,13 @@
 ====================
 
 
-.. _window.py:      https://github.com/MLGB-bot/maliang/blob/main/examples/ahead/window.py
+.. _window.py:      https://github.com/MLGB-bot/maliang/blob/main/examples/window/window.py
 
 
 * window.py_
 
-.. image:: /_static/examples/ahead/window.png
-.. literalinclude:: ../../../../examples/ahead/window.py
+.. image:: /_static/examples/window/window.png
+.. literalinclude:: ../../../../examples/window/window.py
     :language: python
     :linenos:
 

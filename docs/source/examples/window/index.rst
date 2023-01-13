@@ -1,4 +1,4 @@
-基础
+窗口(window)
 =============================
 
 
@@ -6,8 +6,6 @@
     :maxdepth: 3
 
     window
-    on_setup
-    on_draw
     background
     width
     height

@@ -6,5 +6,9 @@
     :maxdepth: 4
     :caption: Contents:
 
-    ahead/index
+
+    ahead/hello_maliang
+    ahead/on_setup
+    ahead/on_draw
+    window/index
     shapes/index

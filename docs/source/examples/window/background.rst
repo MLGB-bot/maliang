@@ -11,12 +11,12 @@ Maliang使用的是RGBA格式的颜色格式, 由四个[0, 255]区间范围内�
 
 
 
-.. _background.py:      https://github.com/MLGB-bot/maliang/blob/main/examples/ahead/background.py
+.. _background.py:      https://github.com/MLGB-bot/maliang/blob/main/examples/window/background.py
 
 * background.py_
 
-.. image:: /_static/examples/ahead/background.png
-.. literalinclude:: ../../../../examples/ahead/background.py
+.. image:: /_static/examples/window/background.png
+.. literalinclude:: ../../../../examples/window/background.py
     :language: python
     :linenos:
 
