@@ -12,3 +12,4 @@
     ahead/on_draw
     window/index
     shapes/index
+    mouse/index
