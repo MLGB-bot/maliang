@@ -109,7 +109,7 @@ class Mouse:
 
     def event_trigger_on_mouse_dragged(self):
         # pressed + move
-        press_status, pressed_buttons = self.event_trigger_on_mouse_pressed()
+        press_status, pressed_buttons = self.event_trigger_on_mouse_down()
         if press_status:
             # move
             move_status, move_delta = self.event_trigger_on_mouse_moved()
