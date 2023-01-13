@@ -6,5 +6,5 @@
     :maxdepth: 2
     :caption: Contents:
 
-    window/index
+    ahead/index
     shapes/index
