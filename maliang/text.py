@@ -7,9 +7,6 @@ class Text:
         self.__text_size = 12
         self.__text_color = pr.BLACK
 
-    def init_font(self, font):
-        return font or self.__text_font or None
-
     def text_size(self, size):
         self.__text_size = size
 
