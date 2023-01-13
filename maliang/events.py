@@ -1,5 +1,5 @@
 
-class Events:
+class Events(object):
     def __init__(self):
         self.events = {
             'on_setup': None,
@@ -24,21 +24,15 @@ class Events:
         self.events_registed = []
         self.events_not_trigger = ('on_setup', 'on_draw', 'on_exit', 'on_resize')
 
-    def _default_event(self):
-        pass
-
     def regist_event(self, event_name, func):
         if event_name in self.events:
             setattr(self, event_name, func)
-            self.events[event_name] = func
-        if event_name not in self.events_registed and event_name not in self.events_not_trigger:
-            self.events_registed.append(event_name)
 
     def unregist_event(self, event_name):
         if event_name in self.events:
-            setattr(self, event_name, self._default_event)
+            delattr(self, event_name)
             self.events[event_name] = None
-        if event_name in self.events_registed and event_name not in self.events_not_trigger:
+        if event_name in self.events_registed:
             self.events_registed.remove(event_name)
 
     def catpure_events(self):
@@ -58,5 +52,8 @@ class Events:
         pass
 
     def __setattr__(self, key, value):
-        # todo
-        pass
+        super().__setattr__(key, value)
+        if key in self.events:
+            self.events[key] = value
+            if key not in self.events_not_trigger:
+                self.events_registed.append(key)

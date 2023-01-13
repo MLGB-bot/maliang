@@ -28,11 +28,11 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
               Model, Mesh, Material, Ray, Shader, Image, Font, Text, Texture, Camera):
     def __init__(self, width=100, height=100, title='', double_buffer=True, fps=60,
                  background_color=(235, 235, 235, 255), full_screen=False):
+        Events.__init__(self)
         Environment.__init__(self, fps=fps)
         Shapes2d.__init__(self)
         Shapes3d.__init__(self)
         Transform.__init__(self)
-        Events.__init__(self)
         Mouse.__init__(self)
         Keyboard.__init__(self)
         Image.__init__(self)
@@ -139,28 +139,22 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
 
     def chack_alive(self):
         if self.should_exit():
-            self.alive = not self.on_exit()
-
-    def on_setup(self):
-        pass
-
-    def on_draw(self, ):
-        pass
+            self.alive = not self.on_exit() if hasattr(self, "on_exit") else None
 
     @decorate_by_buffer_value
     def _on_setup(self):
-        self.background(*self.background_color)  # setup defaule background color
-        # 执行setup中的操作
-        self.on_setup()
+        # setup defaule background color
+        self.background(*self.background_color)
+        self.on_setup() if hasattr(self, "on_setup") else None
 
     @decorate_by_buffer_value
     def _on_draw(self, ):
         self.check_window_resized()
         if self.__loop:
-            self.on_draw()
+            self.on_draw() if hasattr(self, "on_draw") else None
             self.frame_counter.add(1)
         elif self.redraw_count > 0:
-            self.on_draw()
+            self.on_draw() if hasattr(self, "on_draw") else None
             self.redraw_count -= 1
             self.frame_counter.add(1)
 
