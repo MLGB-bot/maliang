@@ -1,5 +1,5 @@
 import pyray as pr
-from maliang.structs import MFont, MColor, MImage
+from maliang.structs import MFont, MColor, MImage, MFontSet
 
 class Text:
     def __init__(self):
@@ -13,7 +13,7 @@ class Text:
     def text_color(self, *color):
         self.__text_color = color
 
-    def text_font(self, font: MFont):
+    def text_font(self, font: MFont | MFontSet):
         self.__text_font = font
 
     def init_text_color(self, text_color):
@@ -22,22 +22,24 @@ class Text:
         else:
             return MColor(*text_color)
 
-    def text(self, text, x=0, y=0, text_size=None, text_color=None, font: MFont = None, space_x=1):
+    def text(self, text, x=0, y=0, text_size=None, text_color=None, font: MFont|MFontSet = None, space_x=1):
         font = font or self.__text_font
         text_size = text_size or self.__text_size
         text_color = self.init_text_color(text_color or self.__text_color)
-        if font:
+        if isinstance(font, MFont):
             font.text(text, x, y, text_size=text_size, text_color=text_color, space_x=space_x)
         else:
-            pr.draw_text_ex(pr.get_font_default(), text, pr.Vector2(x, y), text_size, space_x, text_color.to_pyray())
+            pr_font = font.pr_font if isinstance(font, MFontSet) else pr.get_font_default()
+            pr.draw_text_ex(pr_font, text, pr.Vector2(x, y), text_size, space_x, text_color.to_pyray())
 
-    def text_image(self, text, text_size=12, text_color=None, font: MFont = None, space_x=1):
+    def text_image(self, text, text_size=12, text_color=None, font: MFont|MFontSet = None, space_x=1):
         font = font or self.__text_font
         text_size = text_size or self.__text_size
         text_color = self.init_text_color(text_color or self.__text_color)
-        if font:
+        if isinstance(font, MFont):
             img = font.text_image(text, text_size=text_size, text_color=text_color, space_x=space_x)
         else:
+            pr_font = font.pr_font if isinstance(font, MFontSet) else pr.get_font_default()
             img = MImage()
-            img.pr_image = pr.image_text_ex(pr.get_font_default(), text, text_size, space_x, text_color.to_pyray())
+            img.pr_image = pr.image_text_ex(pr_font, text, text_size, space_x, text_color.to_pyray())
         return img

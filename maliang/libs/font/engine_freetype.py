@@ -105,7 +105,7 @@ class FreeTyper():
 class FontEngineFreetype():
 
     @classmethod
-    def api_auto_load(cls, _file, filetype, font_size):
+    def api_auto_load(cls, _file, filetype, fontsize):
         face = freetype.Face(_file)
         return face
 

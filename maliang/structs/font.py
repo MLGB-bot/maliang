@@ -33,6 +33,16 @@ def engine(engine_id):
     return dec
 
 
+class MFontSet:
+    def __init__(self):
+        self.pr_font = None
+
+    # def text(self, text, x, y, text_size=None, text_color: mod_color.MColor=None, space_x=0, space_y=0):
+    #     pr.draw_text_ex(self.pr_font, text, pr.Vector2(x, y), text_size, space_x, text_color.to_pyray())
+
+    # def text_image(self, text, text_size=12, text_color: mod_color.MColor=None, space_x=0, space_y=0):
+    #     return pr.image_text_ex(self.pr_font, text, text_size, space_x, text_color.to_pyray())
+
 class MFont:
     def __init__(self):
         self._bin = None

@@ -3,14 +3,14 @@ import pyray as pr
 from raylib._raylib_cffi import ffi
 from maliang.units import ResourceLoader
 from maliang.structs.font import FontEngines
-from maliang.structs import MFont
+from maliang.structs import MFont, MFontSet
 
 
 class Font:
     def __init__(self):
         pass
 
-    def load_font(self, filename='', filetype='.ttf', engine=None, engine_font_size=64, ):
+    def load_font(self, filename='', filetype='.ttf', engine=None, engine_fontsize=64, ):
         _path = os.path.join(ResourceLoader.static_dir, filename) if filename else ''
         if not engine:
             font = MFont()
@@ -26,7 +26,7 @@ class Font:
             return font
         else:
             font = MFont()
-            font.font_size = engine_font_size
+            font.fontsize = engine_fontsize
             if _path:
                 if os.path.exists(_path) and os.path.isfile(_path):
                     pass
@@ -35,6 +35,17 @@ class Font:
             font._type = filetype
             # set engine info
             font.engine_id = 0
-            font.engine_font = engine.api_auto_load(_path, filetype, engine_font_size)
+            font.engine_font = engine.api_auto_load(_path, filetype, engine_fontsize)
             font.engine = engine
             return font
+
+    def load_fontset(self, filename='', fontsize=32, words=''):
+        _path = os.path.join(ResourceLoader.static_dir, filename) if filename else ''
+        fontset = MFontSet()
+        codepoints_count = ffi.new("int *")
+        codepoints = pr.load_codepoints(words, codepoints_count)
+        fontset.pr_font = pr.load_font_ex(_path, fontsize, codepoints, codepoints_count[0])
+        # print(fontset.pr_font.baseSize)
+        pr.unload_codepoints(codepoints)
+        del codepoints_count
+        return fontset

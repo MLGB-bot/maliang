@@ -7,7 +7,7 @@ from maliang.structs.model import MModel
 from maliang.structs.model_animation import MModelAnimation
 from maliang.structs.boundingbox import MBoundingBox
 from maliang.structs.texture import MTexture
-from maliang.structs.font import MFont
+from maliang.structs.font import MFont, MFontSet
 from maliang.structs.ray import MRay
 from maliang.structs.shader import MShader
 from maliang.structs.audio import MSound, MusicStream, AudioStream
