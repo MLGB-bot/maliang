@@ -89,7 +89,8 @@ class MFont:
     @engine(0)
     def text_image(self, text, text_size=12, text_color: mod_color.MColor=None, space_x=0, space_y=0) -> mod_image.MImage:
         img_format, img_data = self.engine.api_text_to_image(self.engine_font, text, text_size=text_size,
-                                                             text_color=tuple(text_color), space_y=space_y)
+                                                             text_color=tuple(text_color),
+                                                             space_x=space_x, space_y=space_y)
         m_image = self.generate_m_image_from_data(img_format, img_data)
         return m_image
 
