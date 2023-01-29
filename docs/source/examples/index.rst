@@ -14,4 +14,5 @@
     shapes/index
     mouse/index
     keyboard/index
+    text/index
 
