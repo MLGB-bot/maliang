@@ -1,7 +1,9 @@
+import maliang
 from maliang import Maliang
 
-app = Maliang(width=300, height=300, fps=0, title="Logo")
+app = Maliang(width=400, height=300, fps=0, title="Logo")
 
+app.no_loop()
 
 def on_setup():
     r = 40
@@ -17,7 +19,7 @@ def on_setup():
     app.no_loop()
     app.background(*background)
 
-    app.stroke((*stroke_color, 50), width=1)
+    app.stroke((*stroke_color, 30), width=1)
 
     app.rect(0, 0, app.width, app.height, stroke_width=stroke_width, filled_color=None, stroke_color=stroke_color)
     app.line(0, 0, app.width, app.height)
@@ -93,5 +95,17 @@ def on_setup():
     ma()
     liang()
 
+
+def on_draw():
+    print("draw")
+    img = app.load_screen()
+    img.export_to_file('./logo_400x300.png')
+
+def on_mouse_clicked(*args, **kwargs):
+    app.re_draw()
+
 app.regist_event('on_setup', on_setup)
+app.regist_event('on_draw' , on_draw)
+app.regist_event('on_mouse_clicked' , on_mouse_clicked)
+
 app.run()
