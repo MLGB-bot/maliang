@@ -4,8 +4,7 @@ from maliang import Maliang
 from maliang.units import *
 
 
-app = Maliang(width=800, height=450, double_buffer=True, fps=80)
-app.set_trace_log_level(4)
+app = Maliang(width=800, height=450, buffer_proxy=False, fps=80)
 
 MAX_BUILDINGS = 1000
 spacing = 0
@@ -44,25 +43,25 @@ def on_setup():
     pass
 
 def on_draw():
-    if app.is_key_pressed(KeyboardKeys.KEY_A):
+    if app.is_key_down(KeyboardKeys.KEY_A):
         # print("s: running?", )
         player['x'] -= 1
-    if app.is_key_pressed(KeyboardKeys.KEY_D):
+    if app.is_key_down(KeyboardKeys.KEY_D):
         # print("s: running?", )
         player['x'] += 1
 
     camera.target = (player['x'] + 20, player['y'] + 20)
 
-    if app.is_key_pressed(KeyboardKeys.KEY_W):
+    if app.is_key_down(KeyboardKeys.KEY_W):
         camera.rotation -= 1
-    elif app.is_key_pressed(KeyboardKeys.KEY_S):
+    elif app.is_key_down(KeyboardKeys.KEY_S):
         camera.rotation += 1
     if camera.rotation >= 360:
         camera.rotation = 0
     elif camera.rotation <= -360:
         camera.rotation = 0
 
-    camera.zoom += app.get_mouse_wheel() * 0.05
+    camera.zoom += app.is_mouse_wheel() * 0.05
     if camera.zoom > 3:
         camera.zoom = 3
     elif camera.zoom < 0.1:
@@ -79,8 +78,8 @@ def on_draw():
         # print(building)
         app.rect(building['x'], building['y'], building['width'], building['height'], filled_color=building['color'])
     app.rect(player['x'], player['y'], player['width'], player['height'], filled_color=(255, 0, 200))
-    app.line(int(camera.target[0]), -app.height*10, int(camera.target[0]), app.height*10, stroke_color=(0, 255, 0), )
-    app.line(-app.width*10, camera.target[1], app.width*10, camera.target[1], stroke_color=(0, 255, 0), )
+    app.line(int(camera.target[0]), -app.height*10, int(camera.target[0]), app.height*10, stroke_color=(0, 255, 0), stroke_width=1)
+    app.line(-app.width*10, camera.target[1], app.width*10, camera.target[1], stroke_color=(0, 255, 0), stroke_width=1)
     # app.line(0, 0, app.width, app.height, stroke_color=(0, 255, 0), )
     app.end_camera()
 
@@ -102,4 +101,4 @@ def on_draw():
 app.regist_event('on_setup', on_setup)
 app.regist_event('on_draw', on_draw)
 
-app.loop()
+app.run()
