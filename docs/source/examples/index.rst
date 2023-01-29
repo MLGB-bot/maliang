@@ -13,3 +13,5 @@
     window/index
     shapes/index
     mouse/index
+    keyboard/index
+

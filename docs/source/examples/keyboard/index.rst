@@ -1,4 +1,4 @@
-鼠标(mouse)
+键盘(keyboard)
 =============================
 
 
@@ -6,10 +6,8 @@
     :maxdepth: 2
     :caption: Contents:
 
-    mouse_xy
-    pmouse_xy
-    delta
-    cursor
     events
+
+
 
 

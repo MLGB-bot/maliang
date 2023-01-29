@@ -22,7 +22,6 @@ class MCamera:
 class MCamera2D(MCamera):
     dimension = 2
     def __init__(self, pr_camera):
-        self.pr_camera = pr_camera
         MCamera.__init__(self, pr_camera)
 
     @property
@@ -77,7 +76,6 @@ class MCamera3D(MCamera):
     dimension = 3
 
     def __init__(self, pr_camera):
-        self.pr_camera = pr_camera
         MCamera.__init__(self, pr_camera)
 
     @property
