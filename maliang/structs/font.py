@@ -37,11 +37,10 @@ class MFontSet:
     def __init__(self):
         self.pr_font = None
 
-    # def text(self, text, x, y, text_size=None, text_color: mod_color.MColor=None, space_x=0, space_y=0):
-    #     pr.draw_text_ex(self.pr_font, text, pr.Vector2(x, y), text_size, space_x, text_color.to_pyray())
+    def unload(self):
+        if self.pr_font:
+            pr.unload_font(self.pr_font)
 
-    # def text_image(self, text, text_size=12, text_color: mod_color.MColor=None, space_x=0, space_y=0):
-    #     return pr.image_text_ex(self.pr_font, text, text_size, space_x, text_color.to_pyray())
 
 class MFont:
     def __init__(self):
@@ -67,9 +66,8 @@ class MFont:
                                                 codepoints_count[0])
         pr.unload_codepoints(codepoints)
         del codepoints_count
-        # add to resource
+        # add to resource to unload after draw
         mod_resource.ResourceLoader.loaded_fonts_runtime.append(font_runtime)
-        # pr.unload_font(font_runtime)
         return font_runtime
 
     @engine(FontEngines.FONT_RAYLIB)
