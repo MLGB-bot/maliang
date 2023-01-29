@@ -1,12 +1,10 @@
-# -*- coding:utf-8 -*-
 import random
-from maliang import Maliang
-from maliang.units import *
+from maliang import Maliang, KeyboardKeys
 
 
 app = Maliang(width=800, height=450, buffer_proxy=False, fps=80)
 
-MAX_BUILDINGS = 1000
+MAX_BUILDINGS = 100
 spacing = 0
 buildings = []
 
@@ -22,22 +20,29 @@ for i in range(MAX_BUILDINGS):
     })
     spacing += width
 
-player = {
-    "x": 400,
-    "y": 280,
-    "width": 40,
-    "height": 40
-}
+
+class Player:
+    def __init__(self, x, y, w, h):
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+
+    def show(self):
+        app.rect(self.x, self.y, self.w, self.h, filled_color=(255, 0, 200), stroke_width=0)
+
+player = Player(400, 280, 40, 40)
 
 camera = app.camera_2d()
-
-camera.target = (player['x'] + 20.0, player['y'] + 20.0, )
+camera.target = (player.x + 20.0, player.y + 20.0, )
 camera.offset = (app.width/2, app.height/2)
 camera.rotation = 0
 camera.zoom = 1.0
+
 RED = (255, 0, 0)
 BLACK = (0, 0 ,0)
 DARKGRAY = (80, 80, 80)
+
 def on_setup():
     app.no_stroke()
     pass
@@ -45,12 +50,12 @@ def on_setup():
 def on_draw():
     if app.is_key_down(KeyboardKeys.KEY_A):
         # print("s: running?", )
-        player['x'] -= 1
+        player.x -= 1
     if app.is_key_down(KeyboardKeys.KEY_D):
         # print("s: running?", )
-        player['x'] += 1
+        player.x += 1
 
-    camera.target = (player['x'] + 20, player['y'] + 20)
+    camera.target = (player.x + 20, player.y + 20)
 
     if app.is_key_down(KeyboardKeys.KEY_W):
         camera.rotation -= 1
@@ -77,10 +82,10 @@ def on_draw():
     for building in buildings:
         # print(building)
         app.rect(building['x'], building['y'], building['width'], building['height'], filled_color=building['color'])
-    app.rect(player['x'], player['y'], player['width'], player['height'], filled_color=(255, 0, 200))
+    player.show()
     app.line(int(camera.target[0]), -app.height*10, int(camera.target[0]), app.height*10, stroke_color=(0, 255, 0), stroke_width=1)
     app.line(-app.width*10, camera.target[1], app.width*10, camera.target[1], stroke_color=(0, 255, 0), stroke_width=1)
-    # app.line(0, 0, app.width, app.height, stroke_color=(0, 255, 0), )
+    # app.line(0, 0, app.width, app.height, stroke_color=(0, 255, 0), stroke_width=1 )
     app.end_camera()
 
     app.rect(0, 0, app.width, 5, filled_color=RED)
@@ -94,7 +99,7 @@ def on_draw():
     app.text("- R to reset Zoom and Rotation", 40, 100, 10, text_color=DARKGRAY)
 
     # app.text("SCREEN AREA", 30, 400, 20, text_color=RED)
-    app.text(f"PLAYER: {player['x']}, {player['y']}", 30, 350, 16, text_color=RED)
+    app.text(f"PLAYER: {player.x}, {player.y}", 30, 350, 16, text_color=RED)
     app.text(f"ROTATE: {camera.rotation}", 30, 370, 16, text_color=RED)
     app.text(f"ZOOM: {camera.zoom}", 30, 390, 16, text_color=RED)
 
