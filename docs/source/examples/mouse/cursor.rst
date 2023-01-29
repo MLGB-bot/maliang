@@ -1,7 +1,7 @@
 鼠标指针 cursor() & no_cursor()
 =====================================
 
-cursor()
+cursor() 设置鼠标样式
 ----------------
 
 
@@ -14,7 +14,7 @@ cursor()
     :linenos:
 
 
-no_cursor()
+no_cursor() 隐藏鼠标
 -------------------
 
 .. _no_cursor.py:      https://github.com/MLGB-bot/maliang/blob/main/examples/mouse/no_cursor.py
