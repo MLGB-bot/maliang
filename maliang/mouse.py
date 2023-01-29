@@ -77,7 +77,7 @@ class Mouse:
     def is_mouse_released(self, button: int = 0):
         return pr.is_mouse_button_released(button)
 
-    def get_mouse_wheel(self):
+    def is_mouse_wheel(self):
         return pr.get_mouse_wheel_move()
 
     def event_trigger_on_mouse_moved(self):
