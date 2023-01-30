@@ -139,7 +139,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
 
     def check_alive(self):
         if self.should_exit():
-            self.alive = not self.on_exit() if hasattr(self, "on_exit") else None
+            self.alive = not self.on_exit() if hasattr(self, "on_exit") else False
 
     @decorate_by_buffer_value
     def _on_setup(self):
