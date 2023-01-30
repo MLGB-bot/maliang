@@ -4,6 +4,7 @@ class Events(object):
         self.events = {
             'on_setup': None,
             'on_draw': None,
+            'on_close': None,
             'on_exit': None,
             # window
             "on_resize": None,
@@ -22,7 +23,7 @@ class Events(object):
             "on_char_down": None,
         }
         self.events_registed = []
-        self.events_not_trigger = ('on_setup', 'on_draw', 'on_exit', 'on_resize')
+        self.events_not_trigger = ('on_setup', 'on_draw', 'on_close', 'on_exit', 'on_resize')
 
     def regist_event(self, event_name, func):
         if event_name in self.events:

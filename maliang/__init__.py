@@ -137,9 +137,15 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
             if hasattr(self, 'catpure_events'):
                 self.catpure_events()
 
+    def should_close(self):
+        return pr.window_should_close()
+
+    def on_close(self):
+        return True
+
     def check_alive(self):
-        if self.should_exit():
-            self.alive = not self.on_exit() if hasattr(self, "on_exit") else False
+        if self.should_close():
+            self.alive = not self.on_close() if hasattr(self, "on_close") else False
 
     @decorate_by_buffer_value
     def _on_setup(self):
@@ -164,12 +170,6 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
 
     def re_draw(self):
         self.redraw_count += 1
-
-    def should_exit(self):
-        return pr.window_should_close()
-
-    def on_exit(self):
-        return True
 
     def exit(self):
         self.alive = False
@@ -197,3 +197,5 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
             ResourceLoader.task_unload_fonts_runtime()
         self.unload_render_texture()
         pr.close_window()
+        if hasattr(self, 'on_exit'):
+            self.on_exit()
