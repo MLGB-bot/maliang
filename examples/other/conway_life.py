@@ -128,7 +128,7 @@ def on_draw():
             app.fullscreen()
 
     global exit_alert
-    if app.should_exit():
+    if app.should_close():
         if exit_alert:
             app.exit()
         else:
