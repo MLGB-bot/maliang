@@ -10,7 +10,7 @@ import random
 import maliang
 from maliang import Maliang
 
-app = Maliang(width=600, height=600, fps=0, full_screen=False, title='Conway Life Game', double_buffer=False)
+app = Maliang(width=600, height=600, fps=0, fullscreen=False, title='Conway Life Game', buffer_proxy=True)
 
 class Cells():
     def __init__(self):
@@ -123,9 +123,9 @@ def on_draw():
     #     on_mouse_clicked()
     if app.is_key_clicked(maliang.KeyboardKeys.KEY_F):
         if app.is_window_fullscreen():
-            app.unfull_screen()
+            app.un_fullscreen()
         else:
-            app.full_screen()
+            app.fullscreen()
 
     global exit_alert
     if app.should_exit():
