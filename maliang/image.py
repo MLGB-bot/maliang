@@ -1,7 +1,8 @@
 import os
 import pyray as pr
 from maliang.units import ResourceLoader, ImageMode
-from maliang.structs import MColor, MImage, MTexture
+from maliang.structs import MColor, MImage, MTexture, GifPlayer
+from raylib._raylib_cffi import ffi
 
 
 class Image():
@@ -88,10 +89,13 @@ class Image():
         img.pr_image = pr.load_image_raw(image_path, w, h, format, header_size)
         return img
 
-    def load_gif(self, filename, frames):
+    def load_gif(self, filename, fps_delay=0, loop=0):
         image_path = os.path.join(ResourceLoader.static_dir, filename)
+        frames = ffi.new("int *")
         img = MImage()
         img.pr_image = pr.load_image_anim(image_path, frames)
+        img.gif_player = GifPlayer(img, fps_delay, loop=loop)
+        img.frames = frames[0]
         return img
 
     def load_image_data(self, data, filetype='.png'):
@@ -127,7 +131,7 @@ class Image():
             return self._tint_color
         return pr.WHITE
 
-    def image(self, img: MImage, x: int, y: int, w=0, h=0, mode=None, **kwargs):
+    def image(self, img: MImage, x: int, y: int, w=0, h=0, mode=None, gif_player=None, **kwargs):
         if img.pr_image:
             tint_color = self.init_tint_color(kwargs)
             w = w or img.pr_image.width
@@ -147,6 +151,9 @@ class Image():
                     return x, y, w, h
 
             _x, _y, _w, _h = init_mode(mode)
-            texture = img.load_texture()
+            if img.gif_player:
+                texture = img.load_gif_texture(gif_player)
+            else:
+                texture = img.load_texture()
             texture.draw_pro(_x, _y, _w, _h, tint=MColor(*tint_color).to_pyray())
             return texture

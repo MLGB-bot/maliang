@@ -2,10 +2,64 @@ import pyray as pr
 import maliang.structs.color as mod_color
 import maliang.structs.texture as mod_texture
 
+
+class GifPlayer:
+    def __init__(self, mimage=None, fps_delay=None, loop=None):
+        self.init_params(mimage=mimage, fps_delay=fps_delay, loop=loop)
+
+    def init_params(self, mimage=None, fps_delay=0, loop=0):
+        self.mimage = mimage
+        self.frame_current_index = None
+        self.fps_delay = fps_delay
+        self.fps_counter = 0
+        self.loop = loop
+        self.loop_counter = 0
+        if self.mimage:
+            self.texture = mod_texture.MTexture()
+            self.texture.pr_texture = pr.load_texture_from_image(self.mimage.pr_image)
+
+    def update_gif_texture(self):
+        if self.mimage and (self.loop == 0 or self.loop_counter < self.loop):
+            self.fps_counter += 1
+            if (self.fps_counter >= self.fps_delay):
+                if (self.frame_current_index is None):
+                    self.frame_current_index = 0
+                else:
+                    self.frame_current_index += 1
+                if self.frame_current_index > self.mimage.frames - 1:
+                    self.frame_current_index = 0
+                    if self.loop:
+                        self.loop_counter += 1
+                nextFrameDataOffset = self.mimage.width * self.mimage.height * 4 * self.frame_current_index
+                self.texture.update(self.mimage.pr_image.data + nextFrameDataOffset)
+                self.fps_counter = 0
+            return self.texture
+        elif hasattr(self, 'texture') and self.texture:
+            return self.texture
+
+    def unload(self):
+        if hasattr(self, 'texture'):
+            self.texture.unload()
+
 class MImage:
     def __init__(self):
         self.pr_image = None
         self.texture = None
+        # gif image player
+        self.frames = 1
+        self.gif_player = None
+
+    def load_gif_texture(self, gif_player=None):
+        if gif_player:
+            if not gif_player.mimage:
+                gif_player.init_params(
+                    mimage=self,
+                    fps_delay=gif_player.fps_delay if gif_player.fps_delay is not None else self.gif_player.fps_delay,
+                    loop = gif_player.loop if gif_player.loop is not None else self.gif_player.loop,
+                )
+            return gif_player.update_gif_texture()
+        else:
+            return self.gif_player.update_gif_texture()
 
     @property
     def width(self):

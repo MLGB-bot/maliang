@@ -41,7 +41,9 @@ class MTexture:
     def set_wrap(self, wrap: int):
         pr.set_texture_wrap(self.pr_texture, wrap)
 
-    # todo update update_rect
+    # todo update_rect
+    def update(self, pixels):
+        pr.update_texture(self.pr_texture, pixels)
 
     def draw(self, x, y, tint=pr.WHITE):
         pr.draw_texture(self.pr_texture, x, y, tint)
