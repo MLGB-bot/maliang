@@ -137,7 +137,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
             if hasattr(self, 'catpure_events'):
                 self.catpure_events()
 
-    def chack_alive(self):
+    def check_alive(self):
         if self.should_exit():
             self.alive = not self.on_exit() if hasattr(self, "on_exit") else None
 
@@ -160,7 +160,7 @@ class Maliang(Window, Environment, Shapes2d, Shapes3d, Transform, Events, Mouse,
 
         self.listen_to_events()
         # check whether should exit window
-        self.chack_alive()
+        self.check_alive()
 
     def re_draw(self):
         self.redraw_count += 1
