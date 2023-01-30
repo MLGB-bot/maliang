@@ -1,16 +1,19 @@
-import maliang
 from maliang import Maliang
 
-app = Maliang(width=400, height=300, fps=0, title="Logo")
+width = 300
+height= 250
+
+app = Maliang(width=width, height=height, fps=0, title="Logo")
 
 app.no_loop()
 
 def on_setup():
-    r = 40
-
-    space_x = int(app.width / (r*0.5))
-    space_y = int(app.height /(r*0.5*3/4))
-    stroke_width = int(app.width / r)
+    r = int(max(width/8, height/8))
+    stroke_width = min(int(app.width / r), int(app.height/r))
+    # print(r, stroke_width)
+    space_x = int(app.width  / (r * 0.5))
+    space_y = int(app.height / (r * 0.5 * min(height/width, 0.75)))
+    # print(space_x, space_y)
 
     background = [0] * 3
     stroke_color = [255] * 3
@@ -54,9 +57,8 @@ def on_setup():
 
         for point in points:
             app.point(*point, )
-            # app.rect(*point, stroke_width, stroke_width)
         # for point in points:
-        #     app.circle(*point, diam=stroke_width*2, stroke_width=1, filled_color=None)
+        #     app.circle(*point, diam=stroke_width * 2, stroke_width=1, filled_color=None, stroke_color=(255, 0, 0))
 
     def liang():
         startx = app.width / 2
@@ -78,7 +80,8 @@ def on_setup():
                        (app.height - starty - points[3][1]) * 0.5 + points[3][1]))  # 11
         points.append((points[11][0] + space_x * 2, points[11][1] - space_x * 2,))  # 12
 
-        app.ellipse(*points[0], stroke_width, stroke_width, filled_color=stroke_color)
+        # app.ellipse(*points[0], stroke_width/2, stroke_width/2, filled_color=stroke_color)
+        app.circle(*points[0], stroke_width, filled_color=stroke_color)
         app.circle(*points[0], stroke_width * 2, filled_color=None, stroke_width=1)
         app.line(*points[1], *points[2])
         app.line(*points[2], *points[3])
@@ -90,8 +93,8 @@ def on_setup():
         app.line(*points[6], *points[10])
         for point in points:
             app.point(*point)
-        # for point in points:
-        #     app.circle(*point, diam=stroke_width*2, stroke_width=1, filled_color=None)
+        for point in points:
+            app.circle(*point, diam=stroke_width*2, stroke_width=1, filled_color=None, stroke_color=(255, 0, 0))
     ma()
     liang()
 
@@ -99,7 +102,7 @@ def on_setup():
 def on_draw():
     print("draw")
     img = app.load_screen()
-    img.export_to_file('./logo_400x300.png')
+    img.export_to_file(f'../resources/img/logo_{width}x{height}.png')
 
 def on_mouse_clicked(*args, **kwargs):
     app.re_draw()
