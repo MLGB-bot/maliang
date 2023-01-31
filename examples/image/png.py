@@ -15,8 +15,7 @@ def on_draw():
 
 def on_exit():
     logo.unload()
-    if logo.texture:
-        logo.texture.unload()
+    logo.unload_texture()
 
 app.regist_event('on_draw', on_draw)
 app.regist_event('on_exit', on_exit)
