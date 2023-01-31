@@ -17,7 +17,7 @@ def on_draw():
         app.rect(i * cursor_area_w, 0, (i + 1) * cursor_area_w, app.height, filled_color= bg_colors[i], stroke_width=0)
         if i * cursor_area_w < app.mouse_x < (i+1) * cursor_area_w:
             app.cursor(i)   # different cursor shapes
-            app.text(str(i), i * cursor_area_w + 10, app.height / 2, text_size=30, text_color=(255,))
+            app.text(str(i), i * cursor_area_w + 10, app.height / 2, font_size=30, text_color=(255,))
             app.rect(i * cursor_area_w, 0, (i + 1) * cursor_area_w, app.height, filled_color= None, stroke_width=3, stroke_color=(255, ))
 
 

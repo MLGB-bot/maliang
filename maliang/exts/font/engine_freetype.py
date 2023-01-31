@@ -136,11 +136,11 @@ class FontEngineFreetype():
 
 
     @classmethod
-    def _yield_points_multiline(cls, face, text, x, y, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0, need_size=True):
+    def _yield_points_multiline(cls, face, text, x, y, font_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0, need_size=True):
         resolution = 64
-        face.set_char_size(text_size * resolution)
+        face.set_char_size(font_size * resolution)
 
-        line_height = math.floor( text_size * face.height / face.units_per_EM)
+        line_height = math.floor( font_size * face.height / face.units_per_EM)
         # print(line_height)
         max_x, max_y = x, y # 坐标
         line_y = y
@@ -157,8 +157,8 @@ class FontEngineFreetype():
 
 
     @classmethod
-    def api_text_to_image(cls, face, text, text_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0):
-        yield_points = cls._yield_points_multiline(face, text, 0, 0, text_size, text_color, space_x, space_y)
+    def api_text_to_image(cls, face, text, font_size=12, text_color=(0, 0, 0, 255), space_x=0, space_y=0):
+        yield_points = cls._yield_points_multiline(face, text, 0, 0, font_size, text_color, space_x, space_y)
         points = []
         width, height = 0, 0
         for _x, _y, color in yield_points:
@@ -187,14 +187,14 @@ class FontEngineFreetype():
 
 
     @classmethod
-    def api_text(cls, face, text, x, y, text_size, text_color, space_x, space_y):
+    def api_text(cls, face, text, x, y, font_size, text_color, space_x, space_y):
         # way2
-        # yield_points = cls._yield_points_multiline(face, text, x, y, text_size, text_color, space_x, space_y, need_size=False)
+        # yield_points = cls._yield_points_multiline(face, text, x, y, font_size, text_color, space_x, space_y, need_size=False)
         # for _x, _y, color in yield_points:
         #     if color:
         #         pr.draw_pixel(_x, _y, pr.Color(*color))
 
-        img_format, img_data = cls.api_text_to_image(face, text, text_size=text_size,
+        img_format, img_data = cls.api_text_to_image(face, text, font_size=font_size,
                                                      text_color=text_color, space_x=space_x, space_y=space_y)
         image = pr.load_image_from_memory(img_format, img_data, len(img_data))
         texture = pr.load_texture_from_image(image)

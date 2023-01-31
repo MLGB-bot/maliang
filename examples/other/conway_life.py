@@ -140,7 +140,7 @@ def on_draw():
     # app.draw_fps(0, 0)
     if exit_alert:
         app.rect(0, 100, app.width, 200)
-        app.text("Exit? [Y/N]", 40, 180, text_size=30, text_color=(255, ))
+        app.text("Exit? [Y/N]", 40, 180, font_size=30, text_color=(255, ))
         if app.is_key_clicked(maliang.KeyboardKeys.KEY_Y):
             app.exit()
         elif app.is_key_clicked(maliang.KeyboardKeys.KEY_N):

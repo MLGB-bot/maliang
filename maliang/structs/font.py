@@ -58,11 +58,11 @@ class MFont:
         m_image.pr_image = pr.load_image_from_memory(filetype, filedata, len(filedata))
         return m_image
 
-    def generate_raylib_temp_font(self, text='', text_size=12):
+    def generate_raylib_temp_font(self, text='', font_size=12):
         codepoints_count = ffi.new("int *")
         codepoints = pr.load_codepoints(text, codepoints_count)
         # print(text, "codepoints_count[0]: ", codepoints_count[0])
-        font_runtime = pr.load_font_from_memory(self._type, self._bin, self._len, text_size, codepoints,
+        font_runtime = pr.load_font_from_memory(self._type, self._bin, self._len, font_size, codepoints,
                                                 codepoints_count[0])
         pr.unload_codepoints(codepoints)
         del codepoints_count
@@ -71,29 +71,29 @@ class MFont:
         return font_runtime
 
     @engine(FontEngines.FONT_RAYLIB)
-    def text_image(self, text, text_size=12, text_color: mod_color.MColor=None, space_x=0, space_y=0) -> mod_image.MImage:
+    def text_image(self, text, font_size=12, text_color: mod_color.MColor=None, space_x=0, space_y=0) -> mod_image.MImage:
         img = mod_image.MImage()
-        font_runtime = self.generate_raylib_temp_font(text, text_size)
-        img.pr_image = pr.image_text_ex(font_runtime, text, text_size, space_x,
+        font_runtime = self.generate_raylib_temp_font(text, font_size)
+        img.pr_image = pr.image_text_ex(font_runtime, text, font_size, space_x,
                                         text_color.to_pyray())
         return img
 
     @engine(FontEngines.FONT_RAYLIB)
-    def text(self, text, x, y, text_size=None, text_color: mod_color.MColor=None, space_x=0, space_y=0):
-        font_runtime = self.generate_raylib_temp_font(text, text_size)
-        pr.draw_text_ex(font_runtime, text, pr.Vector2(x, y), text_size, space_x,
+    def text(self, text, x, y, font_size=None, text_color: mod_color.MColor=None, space_x=0, space_y=0):
+        font_runtime = self.generate_raylib_temp_font(text, font_size)
+        pr.draw_text_ex(font_runtime, text, pr.Vector2(x, y), font_size, space_x,
                         text_color.to_pyray())
 
     @engine(0)
-    def text_image(self, text, text_size=12, text_color: mod_color.MColor=None, space_x=0, space_y=0) -> mod_image.MImage:
-        img_format, img_data = self.engine.api_text_to_image(self.engine_font, text, text_size=text_size,
+    def text_image(self, text, font_size=12, text_color: mod_color.MColor=None, space_x=0, space_y=0) -> mod_image.MImage:
+        img_format, img_data = self.engine.api_text_to_image(self.engine_font, text, font_size=font_size,
                                                              text_color=tuple(text_color),
                                                              space_x=space_x, space_y=space_y)
         m_image = self.generate_m_image_from_data(img_format, img_data)
         return m_image
 
     @engine(0)
-    def text(self, text, x, y, text_size=None, text_color: mod_color.MColor=None, space_x=0, space_y=0):
-        texture = self.engine.api_text(self.engine_font, text, x, y, text_size, tuple(text_color), space_x, space_y)
+    def text(self, text, x, y, font_size=None, text_color: mod_color.MColor=None, space_x=0, space_y=0):
+        texture = self.engine.api_text(self.engine_font, text, x, y, font_size, tuple(text_color), space_x, space_y)
         if texture:
             mod_resource.ResourceLoader.loaded_texture_runtime.append(texture)

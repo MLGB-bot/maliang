@@ -14,11 +14,11 @@ font = app.load_font(filename="fonts/LXGWWenKaiLite-Regular.ttf", )
 
 def on_draw():
     app.background(255)
-    app.text(text_en, 0, 0, text_size=12)
-    app.text(text, 0, 40, text_size=18)
-    app.text(text_en, 0, 90, text_size=24, font=font)
-    app.text(text, 0, 160, text_size=30, font=font)
-    # app.text(text, random.randint(0, app.width), random.randint(0, app.height), text_size=random.randint(12, 50),
+    app.text(text_en, 0, 0, font_size=12)
+    app.text(text, 0, 40, font_size=18)
+    app.text(text_en, 0, 90, font_size=24, font=font)
+    app.text(text, 0, 160, font_size=30, font=font)
+    # app.text(text, random.randint(0, app.width), random.randint(0, app.height), font_size=random.randint(12, 50),
     #          font=font, space_x=1)
     app.draw_fps(0, app.height-20)
 
