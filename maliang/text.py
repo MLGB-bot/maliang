@@ -42,4 +42,10 @@ class Text:
             pr_font = font.pr_font if isinstance(font, MFontSet) else pr.get_font_default()
             img = MImage()
             img.pr_image = pr.image_text_ex(pr_font, text, font_size, space_x, text_color.to_pyray())
+
+            # [warning] raylib bug: multilines text size error
+            if "\n" in text:
+                base_size = pr_font.baseSize
+                scale = font_size / base_size
+                img.resize_nn( int( img.width * scale), int(img.height * scale))
         return img
