@@ -17,6 +17,8 @@ class GifPlayer:
         if self.mimage:
             self.texture = mod_texture.MTexture()
             self.texture.pr_texture = pr.load_texture_from_image(self.mimage.pr_image)
+        else:
+            self.texture = None
 
     def update_gif_texture(self):
         if self.mimage and (self.loop == 0 or self.loop_counter < self.loop):
@@ -34,11 +36,11 @@ class GifPlayer:
                 self.texture.update(self.mimage.pr_image.data + nextFrameDataOffset)
                 self.fps_counter = 0
             return self.texture
-        elif hasattr(self, 'texture') and self.texture:
+        elif self.texture:
             return self.texture
 
     def unload(self):
-        if hasattr(self, 'texture'):
+        if self.texture:
             self.texture.unload()
 
 class MImage:
