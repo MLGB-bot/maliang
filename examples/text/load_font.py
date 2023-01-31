@@ -1,27 +1,24 @@
-import random
-
 from maliang import Maliang
-from maliang.structs import MImage
 
-app = Maliang(width=500, height=400, buffer_proxy=True, fps=0)
-app.set_static_relative_dir('../../resources/')
-
-text = "落霞与孤鹜齐飞\n秋水共长天一色"
-text_en = "How are you?\nI am Fine, thank you! and you?"
-
+app = Maliang(width=500, height=400)
+app.set_static_relative_dir('../resources/')
 font = app.load_font(filename="fonts/LXGWWenKaiLite-Regular.ttf", )
 
+text = "How are you?\nI am Fine, thank you! and you?\n" \
+       "落霞与孤鹜齐飞\n秋水共长天一色"
+text_img = app.text_image(text, font_size=24, font=font, text_color=(255, 0, 0))
 
 def on_draw():
     app.background(255)
-    app.text(text_en, 0, 0, font_size=12)
-    app.text(text, 0, 40, font_size=18)
-    app.text(text_en, 0, 90, font_size=24, font=font)
-    app.text(text, 0, 160, font_size=30, font=font)
-    # app.text(text, random.randint(0, app.width), random.randint(0, app.height), font_size=random.randint(12, 50),
-    #          font=font, space_x=1)
-    app.draw_fps(0, app.height-20)
+    app.text(text, 0, 0, font_size=12)
+    app.text(text, 0, 90, font_size=18, font=font)
+    app.image(text_img, 0, 220, )
+
+def on_exit():
+    text_img.unload()
+    text_img.unload_texture()
 
 app.regist_event("on_draw", on_draw)
+app.regist_event("on_exit", on_exit)
 
 app.run()

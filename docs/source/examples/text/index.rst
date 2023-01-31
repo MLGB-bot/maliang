@@ -7,4 +7,5 @@
 
     text
     text_image
+    font
 
