@@ -11,46 +11,41 @@ class Image():
         self._tint = True
         self._tint_color = pr.WHITE
 
-
-    def create_image(self, w: int, h: int, color=(255, 255, 255, 255), color1=(255, 255, 255, 255),
-                     color2=(255, 255, 255, 255), density=0, checksx=10, checksy=10, factor=0.5, tile_size=10,
-                     style=0, ):
-        """
-        create image from
-        :param w:
-        :param h:
-        :param color:
-        :param color1:
-        :param color2:
-        :param density:
-        :param checksx:
-        :param checksy:
-        :param factor:
-        :param tile_size:
-        :param style:
-        :return:
-        """
+    def gen_image_color(self, w: int, h: int, color=(255, 255, 255, 255)):
         img = MImage()
-        if style == 0:
-            img.pr_image = pr.gen_image_color(w, h, MColor(*color).to_pyray())
-        elif style == 1:
-            img.pr_image = pr.gen_image_gradient_v(w, h, MColor(*color1).to_pyray(), MColor(*color2).to_pyray())
-        elif style == 2:
-            img.pr_image = pr.gen_image_gradient_h(w, h, MColor(*color1).to_pyray(), MColor(*color2).to_pyray())
-        elif style == 3:
-            img.pr_image = pr.gen_image_gradient_radial(w, h, density, MColor(*color1).to_pyray(),
+        img.pr_image = pr.gen_image_color(w, h, MColor(*color).to_pyray())
+        return img
+
+    def gen_image_gradient_v(self, w: int, h: int, color1=(255, 255, 255, 255), color2=(255, 255, 255, 255)):
+        img = MImage()
+        img.pr_image = pr.gen_image_gradient_v(w, h, MColor(*color1).to_pyray(), MColor(*color2).to_pyray())
+        return img
+
+    def gen_image_gradient_h(self, w: int, h: int, color1=(255, 255, 255, 255), color2=(255, 255, 255, 255)):
+        img = MImage()
+        img.pr_image = pr.gen_image_gradient_h(w, h, MColor(*color1).to_pyray(), MColor(*color2).to_pyray())
+        return img
+
+    def gen_image_gradient_radial(self, w: int, h: int, color1=(255, 255, 255, 255), color2=(255, 255, 255, 255), density=0,):
+        img = MImage()
+        img.pr_image = pr.gen_image_gradient_radial(w, h, density, MColor(*color1).to_pyray(),
                                                       MColor(*color2).to_pyray())
-        elif style == 4:
-            assert checksx > 0
-            assert checksy > 0
-            img.pr_image = pr.gen_image_checked(w, h, checksx, checksy, MColor(*color1).to_pyray(),
+        return img
+
+    def gen_image_checked(self, w: int, h: int, color1=(255, 255, 255, 255), color2=(255, 255, 255, 255), checksx=10, checksy=10,):
+        img = MImage()
+        img.pr_image = pr.gen_image_checked(w, h, checksx, checksy, MColor(*color1).to_pyray(),
                                               MColor(*color2).to_pyray())
-        elif style == 5:
-            img.pr_image = pr.gen_image_white_noise(w, h, factor)
-        elif style == 6:
-            img.pr_image = pr.gen_image_cellular(w, h, tile_size)
-        else:
-            img.pr_image = pr.gen_image_color(w, h, color)
+        return img
+
+    def gen_image_white_noise(self, w: int, h: int, factor=0.5):
+        img = MImage()
+        img.pr_image = pr.gen_image_white_noise(w, h, factor)
+        return img
+
+    def gen_image_cellular(self, w: int, h: int, tile_size=10):
+        img = MImage()
+        img.pr_image = pr.gen_image_cellular(w, h, tile_size)
         return img
 
     def image_mode(self, mode):
