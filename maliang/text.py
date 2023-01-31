@@ -32,7 +32,7 @@ class Text:
             pr_font = font.pr_font if isinstance(font, MFontSet) else pr.get_font_default()
             pr.draw_text_ex(pr_font, text, pr.Vector2(x, y), font_size, space_x, text_color.to_pyray())
 
-    def text_image(self, text, font_size=12, text_color=None, font: MFont|MFontSet = None, space_x=1):
+    def text_image(self, text, font_size=None, text_color=None, font: MFont|MFontSet = None, space_x=1):
         font = font or self.__text_font
         font_size = font_size or self.__font_size
         text_color = self.init_text_color(text_color or self.__text_color)
