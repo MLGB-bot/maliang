@@ -1,7 +1,7 @@
 import os
 import pyray as pr
-from maliang.units import ResourceLoader, ImageMode
-from maliang.structs import MColor, MImage, MTexture, GifPlayer
+from maliang.units import ResourceLoader, ImageMode, GifPlayer
+from maliang.structs import MColor, MImage, MTexture
 from raylib._raylib_cffi import ffi
 
 
