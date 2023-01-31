@@ -54,6 +54,10 @@ class MImage:
         texture.pr_texture = pr.load_texture_from_image(self.pr_image)
         return texture
 
+    def unload_texture(self):
+        if self.texture:
+            self.texture.unload()
+
     def export_to_file(self, filename, mode=0) -> bool:
         if mode == 0:
             return pr.export_image(self.pr_image, filename)
