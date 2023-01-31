@@ -68,9 +68,7 @@ class MImage:
     @staticmethod
     def decorate_on_image_change(func):
         def inner(self, *args, **kwargs):
-            if self.texture:
-                self.texture.unload()
-                self.texture = None
+            self.unload_texture()
             return func(self, *args, **kwargs)
 
         return inner
