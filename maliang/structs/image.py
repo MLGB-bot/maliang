@@ -57,6 +57,7 @@ class MImage:
     def unload_texture(self):
         if self.texture:
             self.texture.unload()
+            self.texture = None
 
     def export_to_file(self, filename, mode=0) -> bool:
         if mode == 0:
