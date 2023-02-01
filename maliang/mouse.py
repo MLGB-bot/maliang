@@ -82,7 +82,7 @@ class Mouse:
 
     def event_trigger_on_mouse_moved(self):
         delta = self.delta
-        if sum(delta) != 0:
+        if delta != (0, 0):
             return True, delta
         return False, None
 
