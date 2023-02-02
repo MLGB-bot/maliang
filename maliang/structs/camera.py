@@ -1,5 +1,7 @@
 import pyray as pr
 import maliang.structs.ray as mod_ray
+import maliang.structs.vector as mod_vector
+from functools import partial
 
 class MCamera:
     def __init__(self, pr_camera):
@@ -23,26 +25,49 @@ class MCamera2D(MCamera):
     dimension = 2
     def __init__(self, pr_camera):
         MCamera.__init__(self, pr_camera)
+        self.__offset = None
+        self.__target = None
+
+    def on_mvector_change(self, value, attr):
+        setattr(self.pr_camera, attr, pr.Vector2(*value))
 
     @property
     def offset(self):
-        # 2d
-        offset = self.pr_camera.offset
-        return offset.x, offset.y
+        if not self.__offset:
+            pr_vector = self.pr_camera.offset
+            self.__offset = mod_vector.MVector(pr_vector.x, pr_vector.y, pr_vector.z)
+            callback = partial(self.on_mvector_change, attr='offset')
+            self.__offset.bind(callback=callback)
+        return self.__offset
 
     @offset.setter
-    def offset(self, offset: tuple|list):
-        self.pr_camera.offset = pr.Vector2(*offset)
+    def offset(self, value: tuple|list):
+        if not self.__offset:
+            self.__offset = mod_vector.MVector(*value)
+            callback = partial(self.on_mvector_change, attr='offset')
+            self.__offset.bind(callback=callback)
+            self.__offset.bind_update()
+        else:
+            self.__offset.value = value
 
     @property
     def target(self):
-        # 2d & 3d
-        target = self.pr_camera.target
-        return target.x, target.y
+        if not self.__target:
+            pr_vector = self.pr_camera.target
+            self.__target = mod_vector.MVector(pr_vector.x, pr_vector.y, pr_vector.z)
+            callback = partial(self.on_mvector_change, attr='target')
+            self.__target.bind(callback=callback)
+        return self.__target
 
     @target.setter
     def target(self, value):
-        self.pr_camera.target = pr.Vector2(*value)
+        if not self.__target:
+            self.__target = mod_vector.MVector(*value)
+            callback = partial(self.on_mvector_change, attr='target')
+            self.__target.bind(callback=callback)
+            self.__target.bind_update()
+        else:
+            self.__target.value = value
 
     @property
     def rotation(self):
@@ -77,34 +102,70 @@ class MCamera3D(MCamera):
 
     def __init__(self, pr_camera):
         MCamera.__init__(self, pr_camera)
+        self.__target = None
+        self.__position = None
+        self.__up = None
+
+    def on_mvector_change(self, value, attr):
+        setattr(self.pr_camera, attr, pr.Vector3(*value))
 
     @property
     def target(self):
         # 2d & 3d
-        target = self.pr_camera.target
-        return target.x, target.y, target.z
+        if not self.__target:
+            pr_vector = self.pr_camera.target
+            self.__target = mod_vector.MVector(pr_vector.x, pr_vector.y, pr_vector.z)
+            callback = partial(self.on_mvector_change, attr='target')
+            self.__target.bind(callback=callback)
+        return self.__target
 
     @target.setter
     def target(self, value):
-        self.pr_camera.target = pr.Vector3(*value)
+        if not self.__target:
+            self.__target = mod_vector.MVector(*value)
+            callback = partial(self.on_mvector_change, attr='target')
+            self.__target.bind(callback=callback)
+            self.__target.bind_update()
+        else:
+            self.__target.value = value
 
     @property
     def position(self):
-        position = self.pr_camera.position
-        return position.x, position.y, position.z
+        if not self.__position:
+            pr_vector = self.pr_camera.position
+            self.__position = mod_vector.MVector(pr_vector.x, pr_vector.y, pr_vector.z)
+            callback = partial(self.on_mvector_change, attr='position')
+            self.__position.bind(callback=callback)
+        return self.__position
 
     @position.setter
     def position(self, value):
-        self.pr_camera.position = pr.Vector3(*value)
+        if not self.__position:
+            self.__position = mod_vector.MVector(*value)
+            callback = partial(self.on_mvector_change, attr='position')
+            self.__position.bind(callback=callback)
+            self.__position.bind_update()
+        else:
+            self.__position.value = value
 
     @property
     def up(self):
-        up = self.pr_camera.up
-        return up.x, up.y, up.z
+        if not self.__up:
+            pr_vector = self.pr_camera.up
+            self.__up = mod_vector.MVector(pr_vector.x, pr_vector.y, pr_vector.z)
+            callback = partial(self.on_mvector_change, attr='up')
+            self.__up.bind(callback=callback)
+        return self.__up
 
     @up.setter
     def up(self, value):
-        self.pr_camera.up = pr.Vector3(*value)
+        if not self.__up:
+            self.__up = mod_vector.MVector(*value)
+            callback = partial(self.on_mvector_change, attr='up')
+            self.__up.bind(callback=callback)
+            self.__up.bind_update()
+        else:
+            self.__up.value = value
 
     @property
     def fovy(self):
