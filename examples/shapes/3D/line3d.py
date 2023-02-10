@@ -1,25 +1,46 @@
-from maliang import Maliang, CameraProjection
+from maliang import Maliang, CameraProjection, MouseButtons, CameraMode
 
-app = Maliang(width=200, height=200, fps=80)
+app = Maliang(width=300, height=300)
 
 
 camera = app.camera_3d()
 
-camera.position = (0, 0, 10)
+camera.position = (10, 10, 10)
 camera.target = (0, 0, 0)
-camera.up = (0, 1, 0)
+camera.up = (1, 1, 0)
 camera.fovy = 45.0
-camera.projection = CameraProjection.ORTHOGRAPHIC
+camera.projection = CameraProjection.PERSPECTIVE
 
-# camera.target = (player['x'] + 20.0, player['y'] + 20.0, )
-# camera.offset = (app.width/2, app.height/2)
-# camera.rotation = 0
-# camera.zoom = 1.0
 
 def on_draw():
     app.background(255, )
     app.begin_camera(camera)
-    app.line3d(0, 0, 0, app.width, app.height, 1, stroke_color=(255, 0, 0 ))
+
+    app.grid(10, 1)
+
+    app.line3d(0, 0, 0, 10, 0, 0, stroke_color=(255, 0, 0))
+    app.line3d(0, 0, 0, 0, 10, 0, stroke_color=(0, 255, 0))
+    app.line3d(0, 0, 0, 0, 0, 10, stroke_color=(0, 0, 255))
+
+    wheel = app.is_mouse_wheel()
+    if wheel:
+        camera.fovy -= wheel
+        if camera.fovy < 1:
+            camera.fovy = 1
+
+    delta = app.delta
+    if app.is_mouse_down(MouseButtons.MOUSE_BUTTON_LEFT) and delta != (0, 0):
+        # if delta[0] < 0:
+        #     camera.up.x -= 0.1
+        # elif delta[0] > 0:
+        #     camera.up.x += 0.1
+
+        if delta[1] < 0:
+            camera.up.y -= 0.1
+        elif delta[1] > 0:
+            camera.up.y += 0.1
+        # print(camera.up.value)
+
     app.end_camera()
 
 
