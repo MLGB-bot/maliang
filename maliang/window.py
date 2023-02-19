@@ -214,7 +214,8 @@ class Window:
     @classmethod
     def set_window_title(self, title):
         """Set title for window (only PLATFORM_DESKTOP)"""
-        rl.SetWindowTitle(title)
+        # rl.SetWindowTitle(title)
+        pr.set_window_title(title)
 
     @classmethod
     def set_window_position(self, x: int, y: int):
