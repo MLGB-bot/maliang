@@ -22,7 +22,7 @@ class Electron():
         self.y = random.randint(0, app.height)
 
     def display(self):
-        app.point(self.x, self.y, self.size, stroke_color=self.color, shape='circle')
+        app.point(self.x, self.y, stroke_width=self.size, stroke_color=self.color, shape='circle')
 
     def init_genhash_id(self):
         self.genhash_id = self.genhash.encode(self.x, self.y)
