@@ -15,8 +15,11 @@ class Shader():
         shader.pr_shader = pr.load_shader(vs_file, fs_file)
         return shader
 
-    def load_shader_from_code(self, vs_code, fs_code):
+    def load_shader_from_memory(self, vs_code, fs_code):
         shader = MShader()
         shader.pr_shader = pr.load_shader_from_memory(vs_code, fs_code)
         return shader
+
+    def rl_version(self):
+        return pr.rl_get_version()
 
