@@ -8,11 +8,14 @@ class Shader():
     def __init__(self):
         pass
 
-    def load_shader(self, vs_filename, fs_filename) -> MShader:
+    def load_shader(self, vs_filename, fs_filename, glsl_verision=330) -> MShader:
         vs_file = os.path.join(ResourceLoader.static_dir, vs_filename)
         fs_file = os.path.join(ResourceLoader.static_dir, fs_filename)
         shader = MShader()
-        shader.pr_shader = pr.load_shader(vs_file, fs_file)
+        shader.pr_shader = pr.load_shader(
+            pr.text_format(vs_file, glsl_verision),
+            pr.text_format(fs_file, glsl_verision),
+        )
         return shader
 
     def load_shader_from_memory(self, vs_code, fs_code):
